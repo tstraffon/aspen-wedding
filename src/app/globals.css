@@ -45,6 +45,10 @@
   .body-text {
     @apply font-sans text-base md:text-lg text-aspen-stone leading-relaxed;
   }
+
+  .body-sm {
+    @apply font-sans text-sm md:text-base text-aspen-stone leading-relaxed;
+  }
 }
 
 @layer utilities {
