@@ -12,6 +12,7 @@ const navLinks = [
   { href: '/wedding-party', label: 'Wedding Party' },
   { href: '/details', label: 'Details' },
   { href: '/travel', label: 'Travel' },
+  { href: '/faq', label: 'FAQ' },
   { href: '/gallery', label: 'Gallery' },
   { href: '/quiz', label: 'Quiz' },
   { href: '/registry', label: 'Registry' },
