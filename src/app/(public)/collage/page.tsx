@@ -341,8 +341,8 @@ export default function CollageHomepage() {
       </div>
 
       {/* Quick Links - Fixed position */}
-      <motion.div 
-        className="fixed bottom-8 right-8 z-50 flex flex-col gap-3 hidden md:flex"
+      <motion.div
+        className="fixed bottom-8 right-8 z-50 hidden md:flex flex-col gap-3"
         initial={{ x: 200 }}
         animate={{ x: 0 }}
         transition={{ duration: 0.5, delay: 2, staggerChildren: 0.1 }}

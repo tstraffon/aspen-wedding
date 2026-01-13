@@ -45,11 +45,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Get guest ID from user email
+    if (!user.email) {
+      return NextResponse.json(
+        { error: 'User email not found' },
+        { status: 400 }
+      )
+    }
+
     const { data: guest, error: guestError } = await supabase
       .from('guests')
       .select('id')
       .eq('email', user.email)
-      .single()
+      .maybeSingle() as { data: { id: string } | null; error: any }
 
     if (guestError || !guest) {
       return NextResponse.json(
@@ -58,13 +65,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const guestId = guest.id
+
     // Generate unique filename
     const timestamp = Date.now()
     const fileExt = file.name.split('.').pop()
-    const fileName = `${guest.id}/${timestamp}.${fileExt}`
+    const fileName = `${guestId}/${timestamp}.${fileExt}`
 
     // Upload to Supabase Storage
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from('guest-photos')
       .upload(fileName, file, {
         cacheControl: '3600',
@@ -87,8 +96,9 @@ export async function POST(request: NextRequest) {
     // Save metadata to database
     const { data: photoData, error: dbError } = await supabase
       .from('guest_photos')
+      // @ts-ignore - Supabase SSR type inference issue with guest_photos table
       .insert({
-        guest_id: guest.id,
+        guest_id: guestId,
         photo_url: publicUrl,
         caption: caption || null,
         location: location || null,
