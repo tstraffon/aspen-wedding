@@ -134,6 +134,38 @@ export interface Database {
           created_at?: string
         }
       }
+      guest_photos: {
+        Row: {
+          id: string
+          guest_id: string
+          photo_url: string
+          caption: string | null
+          location: string | null
+          date_taken: string | null
+          is_approved: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          guest_id: string
+          photo_url: string
+          caption?: string | null
+          location?: string | null
+          date_taken?: string | null
+          is_approved?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          guest_id?: string
+          photo_url?: string
+          caption?: string | null
+          location?: string | null
+          date_taken?: string | null
+          is_approved?: boolean
+          created_at?: string
+        }
+      }
     }
   }
 }
@@ -143,6 +175,7 @@ export type Guest = Database['public']['Tables']['guests']['Row']
 export type Rsvp = Database['public']['Tables']['rsvps']['Row']
 export type QuizResponse = Database['public']['Tables']['quiz_responses']['Row']
 export type GalleryReaction = Database['public']['Tables']['gallery_reactions']['Row']
+export type GuestPhoto = Database['public']['Tables']['guest_photos']['Row']
 
 export type MealPreference = 'beef' | 'chicken' | 'vegetarian' | 'vegan'
 export type ReactionType = 'love' | 'laugh' | 'wow'

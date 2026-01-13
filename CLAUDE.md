@@ -74,12 +74,13 @@ Route groups `(auth)`, `(public)`, and `(protected)` don't affect URL structure 
 
 ### Database Schema
 
-Four main tables with RLS policies:
+Five main tables with RLS policies:
 
 - **guests**: Guest list with email, names, household grouping, plus-one status
 - **rsvps**: Multi-event RSVP responses with meal preferences and dietary restrictions
 - **quiz_responses**: Quiz answers with JSONB storage for flexibility
 - **gallery_reactions**: Photo reactions (love, laugh, wow)
+- **guest_photos**: Guest-uploaded photos with moderation (requires `is_approved = true` to display)
 
 Key relationships:
 - All tables reference `guests.id` with CASCADE deletion
@@ -205,6 +206,42 @@ Travel guide uses `react-map-gl` wrapper:
 - Token from `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN`
 - Interactive markers for venues, hotels, restaurants, activities
 - Custom map style recommended for brand consistency
+
+## Guest Photo Uploads
+
+### Setup
+
+Guest photo uploads require additional setup:
+
+1. **Run migration**: Execute `docs/guest-photos-migration.sql` in Supabase
+2. **Create storage bucket**: Create `guest-photos` bucket (public) in Supabase Storage
+3. **Configure policies**: Set up storage policies for upload/read/delete
+4. **See full instructions**: `docs/GUEST_PHOTOS_SETUP.md`
+
+### Upload Flow
+
+1. Guest clicks "Share Your Memory" on gallery page
+2. Component opens modal with drag-and-drop file upload
+3. Guest adds optional caption and location
+4. File uploaded to Supabase Storage under `guest-photos/{guest_id}/{timestamp}.{ext}`
+5. Metadata saved to `guest_photos` table with `is_approved = false`
+6. Admin approves photos via Supabase Dashboard or admin panel
+7. Approved photos appear in "Guest Photos" category
+
+### Key Components
+
+- **PhotoUpload** (`src/components/gallery/PhotoUpload.tsx`): Upload modal with file validation
+- **API Route** (`src/app/api/gallery/upload/route.ts`): Handles file upload and database insert
+- **Gallery Page** (`src/app/(public)/gallery/page.tsx`): Displays guest photos when approved
+
+### Moderation
+
+Photos must be manually approved before appearing in gallery:
+```sql
+UPDATE guest_photos SET is_approved = true WHERE id = 'photo-id';
+```
+
+Consider building an admin approval interface at `/admin/photos`.
 
 ## Database Workflows
 
