@@ -172,19 +172,17 @@ export default function CollageHomepage() {
 
           {/* Polaroid Photos */}
           <motion.div
-            className="absolute top-[18%] right-[8%] w-40 h-48"
+            className="absolute top-[18%] right-[8%] w-40 h-48 cursor-pointer"
             style={{ rotate: 8 }}
             whileHover={{ scale: 1.1, rotate: 12, zIndex: 50 }}
-            className="cursor-pointer"
           >
             <Image src="/images/collage/polaroid-photo-1.png" alt="" fill className="object-contain drop-shadow-2xl" />
           </motion.div>
 
           <motion.div
-            className="absolute bottom-[25%] left-[8%] w-40 h-48"
+            className="absolute bottom-[25%] left-[8%] w-40 h-48 cursor-pointer"
             style={{ rotate: -12 }}
             whileHover={{ scale: 1.1, rotate: -8, zIndex: 50 }}
-            className="cursor-pointer-2"
           >
             <Image src="/images/collage/polaroid-photo-2.png" alt="" fill className="object-contain drop-shadow-2xl" />
           </motion.div>
