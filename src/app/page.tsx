@@ -37,43 +37,15 @@ export default function HomePage() {
 
         {/* Call to Actions */}
         <div className="flex flex-wrap gap-4 justify-center items-center animate-slide-up">
-          <Link href="/login">
+          <Link href="/rsvp">
             <Button variant="primary" size="lg">
-              Login & RSVP
+              RSVP Now
             </Button>
           </Link>
-          <Link href="/our-story">
+          <Link href="/details">
             <Button variant="outline" size="lg">
-              Our Story
+              Event Details
             </Button>
-          </Link>
-        </div>
-
-        {/* Quick Links */}
-        <div className="pt-8 flex flex-wrap gap-6 justify-center text-sm">
-          <Link 
-            href="/details" 
-            className="text-aspen-forest hover:text-aspen-copper transition-colors"
-          >
-            Event Details
-          </Link>
-          <Link 
-            href="/travel" 
-            className="text-aspen-forest hover:text-aspen-copper transition-colors"
-          >
-            Travel & Stay
-          </Link>
-          <Link 
-            href="/gallery" 
-            className="text-aspen-forest hover:text-aspen-copper transition-colors"
-          >
-            Photo Gallery
-          </Link>
-          <Link 
-            href="/registry" 
-            className="text-aspen-forest hover:text-aspen-copper transition-colors"
-          >
-            Registry
           </Link>
         </div>
 
