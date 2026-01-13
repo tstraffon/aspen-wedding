@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-playfair: 'Playfair Display', serif;
+    --font-inter: 'Inter', sans-serif;
+  }
+  
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply bg-aspen-cream text-aspen-pine antialiased;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .section-padding {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+  
+  .heading-xl {
+    @apply font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-aspen-pine;
+  }
+  
+  .heading-lg {
+    @apply font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-aspen-pine;
+  }
+  
+  .heading-md {
+    @apply font-serif text-2xl md:text-3xl lg:text-4xl font-semibold text-aspen-pine;
+  }
+  
+  .heading-sm {
+    @apply font-serif text-xl md:text-2xl font-semibold text-aspen-pine;
+  }
+  
+  .body-text {
+    @apply font-sans text-base md:text-lg text-aspen-stone leading-relaxed;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-aspen-cream;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-aspen-copper rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-aspen-rust;
+}
