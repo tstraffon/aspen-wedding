@@ -101,10 +101,10 @@ export default function ItineraryPage() {
                         </span>
                       </div>
                       <h4 className="font-headline text-3xl text-on-surface mb-4">
-                        The Welcome Party
+                        The Welcome Party - Silver City
                       </h4>
                       <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
-                        Horderves & cocktails to kick off the weekend at Aspen's oldest mountain saloon, Silver City. Western elegance attire.
+                        Hors d'oeuvres & cocktails to kick off the weekend at Aspen's oldest mountain saloon, Silver City. Western elegance attire.
                       </p>
                       <div className="flex items-center gap-2 text-on-surface/60 font-label text-[10px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
                         <span className="material-symbols-outlined text-sm">location_on</span>
@@ -177,7 +177,7 @@ export default function ItineraryPage() {
                           </span>
                         </div>
                         <h4 className="font-headline text-3xl text-on-surface mb-4">
-                          The Wedding Ceremony
+                          The Wedding Ceremony - St. Mary's Church
                         </h4>
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                            A traditional Catholic wedding ceremony without a full Mass, officiated by Uncle Father Henry! Please arrive early as we will start at 3pm sharp. Black tie optional attire.
@@ -218,7 +218,7 @@ export default function ItineraryPage() {
                           </span>
                         </div>
                         <h4 className="font-headline text-3xl text-on-surface mb-4">
-                          Cocktails
+                          Cocktails - Hotel Jerome
                         </h4>
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                           A magical outdoor cocktail hour in the Hotel Jerome courtyard before dinner  👀
@@ -279,7 +279,7 @@ export default function ItineraryPage() {
                           </span>
                         </div>
                         <h4 className="font-headline text-3xl text-on-surface mb-4">
-                          Dinner &amp; Dancing
+                          Dinner &amp; Dancing - Hotel Jerome
                         </h4>
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                           A formal seated dinner at Hotel Jerome followed by dancing! Bring your appetite and your dancing shoes.
