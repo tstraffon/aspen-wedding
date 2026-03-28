@@ -1,0 +1,503 @@
+@import "tailwindcss";
+
+@theme {
+  /* Primary — warm gold/copper */
+  --color-primary: #d4a373;
+  --color-on-primary: #1a1c1e;
+  --color-primary-container: #9a7c5b;
+  --color-on-primary-container: #e2e8e4;
+  --color-on-primary-fixed: #1a1c1e;
+  --color-on-primary-fixed-variant: #9a7c5b;
+  --color-primary-fixed: #d4a373;
+  --color-primary-fixed-dim: #9a7c5b;
+
+  /* Secondary */
+  --color-secondary: #a0ada9;
+  --color-on-secondary: #1a1c1e;
+  --color-secondary-container: #1a2c2f;
+  --color-on-secondary-container: #a0ada9;
+  --color-secondary-fixed: #a0ada9;
+  --color-secondary-fixed-dim: #3f4f4c;
+  --color-on-secondary-fixed: #0d1b1e;
+  --color-on-secondary-fixed-variant: #1a2c2f;
+
+  /* Tertiary — accent gold */
+  --color-tertiary: #9a7c5b;
+  --color-tertiary-container: #1a2c2f;
+  --color-on-tertiary: #1a1c1e;
+  --color-on-tertiary-container: #a0ada9;
+  --color-tertiary-fixed: #d4a373;
+  --color-tertiary-fixed-dim: #9a7c5b;
+  --color-on-tertiary-fixed: #1a1c1e;
+  --color-on-tertiary-fixed-variant: #3f4f4c;
+
+  /* Surface — dark teal */
+  --color-surface: #122023;
+  --color-surface-bright: #1a2c2f;
+  --color-surface-dim: #0d1b1e;
+  --color-surface-variant: #1a2c2f;
+  --color-surface-tint: #d4a373;
+  --color-surface-container-lowest: #0d1b1e;
+  --color-surface-container-low: #122023;
+  --color-surface-container: #1a2c2f;
+  --color-surface-container-high: #1a2c2f;
+  --color-surface-container-highest: #1a2c2f;
+  --color-on-surface: #e2e8e4;
+  --color-on-surface-variant: #a0ada9;
+
+  /* Background */
+  --color-background: #0d1b1e;
+  --color-on-background: #e2e8e4;
+
+  /* Error */
+  --color-error: #f87171;
+  --color-error-container: #7f1d1d;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #fca5a5;
+
+  /* Outline */
+  --color-outline: #3f4f4c;
+  --color-outline-variant: #3f4f4c;
+
+  /* Accent */
+  --color-accent: #9a7c5b;
+
+  /* Inverse */
+  --color-inverse-surface: #e2e8e4;
+  --color-inverse-on-surface: #0d1b1e;
+  --color-inverse-primary: #9a7c5b;
+
+  /* Border radius — tight / editorial */
+  --radius: 0.125rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+}
+
+@theme inline {
+  /* Fonts — reference next/font CSS variables */
+  --font-headline: var(--font-noto-serif), "Noto Serif", serif;
+  --font-body: var(--font-manrope), "Manrope", sans-serif;
+  --font-label: var(--font-manrope), "Manrope", sans-serif;
+}
+
+/* Material Symbols icon variation */
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24;
+  vertical-align: middle;
+}
+
+/* Cinematic section system */
+.cinematic-section {
+  position: relative;
+  min-height: 100dvh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.full-bleed-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #0d1b1e;
+}
+
+.content-overlay {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .content-overlay {
+    padding: 0 3rem;
+  }
+}
+
+.scrim-dark {
+  background: linear-gradient(
+    to bottom,
+    rgba(13, 27, 30, 0.4),
+    rgba(13, 27, 30, 0.7),
+    rgba(13, 27, 30, 0.4)
+  );
+}
+
+.scrim-side {
+  background: linear-gradient(
+    to right,
+    rgba(13, 27, 30, 0.8) 0%,
+    rgba(13, 27, 30, 0.4) 50%,
+    rgba(13, 27, 30, 0.8) 100%
+  );
+}
+
+.glass-nav {
+  background: rgba(13, 27, 30, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+.editorial-underline {
+  position: relative;
+}
+
+.editorial-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.5;
+}
+
+/* FAQ accordion */
+.faq-accordion details[open] summary .expand-icon {
+  transform: rotate(180deg);
+}
+
+.faq-accordion details summary::-webkit-details-marker {
+  display: none;
+}
+
+/* FAQ card entrance stagger */
+.faq-accordion details {
+  animation: fade-slide-up 600ms ease-out both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 25%;
+}
+
+.faq-accordion details:nth-child(2) { animation-delay: 60ms; }
+.faq-accordion details:nth-child(3) { animation-delay: 120ms; }
+.faq-accordion details:nth-child(4) { animation-delay: 180ms; }
+.faq-accordion details:nth-child(5) { animation-delay: 240ms; }
+
+/* FAQ card open/close content animation */
+.faq-accordion details .faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 400ms cubic-bezier(0.23, 1, 0.32, 1),
+              opacity 300ms ease 100ms;
+}
+
+.faq-accordion details[open] .faq-answer {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.faq-accordion details .faq-answer > div {
+  overflow: hidden;
+}
+
+/* FAQ card hover and open states */
+.faq-card {
+  transition: transform 400ms cubic-bezier(0.23, 1, 0.32, 1),
+              border-color 400ms ease,
+              box-shadow 400ms ease,
+              background-color 400ms ease;
+}
+
+.faq-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+              0 0 0 1px rgba(212, 163, 115, 0.08);
+}
+
+.faq-card[open] {
+  border-color: rgba(212, 163, 115, 0.15);
+  background-color: rgba(18, 32, 35, 0.6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+              0 0 40px rgba(212, 163, 115, 0.03);
+}
+
+/* FAQ number badge */
+.faq-number {
+  transition: background-color 300ms ease, color 300ms ease, transform 300ms ease;
+}
+
+.faq-card:hover .faq-number,
+.faq-card[open] .faq-number {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  transform: scale(1.1);
+}
+
+/* FAQ tag pill hover */
+.faq-tag {
+  transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.faq-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(212, 163, 115, 0.15);
+}
+
+/* FAQ contact CTA shimmer */
+@keyframes faq-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.faq-cta-card {
+  position: relative;
+  overflow: hidden;
+  transition: border-color 500ms ease, transform 400ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.faq-cta-card:hover {
+  border-color: rgba(212, 163, 115, 0.2);
+  transform: translateY(-2px);
+}
+
+.faq-cta-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(212, 163, 115, 0.04) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: faq-shimmer 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Itinerary event card overlay */
+.event-card-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(18, 32, 35, 0.97) 0%,
+    rgba(26, 44, 47, 0.92) 50%,
+    rgba(18, 32, 35, 0.95) 100%
+  );
+}
+
+/* Itinerary card hover lift + glow */
+.itinerary-card {
+  transition: transform 500ms cubic-bezier(0.23, 1, 0.32, 1),
+              border-color 500ms ease,
+              box-shadow 500ms ease;
+}
+
+.itinerary-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(212, 163, 115, 0.15);
+  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.35),
+              0 0 0 1px rgba(212, 163, 115, 0.08),
+              inset 0 1px 0 rgba(212, 163, 115, 0.1);
+}
+
+/* Itinerary icon warm pulse on card hover */
+.itinerary-card:hover .itinerary-icon {
+  filter: drop-shadow(0 0 6px rgba(212, 163, 115, 0.4));
+  transition: filter 500ms ease;
+}
+
+.hero-gradient {
+  background: linear-gradient(to bottom, rgba(13, 27, 30, 0.4), rgba(13, 27, 30, 0.9));
+}
+
+.vignette-overlay {
+  background: radial-gradient(circle, transparent 40%, rgba(13, 27, 30, 0.4) 100%);
+}
+
+/* Login page overlays */
+.hero-gradient-dark {
+  background: linear-gradient(
+    to bottom,
+    rgba(13, 27, 30, 0.85),
+    rgba(13, 27, 30, 0.95)
+  );
+}
+
+.vignette-overlay-deep {
+  background: radial-gradient(circle, rgba(13, 27, 30, 0.4) 20%, rgba(13, 27, 30, 0.75) 100%);
+}
+
+/* Editorial text shadow for dark theme */
+.text-shadow-editorial {
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Hero entrance animations ────────────────────────────── */
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-reveal-label {
+  animation: hero-fade-up 800ms ease-out 200ms both;
+}
+
+.hero-reveal-title {
+  animation: hero-fade-up 800ms ease-out 400ms both;
+}
+
+.hero-reveal-subtitle {
+  animation: hero-fade-up 800ms ease-out 600ms both;
+}
+
+/* Hero parallax zoom-out on scroll */
+@keyframes hero-parallax {
+  from { transform: scale(1.08); }
+  to   { transform: scale(1); }
+}
+
+.hero-parallax-bg {
+  animation: hero-parallax ease-out both;
+  animation-timeline: view();
+  animation-range: contain 0% contain 100%;
+}
+
+/* ── Scroll-driven reveal ────────────────────────────────── */
+@keyframes fade-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-on-scroll {
+  animation: fade-slide-up ease-out both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 30%;
+}
+
+.reveal-on-scroll-stagger > * {
+  animation: fade-slide-up ease-out both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 35%;
+}
+
+.reveal-on-scroll-stagger > *:nth-child(2) { animation-delay: 80ms; }
+.reveal-on-scroll-stagger > *:nth-child(3) { animation-delay: 160ms; }
+
+/* ── Hotel card lift ─────────────────────────────────────── */
+.hotel-card {
+  transition: transform 500ms cubic-bezier(0.23, 1, 0.32, 1),
+              border-color 500ms ease,
+              box-shadow 500ms ease;
+}
+
+.hotel-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25),
+              0 0 0 1px rgba(212, 163, 115, 0.1);
+}
+
+.hotel-card .hotel-meta {
+  opacity: 0.6;
+  transform: translateY(6px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+
+.hotel-card:hover .hotel-meta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hotel-card-featured:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25),
+              0 0 60px rgba(212, 163, 115, 0.08);
+}
+
+/* ── Altitude callout ────────────────────────────────────── */
+@keyframes altitude-breathe {
+  0%, 100% { transform: translateY(0); opacity: 0.9; }
+  50%      { transform: translateY(-3px); opacity: 1; }
+}
+
+.altitude-icon {
+  animation: altitude-breathe 3s ease-in-out infinite;
+}
+
+/* ── Editorial link hover ────────────────────────────────── */
+.link-editorial {
+  position: relative;
+  transition: color 300ms ease;
+}
+
+.link-editorial::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-primary);
+  transition: width 400ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.link-editorial:hover::after {
+  width: 100%;
+}
+
+/* ── Button hover glow ───────────────────────────────────── */
+.btn-outline-glow {
+  position: relative;
+  overflow: hidden;
+  transition: border-color 300ms ease, color 300ms ease;
+}
+
+.btn-outline-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-primary);
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.btn-outline-glow:hover::before {
+  opacity: 0.06;
+}
+
+/* ── Decorative divider ──────────────────────────────────── */
+.divider-diamond {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0 2rem;
+}
+
+.divider-diamond::before,
+.divider-diamond::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    to var(--dir, right),
+    transparent,
+    var(--color-primary) 40%,
+    var(--color-primary)
+  );
+  opacity: 0.2;
+}
+
+.divider-diamond::after {
+  --dir: left;
+}
