@@ -4,13 +4,13 @@ const faqs = [
   {
     question: "What is the dress code for the weekend?",
     answer:
-      "For the wedding ceremony and reception, the dress code is Black Tie Optional. Gentlemen are encouraged to wear tuxedos or dark suits, and ladies are invited to wear floor-length gowns or elegant cocktail dresses. For the welcome drinks, the attire is \u201cMountain Chic\u201d\u2014think dressy but comfortable for the crisp evening air.",
+      "For the wedding ceremony and reception, the dress code is Black Tie Optional. The groom will be wearing a dark suit and gentlemen are encouraged to do the same. Ladies are invited to wear floor-length gowns or elegant cocktail dresses. For the welcome drinks, the attire is \u201cMountain Elegance\u201d\u2014think dressy but comfortable for the crisp evening air.",
     icon: "checkroom",
   },
   {
     question: "Will there be transportation provided?",
     answer:
-      "Yes. Shuttles will be provided for all guests staying at our recommended hotels. Pick-up times will be listed in your welcome bags upon arrival. Since Hotel Jerome is centrally located, many guests may also find it convenient to walk from nearby downtown accommodations.",
+      "In short, no. Downtown Aspen is very walkable and our recommended hotels are all within 10 mins of all the weekend's events. With Aspen's beautiful fall weather, walking too and from each venue will be idyllic!",
     icon: "directions_car",
   },
   {
@@ -18,6 +18,26 @@ const faqs = [
     answer:
       "Aspen sits at nearly 8,000 feet. We recommend drinking plenty of water, starting several days before you arrive. Limit alcohol consumption on your first night, and consider arriving a day early to acclimate if you are sensitive to elevation. Hydration stations will be available throughout the venue.",
     icon: "landscape",
+  },
+  {
+    question: "What will the weather be like in September?",
+    answer:
+      "Mid-September in Aspen is absolutely gorgeous. Expect daytime highs in the mid-60s\u00b0F and cooler evenings dipping into the low 40s\u00b0F. The aspen trees should be starting to turn gold, making for a stunning backdrop. We recommend bringing layers\u2014a light jacket or wrap for the evening will be your best friend.",
+    icon: "partly_cloudy_day",
+  },
+  {
+    question: "What airport should I fly into?",
+    answer:
+      "The closest airport is Aspen/Pitkin County Airport (ASE), just a few minutes from downtown. Denver International Airport (DEN) is another option, about a four-hour scenic drive. Visit our Travel & Stay page for more details on getting here.",
+    link: { label: "Travel & Stay", href: "/travel" },
+    icon: "flight",
+  },
+  {
+    question: "Where should I stay?",
+    answer:
+      "We recommend staying in downtown Aspen to be within walking distance of both the ceremony and reception venues. Head over to our Travel & Stay page for our top hotel picks and booking details.",
+    link: { label: "Travel & Stay", href: "/travel" },
+    icon: "hotel",
   },
   {
     question: "Are children invited to the celebration?",
@@ -33,18 +53,11 @@ const faqs = [
   },
 ];
 
-const popularTags = [
-  { label: "Dress Code", icon: "checkroom" },
-  { label: "Transport", icon: "directions_car" },
-  { label: "Hotels", icon: "hotel" },
-  { label: "Altitude", icon: "landscape" },
-];
-
 export default function FAQPage() {
   return (
     <main className="pt-20">
       {/* Hero Section */}
-      <section className="py-24 md:py-32 bg-background relative overflow-hidden">
+      <section className="pt-24 pb-16 md:pt-32 md:pb-20 bg-background relative overflow-hidden">
         {/* Ambient glow */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(212,163,115,0.06)_0%,transparent_50%)] pointer-events-none" />
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[rgba(212,163,115,0.02)] rounded-full blur-3xl pointer-events-none" />
@@ -60,55 +73,29 @@ export default function FAQPage() {
               Questions
             </span>
           </h1>
-          <p className="text-on-surface-variant text-lg font-light mb-12 max-w-xl mx-auto hero-reveal-subtitle">
+          <p className="text-on-surface-variant text-lg font-light mb-0 max-w-xl mx-auto hero-reveal-subtitle">
             Everything you need to know before your trip to the mountains.
           </p>
-          <div className="relative max-w-2xl mx-auto group hero-reveal-subtitle">
-            <span className="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">
-              search
-            </span>
-            <input
-              className="w-full bg-surface border border-outline/30 rounded-full py-5 pl-16 pr-6 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
-              placeholder="Search for answers..."
-              type="text"
-            />
-          </div>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <span className="text-on-surface-variant font-label text-[10px] uppercase tracking-[0.1em] self-center mr-2">
-              Popular:
-            </span>
-            {popularTags.map((tag) => (
-              <button
-                key={tag.label}
-                className="faq-tag px-5 py-2 rounded-full border border-primary/40 text-primary font-label text-[10px] uppercase tracking-[0.1em] hover:bg-primary hover:text-on-primary flex items-center gap-2"
-              >
-                <span className="material-symbols-outlined text-sm">
-                  {tag.icon}
-                </span>
-                {tag.label}
-              </button>
-            ))}
-          </div>
         </div>
       </section>
 
       {/* FAQ Accordion Section */}
-      <section className="pb-40 bg-background">
+      <section className="pb-28 md:pb-36 bg-background">
         <div className="max-w-3xl mx-auto px-6">
-          <div className="space-y-4 faq-accordion">
+          <div className="space-y-3 md:space-y-4 faq-accordion">
             {faqs.map((faq, i) => (
               <details
                 key={faq.question}
                 className="faq-card group border border-outline/10 rounded-xl overflow-hidden"
               >
-                <summary className="flex items-center gap-5 p-8 cursor-pointer list-none">
+                <summary className="flex items-center gap-4 md:gap-5 px-6 py-5 md:p-8 cursor-pointer list-none">
                   {/* Icon badge */}
                   <span className="faq-number shrink-0 size-10 rounded-full bg-primary/10 flex items-center justify-center">
                     <span className="material-symbols-outlined text-lg text-primary">
                       {faq.icon}
                     </span>
                   </span>
-                  <span className="flex-1 font-headline text-xl text-on-surface group-hover:text-primary transition-colors">
+                  <span className="flex-1 font-headline text-lg md:text-xl text-on-surface group-hover:text-primary transition-colors">
                     {faq.question}
                   </span>
                   <span className="material-symbols-outlined text-primary/60 expand-icon transition-transform duration-300 shrink-0">
@@ -117,10 +104,20 @@ export default function FAQPage() {
                 </summary>
                 <div className="faq-answer">
                   <div>
-                    <div className="px-8 pb-8 pl-[5.25rem]">
+                    <div className="px-6 pb-6 pl-16 md:px-8 md:pb-8 md:pl-[5.25rem]">
                       <div className="border-l-2 border-primary/15 pl-5 py-1 bg-primary/[0.02] rounded-r-lg">
                         <div className="w-8 h-px bg-primary/20 mb-4 rounded-full" />
-                        <p className="text-on-surface-variant leading-relaxed font-light">{faq.answer}</p>
+                        <p className="text-on-surface-variant leading-relaxed font-light">
+                          {faq.answer}
+                          {"link" in faq && faq.link && (
+                            <>
+                              {" "}
+                              <Link href={faq.link.href} className="text-primary underline underline-offset-4 decoration-primary/30 hover:decoration-primary transition-colors">
+                                {faq.link.label} &rarr;
+                              </Link>
+                            </>
+                          )}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -130,7 +127,7 @@ export default function FAQPage() {
           </div>
 
           {/* Contact CTA */}
-          <div className="faq-cta-card mt-20 p-12 bg-[rgba(212,163,115,0.03)] border border-outline/10 text-center rounded-xl">
+          <div className="faq-cta-card mt-16 md:mt-20 p-8 md:p-12 bg-[rgba(212,163,115,0.03)] border border-outline/10 text-center rounded-xl">
             <span className="material-symbols-outlined text-primary text-4xl mb-4 block">
               mail
             </span>

@@ -110,7 +110,7 @@ function HotelCard({ hotel }: { hotel: Hotel }) {
     >
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
-          <span className={`font-label text-[10px] uppercase tracking-[0.3em] block mb-2 ${hotel.featured ? "text-primary" : "text-on-surface-variant"}`}>
+          <span className={`font-label text-[11px] uppercase tracking-[0.3em] block mb-2 ${hotel.featured ? "text-primary" : "text-on-surface-variant"}`}>
             {hotel.category}
           </span>
           <h3 className={`font-headline text-on-surface ${hotel.featured ? "text-3xl" : "text-2xl"}`}>
@@ -119,7 +119,7 @@ function HotelCard({ hotel }: { hotel: Hotel }) {
         </div>
         {!hotel.featured && (
           <a
-            className="btn-outline-glow px-8 py-3 font-label text-[10px] uppercase tracking-[0.2em] shrink-0 border border-outline text-on-surface-variant hover:border-primary hover:text-primary"
+            className="btn-outline-glow px-8 py-3 font-label text-[11px] uppercase tracking-[0.2em] shrink-0 border border-outline text-on-surface-variant hover:border-primary hover:text-primary"
             href={hotel.website}
             target="_blank"
             rel="noopener noreferrer"
@@ -133,7 +133,7 @@ function HotelCard({ hotel }: { hotel: Hotel }) {
       </p>
       <div className="hotel-meta grid grid-cols-2 md:grid-cols-3 gap-6 pt-6 border-t border-outline/10">
         <div>
-          <p className="text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">
+          <p className="text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">
             Atmosphere
           </p>
           <p className="text-sm font-label text-on-surface">
@@ -141,13 +141,13 @@ function HotelCard({ hotel }: { hotel: Hotel }) {
           </p>
         </div>
         <div>
-          <p className="text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">
+          <p className="text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">
             Location
           </p>
           <p className="text-sm font-label text-on-surface">{hotel.location}</p>
         </div>
         <div>
-          <p className="text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">
+          <p className="text-[11px] uppercase tracking-widest text-on-surface-variant mb-1">
             Distance
           </p>
           <p className="text-sm font-label text-on-surface">{hotel.distance}</p>
@@ -157,10 +157,43 @@ function HotelCard({ hotel }: { hotel: Hotel }) {
   );
 }
 
+function CompactHotelCard({ hotel }: { hotel: Hotel }) {
+  return (
+    <div className="hotel-card p-6 bg-surface-variant/20 border border-outline/5 hover:border-primary/20 transition-all duration-300 group">
+      <span className="font-label text-[11px] uppercase tracking-[0.3em] text-on-surface-variant block mb-2">
+        {hotel.category}
+      </span>
+      <h3 className="font-headline text-lg text-on-surface mb-3 group-hover:text-primary transition-colors">
+        {hotel.name}
+      </h3>
+      <div className="flex items-center gap-4 text-on-surface-variant text-sm mb-4">
+        <span className="flex items-center gap-1.5">
+          <span className="material-symbols-outlined text-primary/50 text-base">
+            directions_walk
+          </span>
+          {hotel.distance}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="material-symbols-outlined text-primary/50 text-base">
+            location_on
+          </span>
+          {hotel.location}
+        </span>
+      </div>
+      <a
+        className="font-label text-[11px] uppercase tracking-[0.2em] text-primary hover:text-primary/70 transition-colors"
+        href={hotel.website}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Visit Website &rarr;
+      </a>
+    </div>
+  );
+}
+
 export default function HotelTabs() {
   const [activeTab, setActiveTab] = useState<"nicer" | "affordable">("nicer");
-
-  const hotels = activeTab === "nicer" ? nicerHotels : affordableHotels;
 
   return (
     <div>
@@ -175,7 +208,7 @@ export default function HotelTabs() {
       <div className="flex gap-2 mb-8">
         <button
           onClick={() => setActiveTab("nicer")}
-          className={`flex-1 group relative px-6 py-4 rounded-lg font-label text-[10px] uppercase tracking-[0.2em] transition-all duration-300 border ${
+          className={`flex-1 group relative px-6 py-4 rounded-lg font-label text-[11px] uppercase tracking-[0.2em] transition-all duration-300 border ${
             activeTab === "nicer"
               ? "bg-primary/10 border-primary/30 text-primary"
               : "bg-surface-variant/20 border-outline/10 text-on-surface-variant hover:border-outline/30 hover:text-on-surface"
@@ -188,7 +221,7 @@ export default function HotelTabs() {
         </button>
         <button
           onClick={() => setActiveTab("affordable")}
-          className={`flex-1 group relative px-6 py-4 rounded-lg font-label text-[10px] uppercase tracking-[0.2em] transition-all duration-300 border ${
+          className={`flex-1 group relative px-6 py-4 rounded-lg font-label text-[11px] uppercase tracking-[0.2em] transition-all duration-300 border ${
             activeTab === "affordable"
               ? "bg-primary/10 border-primary/30 text-primary"
               : "bg-surface-variant/20 border-outline/10 text-on-surface-variant hover:border-outline/30 hover:text-on-surface"
@@ -202,11 +235,19 @@ export default function HotelTabs() {
       </div>
 
       {/* Hotel cards */}
-      <div className="space-y-6">
-        {hotels.map((hotel) => (
-          <HotelCard key={hotel.name} hotel={hotel} />
-        ))}
-      </div>
+      {activeTab === "nicer" ? (
+        <div className="space-y-6">
+          {nicerHotels.map((hotel) => (
+            <HotelCard key={hotel.name} hotel={hotel} />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {affordableHotels.map((hotel) => (
+            <CompactHotelCard key={hotel.name} hotel={hotel} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

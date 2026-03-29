@@ -72,12 +72,7 @@ export default function Navbar() {
           </span>
         </button>
 
-        {/* <Link
-          href="/rsvp"
-          className="bg-primary text-on-primary px-7 py-2.5 font-label text-[10px] uppercase tracking-[0.2em] hover:brightness-110 transition-all"
-        >
-          RSVP Now
-        </Link> */}
+        {/* RSVP button — re-enable when ready to collect responses */}
       </div>
 
       <div

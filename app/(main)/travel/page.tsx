@@ -74,7 +74,7 @@ export default function TravelPage() {
                         Aspen/Pitkin County Airport (ASE)
                       </span>{" "}
                       is undoubtedly the easiest option, located just 10 minutes
-                      from downtown Aspen and Hotel Jerome. No need to rent a car, downtown Aspen is very walkable!
+                      from downtown Aspen and Hotel Jerome. 
                     </p>
                     <p className="text-on-surface-variant leading-relaxed italic">
                       Most major carriers offer connecting flights through
@@ -111,51 +111,18 @@ export default function TravelPage() {
                       <div className="flex flex-col justify-between py-0.5">
                         <div>
                           <p className="font-label text-xs uppercase tracking-widest text-on-surface">Denver (DEN)</p>
-                          <p className="text-[10px] text-on-surface-variant">5,280 ft</p>
+                          <p className="text-[11px] text-on-surface-variant">5,280 ft</p>
                         </div>
                         <div className="py-3">
-                          <p className="text-[10px] text-on-surface-variant italic">~ 3.5 hrs via I-70 W &amp; Independence Pass</p>
+                          <p className="text-[11px] text-on-surface-variant italic">~ 3.5 hrs via I-70 W &amp; Independence Pass</p>
                         </div>
                         <div>
                           <p className="font-label text-xs uppercase tracking-widest text-on-surface">Aspen</p>
-                          <p className="text-[10px] text-on-surface-variant">8,000 ft</p>
+                          <p className="text-[11px] text-on-surface-variant">8,000 ft</p>
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  {/* Car Rentals */}
-                  {/* <div>
-                    <h3 className="font-label text-xs uppercase tracking-[0.2em] text-primary mb-3">
-                      Car Rentals &amp; Shuttles
-                    </h3>
-                    <p className="text-on-surface-variant leading-relaxed mb-4">
-                      If flying into ASE, you likely won&apos;t need a car as
-                      Aspen is very walkable and the hotel provides local
-                      transport. For those driving from Denver, we recommend an
-                      AWD vehicle.
-                    </p>
-                    <div className="mt-6 flex flex-col gap-4">
-                      <a
-                        className="link-editorial text-on-surface text-sm font-label uppercase tracking-widest flex items-center gap-3 hover:text-primary transition-colors"
-                        href="#"
-                      >
-                        <span className="material-symbols-outlined text-xs">
-                          open_in_new
-                        </span>{" "}
-                        Epic Mountain Express
-                      </a>
-                      <a
-                        className="link-editorial text-on-surface text-sm font-label uppercase tracking-widest flex items-center gap-3 hover:text-primary transition-colors"
-                        href="#"
-                      >
-                        <span className="material-symbols-outlined text-xs">
-                          open_in_new
-                        </span>{" "}
-                        Hertz Aspen Rental
-                      </a>
-                    </div>
-                  </div> */}
                 </div>
               </div>
 
@@ -182,33 +149,17 @@ export default function TravelPage() {
                       favorite cafes and viewpoints along I-70 and Hwy 82.
                     </p>
                     <a
-                      className="link-editorial inline-block text-[10px] uppercase tracking-[0.2em] text-primary pb-1 hover:opacity-80 transition-all"
-                      href="#"
+                      className="link-editorial inline-block text-[11px] uppercase tracking-[0.2em] text-primary pb-1 hover:opacity-80 transition-all"
+                      href="https://maps.app.goo.gl/TtyBXdxejcwhLkXe6"
                     >
                       Open in Google Maps
                     </a>
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Where to Stay — right column */}
-            <div className="lg:col-span-7">
-              <div className="flex items-center gap-4 mb-12 reveal-on-scroll">
-                <span className="material-symbols-outlined text-primary text-3xl">
-                  bed
-                </span>
-                <h2 className="font-headline text-3xl text-on-surface">
-                  Where to Stay
-                </h2>
-              </div>
-
-              <div className="reveal-on-scroll">
-                <HotelTabs />
-              </div>
 
               {/* Altitude note */}
-              <div className="reveal-on-scroll mt-16 p-8 bg-primary/5 border border-primary/20 rounded-lg">
+              <div className="reveal-on-scroll p-8 bg-primary/5 border border-primary/20 rounded-lg">
                 <div className="flex gap-6">
                   <span className="material-symbols-outlined text-primary altitude-icon">
                     landscape
@@ -226,29 +177,96 @@ export default function TravelPage() {
                 </div>
               </div>
             </div>
+
+            {/* Where to Stay — right column */}
+            <div className="lg:col-span-7">
+              <div className="flex items-center gap-4 mb-12 reveal-on-scroll">
+                <span className="material-symbols-outlined text-primary text-3xl">
+                  bed
+                </span>
+                <h2 className="font-headline text-3xl text-on-surface">
+                  Where to Stay
+                </h2>
+              </div>
+
+              <div className="reveal-on-scroll mb-10 p-8 bg-primary/5 border border-primary/20 rounded-lg">
+                <div className="flex gap-6">
+                  <span className="material-symbols-outlined text-primary">
+                    location_on
+                  </span>
+                  <div>
+                    <h4 className="font-label text-xs uppercase tracking-widest text-primary mb-2">
+                      Stay Downtown
+                    </h4>
+                    <p className="text-on-surface-variant text-sm leading-relaxed">
+                      All of the weekend&apos;s events are within walking distance of
+                      downtown Aspen. We highly recommend booking a hotel in the
+                      downtown area so you can walk to everything with ease!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="reveal-on-scroll">
+                <HotelTabs />
+              </div>
+
+              {/* Getting Around */}
+              <div className="reveal-on-scroll mt-16">
+                <div className="flex items-center gap-4 mb-8">
+                  <span className="material-symbols-outlined text-primary text-2xl">
+                    directions_walk
+                  </span>
+                  <h3 className="font-label text-xs uppercase tracking-[0.2em] text-primary">
+                    Getting Around Aspen
+                  </h3>
+                </div>
+                <div className="grid gap-4">
+                  <div className="p-6 bg-surface-variant/20 border border-outline/5 rounded-lg">
+                    <div className="flex items-start gap-4">
+                      <span className="material-symbols-outlined text-primary/60 text-xl mt-0.5">
+                        directions_walk
+                      </span>
+                      <div>
+                        <h4 className="font-label text-sm text-on-surface mb-1">Walking</h4>
+                        <p className="text-on-surface-variant text-sm leading-relaxed font-light">
+                          Downtown Aspen is very walkable! Most hotels are within 5–10 minutes of everything.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-6 bg-surface-variant/20 border border-outline/5 rounded-lg">
+                    <div className="flex items-start gap-4">
+                      <span className="material-symbols-outlined text-primary/60 text-xl mt-0.5">
+                        directions_bus
+                      </span>
+                      <div>
+                        <h4 className="font-label text-sm text-on-surface mb-1">Free RFTA Buses</h4>
+                        <p className="text-on-surface-variant text-sm leading-relaxed font-light">
+                          Excellent public transportation throughout Aspen and surrounding areas.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-6 bg-surface-variant/20 border border-outline/5 rounded-lg">
+                    <div className="flex items-start gap-4">
+                      <span className="material-symbols-outlined text-primary/60 text-xl mt-0.5">
+                        local_taxi
+                      </span>
+                      <div>
+                        <h4 className="font-label text-sm text-on-surface mb-1">Rideshare</h4>
+                        <p className="text-on-surface-variant text-sm leading-relaxed font-light">
+                          Uber and Lyft are available, though they may be limited during peak times.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
-
-      {/* Need Assistance */}
-      {/* <section className="py-32 bg-surface text-center">
-        <div className="max-w-2xl mx-auto px-6 reveal-on-scroll">
-          <h2 className="font-headline text-4xl text-on-surface mb-8">
-            Need Assistance?
-          </h2>
-          <p className="text-on-surface-variant mb-12">
-            If you have questions about travel arrangements or need
-            recommendations tailored to your trip, please don&apos;t hesitate to
-            reach out to our wedding planners.
-          </p>
-          <a
-            className="link-editorial font-label text-[10px] uppercase tracking-[0.4em] text-primary pb-2 transition-opacity"
-            href="mailto:hello@example.com"
-          >
-            Contact Planning Team
-          </a>
-        </div>
-      </section> */}
     </main>
   );
 }

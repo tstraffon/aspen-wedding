@@ -96,7 +96,7 @@ export default function RSVPPage() {
             {/* Identity */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="relative">
-                <label className="font-label text-[10px] uppercase tracking-widest text-primary block mb-2 opacity-80">
+                <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80">
                   Full Name
                 </label>
                 <input
@@ -111,7 +111,7 @@ export default function RSVPPage() {
                 />
               </div>
               <div className="relative">
-                <label className="font-label text-[10px] uppercase tracking-widest text-primary block mb-2 opacity-80">
+                <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80">
                   Email Address
                 </label>
                 <input
@@ -130,7 +130,7 @@ export default function RSVPPage() {
             {/* Attendance + Guest Count */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
               <div>
-                <label className="font-label text-[10px] uppercase tracking-widest text-primary block mb-4 opacity-80">
+                <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-4 opacity-80">
                   Will you be attending?
                 </label>
                 <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-6">
@@ -166,7 +166,7 @@ export default function RSVPPage() {
                 </div>
               </div>
               <div>
-                <label className="font-label text-[10px] uppercase tracking-widest text-primary block mb-2 opacity-80">
+                <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80">
                   Number of Guests
                 </label>
                 <select
@@ -187,7 +187,7 @@ export default function RSVPPage() {
             {/* Dietary + Note */}
             <div className="space-y-8 pt-4">
               <div>
-                <label className="font-label text-[10px] uppercase tracking-widest text-primary block mb-2 opacity-80">
+                <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80">
                   Dietary Restrictions
                 </label>
                 <input
@@ -204,7 +204,7 @@ export default function RSVPPage() {
                 />
               </div>
               <div>
-                <label className="font-label text-[10px] uppercase tracking-widest text-primary block mb-2 opacity-80">
+                <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80">
                   A Personal Note for the Couple
                 </label>
                 <textarea

@@ -90,12 +90,18 @@
 /* Cinematic section system */
 .cinematic-section {
   position: relative;
-  min-height: 100dvh;
+  min-height: 75dvh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .cinematic-section {
+    min-height: 100dvh;
+  }
 }
 
 .full-bleed-bg {
@@ -181,6 +187,9 @@
 .faq-accordion details:nth-child(3) { animation-delay: 120ms; }
 .faq-accordion details:nth-child(4) { animation-delay: 180ms; }
 .faq-accordion details:nth-child(5) { animation-delay: 240ms; }
+.faq-accordion details:nth-child(6) { animation-delay: 300ms; }
+.faq-accordion details:nth-child(7) { animation-delay: 360ms; }
+.faq-accordion details:nth-child(8) { animation-delay: 420ms; }
 
 /* FAQ card open/close content animation */
 .faq-accordion details .faq-answer {
@@ -231,16 +240,6 @@
   background-color: var(--color-primary);
   color: var(--color-on-primary);
   transform: scale(1.1);
-}
-
-/* FAQ tag pill hover */
-.faq-tag {
-  transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.faq-tag:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(212, 163, 115, 0.15);
 }
 
 /* FAQ contact CTA shimmer */
@@ -366,6 +365,57 @@
   animation: hero-parallax ease-out both;
   animation-timeline: view();
   animation-range: contain 0% contain 100%;
+}
+
+/* ── Parallax shift (non-hero backgrounds) ───────────────── */
+@keyframes parallax-shift {
+  from { transform: translateY(-4%); }
+  to   { transform: translateY(4%); }
+}
+
+.parallax-bg {
+  animation: parallax-shift linear both;
+  animation-timeline: view();
+  animation-range: cover 0% cover 100%;
+}
+
+/* ── Ampersand breathing glow ────────────────────────────── */
+@keyframes ampersand-glow {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+}
+
+.ampersand-breathe {
+  animation: ampersand-glow 4s ease-in-out infinite;
+}
+
+/* ── Diamond divider scroll reveal ───────────────────────── */
+@keyframes diamond-reveal {
+  from { opacity: 0; transform: rotate(-90deg) scale(0.8); }
+  to   { opacity: 1; transform: rotate(0deg) scale(1); }
+}
+
+.diamond-scroll-reveal {
+  animation: diamond-reveal 800ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 40%;
+}
+
+/* ── Button press feedback ───────────────────────────────── */
+.btn-press:active {
+  transform: translateY(2px);
+  transition: transform 100ms ease;
+}
+
+/* ── Arrow bounce hint ───────────────────────────────────── */
+@keyframes arrow-hint {
+  0%, 100% { transform: translateY(0); }
+  40%      { transform: translateY(5px); }
+  60%      { transform: translateY(2px); }
+}
+
+.arrow-bounce-hint {
+  animation: arrow-hint 1.5s cubic-bezier(0.23, 1, 0.32, 1) 3s 2 both;
 }
 
 /* ── Scroll-driven reveal ────────────────────────────────── */
@@ -500,4 +550,72 @@
 
 .divider-diamond::after {
   --dir: left;
+}
+
+/* ── Gallery grid ────────────────────────────────────────── */
+.gallery-item {
+  overflow: hidden;
+  position: relative;
+}
+
+.gallery-item img {
+  transition: transform 600ms cubic-bezier(0.23, 1, 0.32, 1),
+              filter 600ms ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.gallery-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(13, 27, 30, 0.3) 0%,
+    transparent 40%
+  );
+  opacity: 1;
+  transition: opacity 500ms ease;
+  pointer-events: none;
+}
+
+.gallery-item:hover::after {
+  opacity: 0;
+}
+
+/* Gallery stagger reveal */
+.gallery-grid > * {
+  animation: fade-slide-up 600ms ease-out both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 30%;
+}
+
+.gallery-grid > *:nth-child(2) { animation-delay: 40ms; }
+.gallery-grid > *:nth-child(3) { animation-delay: 80ms; }
+.gallery-grid > *:nth-child(4) { animation-delay: 120ms; }
+.gallery-grid > *:nth-child(5) { animation-delay: 160ms; }
+.gallery-grid > *:nth-child(6) { animation-delay: 200ms; }
+.gallery-grid > *:nth-child(7) { animation-delay: 240ms; }
+.gallery-grid > *:nth-child(8) { animation-delay: 280ms; }
+.gallery-grid > *:nth-child(9) { animation-delay: 320ms; }
+.gallery-grid > *:nth-child(10) { animation-delay: 360ms; }
+.gallery-grid > *:nth-child(11) { animation-delay: 400ms; }
+.gallery-grid > *:nth-child(12) { animation-delay: 440ms; }
+.gallery-grid > *:nth-child(13) { animation-delay: 480ms; }
+.gallery-grid > *:nth-child(14) { animation-delay: 520ms; }
+.gallery-grid > *:nth-child(15) { animation-delay: 560ms; }
+.gallery-grid > *:nth-child(16) { animation-delay: 600ms; }
+
+/* ── Reduced motion safety ───────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-reveal-label, .hero-reveal-title, .hero-reveal-subtitle,
+  .reveal-on-scroll, .reveal-on-scroll-stagger > *, .gallery-grid > *,
+  .parallax-bg, .hero-parallax-bg,
+  .ampersand-breathe, .diamond-scroll-reveal, .arrow-bounce-hint {
+    animation: none !important;
+  }
+  .btn-press:active { transform: none; }
 }

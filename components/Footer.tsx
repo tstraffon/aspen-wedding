@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="bg-background py-16 ">
       <div className="divider-diamond  max-w-[1440px] mx-auto bg-background">
-        <span className="material-symbols-outlined py-8 text-primary/50 text-sm">diamond</span>
+        <span className="material-symbols-outlined py-8 text-primary/50 text-sm diamond-scroll-reveal">diamond</span>
       </div>
       <div className="max-w-[1440px] mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-16">
         <Link href="/" className="flex items-center gap-3">
@@ -31,27 +31,7 @@ export default function Footer() {
           Emily &amp; Tyler &bull; September 19, 2026
         </p>
 
-        {/* <div className="flex gap-16">
-          <Link
-            href="https://instagram.com"
-            className="font-label text-xs uppercase tracking-[0.3em] text-on-surface-variant hover:text-primary transition-colors"
-          >
-            Instagram
-          </Link>
-          <Link
-            href="mailto:hello@example.com"
-            className="font-label text-xs uppercase tracking-[0.3em] text-on-surface-variant hover:text-primary transition-colors"
-          >
-            Contact
-          </Link>
-        </div> */}
       </div>
-      {/* <div className="text-center mt-24">
-        <p className="font-label text-[10px] uppercase tracking-[0.6em] text-outline/40">
-          Designed for the Rocky Mountains
-        </p>
-      </div> */}
-
     </footer>
   );
 }

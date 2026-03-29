@@ -39,7 +39,7 @@ export default function ItineraryPage() {
         <div className="relative z-10 h-full max-w-[1440px] mx-auto px-6 md:px-12 flex flex-col justify-end pb-20">
           <div className="max-w-4xl">
             <p className="hero-reveal-label font-label text-xs uppercase tracking-[0.4em] text-primary drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)] mb-6">
-              September 19, 2026 &bull; Aspen, Colorado
+              September 19th, 2026 &bull; Aspen, Colorado
             </p>
             <h1
               className="hero-reveal-title font-headline text-5xl md:text-8xl text-on-surface leading-[0.85] tracking-tighter mb-4"
@@ -68,7 +68,7 @@ export default function ItineraryPage() {
               <div className="flex items-center gap-6 mb-16">
                 <h3 className="font-headline text-3xl text-on-surface">
                   Friday,{" "}
-                  <span className="italic text-primary">Sept 18</span>
+                  <span className="italic text-primary">September 18th</span>
                 </h3>
                 <div className="h-px flex-1 bg-gradient-to-r from-primary/30 to-transparent" />
               </div>
@@ -96,7 +96,7 @@ export default function ItineraryPage() {
                     <div className="flex-1 border-l border-primary/20 pl-8 md:pl-16 py-8 pr-8">
                       <div className="flex items-center gap-3 text-primary mb-4">
                         <span className="material-symbols-outlined text-xl itinerary-icon">restaurant</span>
-                        <span className="font-label text-[10px] uppercase tracking-[0.2em]">
+                        <span className="font-label text-[11px] uppercase tracking-[0.2em]">
                           Welcome Drinks
                         </span>
                       </div>
@@ -106,7 +106,7 @@ export default function ItineraryPage() {
                       <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                         Hors d'oeuvres & cocktails to kick off the weekend at Aspen's oldest mountain saloon, Silver City. Western elegance attire.
                       </p>
-                      <div className="flex items-center gap-2 text-on-surface/60 font-label text-[10px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
+                      <div className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
                         <span className="material-symbols-outlined text-sm">location_on</span>
                         210 S Galena St, Aspen, CO 81611
                       </div>
@@ -131,7 +131,7 @@ export default function ItineraryPage() {
               <div className="flex items-center gap-6 mb-16">
                 <h3 className="font-headline text-3xl text-on-surface">
                   Saturday,{" "}
-                  <span className="italic text-primary">Sept 19</span>
+                  <span className="italic text-primary">September 19th</span>
                 </h3>
                 <div className="h-px flex-1 bg-gradient-to-r from-primary/30 to-transparent" />
               </div>
@@ -147,11 +147,6 @@ export default function ItineraryPage() {
                       className="w-full h-full object-cover transition-transform duration-1000 group-hover/ceremony:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
-                    {/* <div className="absolute bottom-6 left-8 z-10">
-                      <span className="font-label text-[10px] uppercase tracking-[0.3em] text-primary/80">
-                        Aspen Mountain Club &bull; 10,000 ft
-                      </span>
-                    </div> */}
                   </div>
                   <div className="group relative overflow-hidden rounded-lg border border-outline/10 shadow-[0_4px_30px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(212,163,115,0.06)] itinerary-card">
                     <div
@@ -172,7 +167,7 @@ export default function ItineraryPage() {
                       <div className="flex-1 border-l border-primary/20 pl-8 md:pl-16 py-8 pr-8">
                         <div className="flex items-center gap-3 text-primary mb-4">
                           <span className="material-symbols-outlined text-xl itinerary-icon">church</span>
-                          <span className="font-label text-[10px] uppercase tracking-[0.2em]">
+                          <span className="font-label text-[11px] uppercase tracking-[0.2em]">
                             The Main Event
                           </span>
                         </div>
@@ -182,7 +177,7 @@ export default function ItineraryPage() {
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                            A traditional Catholic wedding ceremony without a full Mass, officiated by Uncle Father Henry! Please arrive early as we will start at 3pm sharp. Black tie optional attire.
                         </p>
-                        <div className="flex items-center gap-2 text-on-surface/60 font-label text-[10px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
+                        <div className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
                           <span className="material-symbols-outlined text-sm">location_on</span>
                          533 E Main St #533, Aspen, CO 81611
                         </div>
@@ -213,7 +208,7 @@ export default function ItineraryPage() {
                       <div className="flex-1 border-l border-primary/20 pl-8 md:pl-16 py-8 pr-8">
                         <div className="flex items-center gap-3 text-primary mb-4">
                           <span className="material-symbols-outlined text-xl itinerary-icon">local_bar</span>
-                          <span className="font-label text-[10px] uppercase tracking-[0.2em]">
+                          <span className="font-label text-[11px] uppercase tracking-[0.2em]">
                             Cocktail Hour
                           </span>
                         </div>
@@ -221,9 +216,9 @@ export default function ItineraryPage() {
                           Cocktails - Hotel Jerome
                         </h4>
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
-                          A magical outdoor cocktail hour in the Hotel Jerome courtyard before dinner  👀
+                          A magical (👀) outdoor cocktail hour in the Hotel Jerome courtyard before dinner. Just a 3 minute walk from St. Mary's!
                         </p>
-                        <div className="flex items-center gap-2 text-on-surface/60 font-label text-[10px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
+                        <div className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
                           <span className="material-symbols-outlined text-sm">location_on</span>
                           330 East Main St, Aspen, CO 81611, USA.
                         </div>
@@ -274,7 +269,7 @@ export default function ItineraryPage() {
                       <div className="flex-1 border-l border-primary/20 pl-8 md:pl-16 py-8 pr-8">
                         <div className="flex items-center gap-3 text-primary mb-4">
                           <span className="material-symbols-outlined text-xl itinerary-icon">restaurant</span>
-                          <span className="font-label text-[10px] uppercase tracking-[0.2em]">
+                          <span className="font-label text-[11px] uppercase tracking-[0.2em]">
                             Celebration
                           </span>
                         </div>
@@ -284,7 +279,7 @@ export default function ItineraryPage() {
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                           A formal seated dinner at Hotel Jerome followed by dancing! Bring your appetite and your dancing shoes.
                         </p>
-                        <div className="flex items-center gap-2 text-on-surface/60 font-label text-[10px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
+                        <div className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
                           <span className="material-symbols-outlined text-sm">location_on</span>
                           330 East Main St, Aspen, CO 81611, USA.
                         </div>
@@ -300,7 +295,7 @@ export default function ItineraryPage() {
               <div className="flex items-center gap-6 mb-16">
                 <h3 className="font-headline text-3xl text-on-surface">
                   Sunday,{" "}
-                  <span className="italic text-primary">Sept 20</span>
+                  <span className="italic text-primary">September 20th</span>
                 </h3>
                 <div className="h-px flex-1 bg-gradient-to-r from-primary/30 to-transparent" />
               </div>
@@ -327,7 +322,7 @@ export default function ItineraryPage() {
                     <div className="flex-1 border-l border-primary/20 pl-8 md:pl-16 py-8 pr-8">
                       <div className="flex items-center gap-3 text-primary mb-4">
                         <span className="material-symbols-outlined text-xl itinerary-icon">bakery_dining</span>
-                        <span className="font-label text-[10px] uppercase tracking-[0.2em]">
+                        <span className="font-label text-[11px] uppercase tracking-[0.2em]">
                           Farewell
                         </span>
                       </div>
@@ -337,7 +332,7 @@ export default function ItineraryPage() {
                       <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                         Details coming soon - stay tuned.
                       </p>
-                      {/* <div className="flex items-center gap-2 text-on-surface/60 font-label text-[10px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
+                      {/* <div className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
                         <span className="material-symbols-outlined text-sm">location_on</span>
                         The Little Nell
                       </div> */}
@@ -358,41 +353,9 @@ export default function ItineraryPage() {
             </div>
           </div>
 
-          {/* Download PDF link */}
-          {/* <div className="mt-32 pt-24 border-t border-outline/10 text-center reveal-on-scroll">
-            <span className="font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center gap-4 cursor-pointer group/dl">
-              <span className="material-symbols-outlined transition-transform duration-300 group-hover/dl:translate-y-0.5">download</span>
-              Download the full itinerary PDF
-            </span>
-          </div> */}
         </div>
       </section>
 
-      {/* Closing CTA */}
-      {/* <section className="py-52 bg-surface text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,163,115,0.04)_0%,transparent_60%)] pointer-events-none" />
-        <div className="absolute top-20 left-[15%] w-1 h-1 rounded-full bg-primary/20 altitude-icon" />
-        <div className="absolute top-32 right-[20%] w-1.5 h-1.5 rounded-full bg-primary/15 altitude-icon" style={{ animationDelay: "1s" }} />
-        <div className="absolute bottom-28 left-[25%] w-1 h-1 rounded-full bg-primary/20 altitude-icon" style={{ animationDelay: "2s" }} />
-        <div className="max-w-3xl mx-auto px-6 relative z-10 reveal-on-scroll">
-          <h2 className="font-headline text-6xl md:text-8xl text-on-surface mb-10 leading-[1.1]">
-            See You in <br />
-            <span className="italic text-primary">September.</span>
-          </h2>
-          <p className="text-on-surface-variant text-xl mb-16 italic font-headline font-light">
-            &ldquo;Where the air is thin and the hearts are full.&rdquo;
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link
-              href="/rsvp"
-              className="group/cta relative bg-primary text-on-primary px-16 py-5 font-label text-xs uppercase tracking-[0.3em] shadow-xl transition-all duration-300 hover:shadow-[0_8px_40px_rgba(212,163,115,0.25)] hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <span className="relative z-10">Confirm Attendance</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary via-[#e0b88a] to-primary opacity-0 group-hover/cta:opacity-100 transition-opacity duration-500" />
-            </Link>
-          </div>
-        </div>
-      </section> */}
     </main>
   );
 }

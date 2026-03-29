@@ -38,7 +38,7 @@ export default function LoginPage() {
       {/* Background image + overlays */}
       <div className="absolute inset-0 z-0">
         <div
-          className="w-full h-full bg-cover bg-center scale-105"
+          className="w-full h-full bg-cover bg-center scale-100"
           style={{ backgroundImage: "url('/login-bg.jpg')" }}
         />
         <div className="absolute inset-0 hero-gradient-dark" />
@@ -119,15 +119,6 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Contact link */}
-        <div className="mt-8 text-center">
-          <a
-            className="font-label text-[9px] uppercase tracking-[0.4em] text-on-surface-variant/40 hover:text-primary transition-colors"
-            href="#"
-          >
-            Contact the Wedding Planners
-          </a>
-        </div>
       </div>
     </main>
   );

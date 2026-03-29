@@ -8,15 +8,19 @@ export default function MusicButton() {
   const [entered, setEntered] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
 
+  const [showPing, setShowPing] = useState(true);
+
   /* Stagger the entrance so the button arrives after the hero settles */
   useEffect(() => {
     const enterTimer = setTimeout(() => setEntered(true), 1800);
     const tooltipIn = setTimeout(() => setShowTooltip(true), 2400);
     const tooltipOut = setTimeout(() => setShowTooltip(false), 6000);
+    const pingOff = setTimeout(() => setShowPing(false), 5000);
     return () => {
       clearTimeout(enterTimer);
       clearTimeout(tooltipIn);
       clearTimeout(tooltipOut);
+      clearTimeout(pingOff);
     };
   }, []);
 
@@ -36,9 +40,11 @@ export default function MusicButton() {
     <>
       <audio
         ref={audioRef}
-        src="/John_Denver_Rocky_Mountain_High.wav"
         onEnded={() => setPlaying(false)}
-      />
+      >
+        <source src="/John_Denver_Rocky_Mountain_High.m4a" type="audio/mp4" />
+        <source src="/John_Denver_Rocky_Mountain_High.wav" type="audio/wav" />
+      </audio>
 
       {/* Wrapper keeps the tooltip + button grouped in the corner */}
       <div
@@ -67,8 +73,8 @@ export default function MusicButton() {
           aria-label={playing ? "Pause music" : "Play music"}
           className={`relative flex items-center justify-center w-12 h-12 rounded-full bg-surface-variant/60 backdrop-blur-xl border border-outline/30 text-primary hover:bg-surface-variant/80 transition-all cursor-pointer ${playing ? "animate-pulse" : ""}`}
         >
-          {/* Ping ring on entrance */}
-          {entered && !playing && (
+          {/* Ping ring on entrance — stops after a few seconds */}
+          {entered && !playing && showPing && (
             <span className="absolute inset-0 rounded-full border border-primary/60 animate-ping pointer-events-none" />
           )}
           <span className="material-symbols-outlined text-xl relative">
