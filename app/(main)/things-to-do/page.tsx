@@ -195,7 +195,7 @@ export default function ThingsToDoPage() {
               <div className="group relative overflow-hidden aspect-[16/9] mb-8 cursor-pointer">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="https://swiftmedia.s3.amazonaws.com/mountain.swiftcom.com/images/sites/5/2022/08/10031822/b8bb5da2-6d07-502c-a147-06d4b0ee7def.jpg"
+                  src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80"
                   alt="Fine dining table setting"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 scale-105 group-hover:scale-110"
                 />
@@ -228,9 +228,9 @@ export default function ThingsToDoPage() {
               <div className="group relative overflow-hidden aspect-[16/9] mb-8 cursor-pointer">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="https://swiftmedia.s3.amazonaws.com/mountain.swiftcom.com/images/sites/5/2022/08/10180235/d940d959-8a64-51da-9409-44e08912d658-1024x1024.jpg"
-                  alt="Grateful Deli shop"
-                  className="absolute inset-0 w-full h-full object-cover object-[50%_15%] transition-transform duration-1000 scale-105 group-hover:scale-110"
+                  src="https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80"
+                  alt="Lunch spread"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 scale-105 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-background/20 group-hover:bg-transparent transition-colors duration-500" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background/90 via-background/50 to-transparent">
