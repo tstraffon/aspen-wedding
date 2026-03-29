@@ -379,10 +379,10 @@ export default function ItineraryPage() {
                         </span>
                       </div>
                       <h4 className="font-headline text-3xl text-on-surface mb-4">
-                        Farewell Brunch
+                        TBD
                       </h4>
                       <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
-                        One last gathering before we part ways. Venue and details will be shared closer to the date &mdash; check back soon!
+                        One last gathering before we part ways. Details will be shared closer to the date &mdash; check back soon!
                       </p>
                       <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full">
                         <span className="material-symbols-outlined text-primary text-sm">schedule</span>
