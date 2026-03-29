@@ -24,10 +24,10 @@ export default function LoginPage() {
       if (res.ok) {
         router.push("/");
       } else {
-        setError("Invalid access code. Please try again.");
+        setError("That access code didn\u2019t match. Check your invitation and try again.");
       }
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError("Couldn\u2019t connect to the server. Please check your internet connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -95,9 +95,12 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <p className="text-error font-body text-sm text-center">
-                {error}
-              </p>
+              <div className="flex items-center gap-3 p-4 bg-error/10 border border-error/20 rounded-lg" role="alert">
+                <span className="material-symbols-outlined text-error text-lg shrink-0">error</span>
+                <p className="text-error font-body text-sm">
+                  {error}
+                </p>
+              </div>
             )}
 
             <div className="pt-4">

@@ -127,88 +127,92 @@ export default function RSVPPage() {
               </div>
             </div>
 
-            {/* Attendance + Guest Count */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
-              <div>
-                <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-4 opacity-80">
-                  Will you be attending?
+            {/* Attendance */}
+            <div>
+              <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-4 opacity-80">
+                Will you be attending?
+              </label>
+              <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-6">
+                <label className="flex items-center space-x-3 cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="attending"
+                    required
+                    checked={form.attending === "accept"}
+                    onChange={() =>
+                      setForm((f) => ({ ...f, attending: "accept" }))
+                    }
+                    className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary"
+                  />
+                  <span className="font-label text-xs uppercase tracking-wider group-hover:text-primary transition-colors text-on-surface-variant">
+                    Delightfully Accept
+                  </span>
                 </label>
-                <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-6">
-                  <label className="flex items-center space-x-3 cursor-pointer group">
-                    <input
-                      type="radio"
-                      name="attending"
-                      required
-                      checked={form.attending === "accept"}
-                      onChange={() =>
-                        setForm((f) => ({ ...f, attending: "accept" }))
-                      }
-                      className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary"
-                    />
-                    <span className="font-label text-xs uppercase tracking-wider group-hover:text-primary transition-colors text-on-surface-variant">
-                      Delightfully Accept
-                    </span>
-                  </label>
-                  <label className="flex items-center space-x-3 cursor-pointer group">
-                    <input
-                      type="radio"
-                      name="attending"
-                      checked={form.attending === "decline"}
-                      onChange={() =>
-                        setForm((f) => ({ ...f, attending: "decline" }))
-                      }
-                      className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary"
-                    />
-                    <span className="font-label text-xs uppercase tracking-wider group-hover:text-primary transition-colors text-on-surface-variant">
-                      Regretfully Decline
-                    </span>
-                  </label>
-                </div>
-              </div>
-              <div>
-                <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80">
-                  Number of Guests
+                <label className="flex items-center space-x-3 cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="attending"
+                    checked={form.attending === "decline"}
+                    onChange={() =>
+                      setForm((f) => ({ ...f, attending: "decline" }))
+                    }
+                    className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary"
+                  />
+                  <span className="font-label text-xs uppercase tracking-wider group-hover:text-primary transition-colors text-on-surface-variant">
+                    Regretfully Decline
+                  </span>
                 </label>
-                <select
-                  value={form.guestCount}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, guestCount: e.target.value }))
-                  }
-                  className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary py-4 px-4 font-body text-on-surface appearance-none"
-                >
-                  <option>1 Guest</option>
-                  <option>2 Guests</option>
-                  <option>3 Guests</option>
-                  <option>4 Guests</option>
-                </select>
               </div>
             </div>
 
-            {/* Dietary + Note */}
-            <div className="space-y-8 pt-4">
-              <div>
-                <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80">
-                  Dietary Restrictions
-                </label>
-                <input
-                  type="text"
-                  placeholder="Gluten-free, Vegan, Allergies..."
-                  value={form.dietaryRestrictions}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      dietaryRestrictions: e.target.value,
-                    }))
-                  }
-                  className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface placeholder:text-on-surface-variant/40"
-                />
+            {/* Guest details — only shown when accepting */}
+            {form.attending !== "decline" && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
+                <div>
+                  <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80">
+                    Number of Guests
+                  </label>
+                  <select
+                    value={form.guestCount}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, guestCount: e.target.value }))
+                    }
+                    className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary py-4 px-4 font-body text-on-surface appearance-none"
+                  >
+                    <option>1 Guest</option>
+                    <option>2 Guests</option>
+                    <option>3 Guests</option>
+                    <option>4 Guests</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80">
+                    Dietary Restrictions
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Gluten-free, Vegan, Allergies..."
+                    value={form.dietaryRestrictions}
+                    onChange={(e) =>
+                      setForm((f) => ({
+                        ...f,
+                        dietaryRestrictions: e.target.value,
+                      }))
+                    }
+                    className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface placeholder:text-on-surface-variant/40"
+                  />
+                </div>
               </div>
+            )}
+
+            {/* Note */}
+            <div className="space-y-8 pt-4">
               <div>
                 <label className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80">
                   A Personal Note for the Couple
                 </label>
                 <textarea
-                  placeholder="Share a memory or a wish..."
+                  placeholder={form.attending === "decline" ? "We'll miss you! Leave a note if you'd like..." : "Share a memory or a wish..."}
                   rows={4}
                   value={form.note}
                   onChange={(e) =>
@@ -222,9 +226,18 @@ export default function RSVPPage() {
             {/* Submit */}
             <div className="pt-8">
               {status === "error" && (
-                <p className="text-error text-sm font-label mb-4 uppercase tracking-widest">
-                  Something went wrong. Please try again.
-                </p>
+                <div className="flex items-start gap-3 p-4 bg-error/10 border border-error/20 rounded-lg mb-6" role="alert">
+                  <span className="material-symbols-outlined text-error text-lg shrink-0 mt-0.5">error</span>
+                  <div>
+                    <p className="text-error text-sm font-body font-medium mb-1">
+                      We couldn&apos;t submit your RSVP
+                    </p>
+                    <p className="text-error/80 text-sm font-body font-light">
+                      Please check your connection and try again. If the issue persists, email us at{" "}
+                      <a href="mailto:hello@emilyandtyler.com" className="underline underline-offset-2">hello@emilyandtyler.com</a>.
+                    </p>
+                  </div>
+                </div>
               )}
               <button
                 type="submit"

@@ -44,7 +44,7 @@ export default function HomePage() {
       </section>
 
       {/* Details Section */}
-      <section className="cinematic-section" id="details">
+      <section className="cinematic-section items-start pt-24 md:items-center md:pt-0" id="details">
         <div
           className="full-bleed-bg parallax-bg"
           style={{
@@ -54,18 +54,18 @@ export default function HomePage() {
         />
         <div className="absolute inset-0 bg-background/70" />
         <div className="content-overlay reveal-on-scroll">
-          <div className="flex flex-col items-center text-center mb-20">
-            <span className="font-label text-xs uppercase tracking-[0.5em] text-primary mb-6 block">
+          <div className="flex flex-col items-center text-center mb-12 md:mb-20">
+            <span className="font-label text-xs uppercase tracking-[0.5em] text-primary mb-4 md:mb-6 hidden md:block">
               Join Us In
             </span>
-            <h2 className="font-headline text-5xl md:text-7xl text-on-surface">
+            <h2 className="font-headline text-4xl md:text-7xl text-on-surface">
               A Weekend of Celebration
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto reveal-on-scroll-stagger">
             <Link
               href="/travel"
-              className="bg-surface-variant/20 backdrop-blur-xl border border-outline/20 p-12 hover:bg-surface-variant/40 transition-all cursor-pointer group"
+              className="bg-surface-variant/20 backdrop-blur-xl border border-outline/20 p-8 md:p-12 hover:bg-surface-variant/40 transition-all cursor-pointer group"
             >
               <h3 className="font-headline text-3xl text-primary mb-6">
                 Travel &amp; Stay
@@ -80,7 +80,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/itinerary"
-              className="bg-surface-variant/20 backdrop-blur-xl border border-outline/20 p-12 hover:bg-surface-variant/40 transition-all cursor-pointer group"
+              className="bg-surface-variant/20 backdrop-blur-xl border border-outline/20 p-8 md:p-12 hover:bg-surface-variant/40 transition-all cursor-pointer group"
             >
               <h3 className="font-headline text-3xl text-primary mb-6">
                 The Itinerary
@@ -95,7 +95,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/things-to-do"
-              className="bg-surface-variant/20 backdrop-blur-xl border border-outline/20 p-12 hover:bg-surface-variant/40 transition-all cursor-pointer group"
+              className="bg-surface-variant/20 backdrop-blur-xl border border-outline/20 p-8 md:p-12 hover:bg-surface-variant/40 transition-all cursor-pointer group"
             >
               <h3 className="font-headline text-3xl text-primary mb-6">
                 Things to Do
@@ -113,7 +113,7 @@ export default function HomePage() {
       </section>
 
       {/* Our Story Section */}
-      <section className="cinematic-section" id="our-story">
+      <section className="cinematic-section items-start pt-24 md:items-center md:pt-0" id="our-story">
         <div
           className="full-bleed-bg parallax-bg"
           style={{ backgroundImage: "url('/propose.jpg')" }}
@@ -121,10 +121,10 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent" />
         <div className="content-overlay reveal-on-scroll flex justify-start">
           <div className="max-w-xl text-left flex flex-col items-start">
-            <span className="font-label text-xs uppercase tracking-[0.5em] text-primary mb-8 block">
+            <span className="font-label text-xs uppercase tracking-[0.5em] text-primary mb-8 hidden md:block">
               Our Story
             </span>
-            <h2 className="font-headline text-6xl md:text-8xl text-on-surface mb-12 leading-tight">
+            <h2 className="font-headline text-5xl md:text-8xl text-on-surface mb-12 leading-tight">
               It All Began With{" "}
               <span className="italic text-primary">Bourbon...</span>
             </h2>
@@ -161,8 +161,8 @@ export default function HomePage() {
 
           <div className="gallery-grid grid grid-cols-2 md:grid-cols-4 auto-rows-[180px] md:auto-rows-[240px] gap-2 md:gap-3">
             {/* Row 1–2: proposal tall | mountains + beach wide | kiss tall */}
-            <div className="gallery-item row-span-2">
-              <img src="/images/gallery/IMG_1813.JPG" alt="Emily and Tyler together" className="w-full h-full object-cover" />
+            <div className="gallery-item md:row-span-2">
+              <img src="/images/gallery/IMG_3040.JPG" alt="Dressed up for an evening out" className="w-full h-full object-cover object-[50%_20%]" />
             </div>
             <div className="gallery-item">
               <img src="/images/gallery/IMG_2883.jpeg" alt="Mountain adventure together" className="w-full h-full object-cover" />
@@ -170,10 +170,10 @@ export default function HomePage() {
             <div className="gallery-item">
               <img src="/images/gallery/IMG_5433.jpeg" alt="Exploring the outdoors" className="w-full h-full object-cover" />
             </div>
-            <div className="gallery-item row-span-2">
-              <img src="/images/gallery/IMG_5891.jpeg" alt="Emily and Tyler smiling" className="w-full h-full object-cover object-top" />
+            <div className="gallery-item md:row-span-2">
+              <img src="/images/gallery/IMG_3203.jpeg" alt="Toasting together" className="w-full h-full object-cover" />
             </div>
-            <div className="gallery-item col-span-2">
+            <div className="gallery-item md:col-span-2">
               <img src="/images/gallery/IMG_1823.JPG" alt="A scenic moment together" className="w-full h-full object-cover" />
             </div>
 
@@ -182,21 +182,21 @@ export default function HomePage() {
               <img src="/images/gallery/cpm35 2023-07-24 204531.756_Original.JPG" alt="Candid moment at an event" className="w-full h-full object-cover object-[50%_40%]" />
             </div>
             <div className="gallery-item">
+              <img src="/images/gallery/IMG_5891.jpeg" alt="Emily and Tyler smiling" className="w-full h-full object-cover object-[50%_50%]" />
+            </div>
+            <div className="gallery-item">
               <img src="/images/gallery/IMG_7812.jpeg" alt="Tyler DJing as Empty Juicebox" className="w-full h-full object-cover object-[50%_30%]" />
             </div>
             <div className="gallery-item">
-              <img src="/images/gallery/IMG_3203.jpeg" alt="Toasting together" className="w-full h-full object-cover" />
-            </div>
-            <div className="gallery-item">
-              <img src="/images/gallery/IMG_2968.jpeg" alt="Fun selfie together" className="w-full h-full object-cover" />
+              <img src="/images/gallery/IMG_5236.jpeg" alt="Fun selfie together" className="w-full h-full object-cover object-[50%_40%]" />
             </div>
 
             {/* Row 4 */}
             <div className="gallery-item">
               <img src="/images/gallery/IMG_7397.jpeg" alt="Hiking through a canyon" className="w-full h-full object-cover" />
             </div>
-            <div className="gallery-item col-span-2">
-              <img src="/images/gallery/alps.jpeg" alt="Adventures in the Alps" className="w-full h-full object-cover object-[50%_40%]" />
+            <div className="gallery-item md:col-span-2">
+              <img src="/images/gallery/alps.JPG" alt="Adventures in the Alps" className="w-full h-full object-cover object-[50%_43%]" />
             </div>
             <div className="gallery-item">
               <img src="/images/gallery/PXL_20230729_001921991.PORTRAIT_Original.JPG" alt="Evening portrait together" className="w-full h-full object-cover object-[50%_70%]" />
@@ -207,13 +207,13 @@ export default function HomePage() {
               <img src="/images/gallery/IMG_0010.JPG" alt="At a local brewery" className="w-full h-full object-cover" />
             </div>
             <div className="gallery-item">
-              <img src="/images/gallery/IMG_8256.jpeg" alt="Tyler spinning tunes at a bar" className="w-full h-full object-cover object-[50%_30%]" />
+              <img src="/images/gallery/IMG_8256.jpeg" alt="Tyler spinning tunes at a bar" className="w-full h-full object-cover object-[50%_25%]" />
             </div>
             <div className="gallery-item">
-              <img src="/images/gallery/IMG_5869.jpeg" alt="On the ski slopes" className="w-full h-full object-cover" />
+              <img src="/images/gallery/IMG_5869.jpeg" alt="On the ski slopes" className="w-full h-full object-cover object-[50%_45%]" />
             </div>
             <div className="gallery-item">
-              <img src="/images/gallery/IMG_3040.JPG" alt="Dressed up for an evening out" className="w-full h-full object-cover object-[50%_20%]" />
+              <img src="/images/gallery/IMG_5455.jpeg" alt="Fun selfie together" className="w-full h-full object-cover object-[50%_20%]" />
             </div>
           </div>
         </div>
@@ -230,7 +230,7 @@ export default function HomePage() {
         />
         <div className="absolute inset-0 bg-background/80" />
         <div className="content-overlay reveal-on-scroll text-center">
-          <h2 className="font-headline text-7xl md:text-9xl text-on-surface mb-12 leading-[1.1]">
+          <h2 className="font-headline text-5xl md:text-9xl text-on-surface mb-12 leading-[1.1]">
             See You in <br />
             <span className="italic text-primary">September.</span>
           </h2>

@@ -20,7 +20,13 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "Emily & Tyler — Aspen Wedding",
   description:
-    "Join us for a weekend of love and celebration in the heart of the Rocky Mountains.",
+    "Emily & Tyler are getting married on September 19, 2026, in Aspen, Colorado. Join us for a weekend of love and celebration in the heart of the Rocky Mountains.",
+  openGraph: {
+    title: "Emily & Tyler — Aspen Wedding",
+    description:
+      "Emily & Tyler are getting married on September 19, 2026, in Aspen, Colorado. Join us for a weekend of celebration in the Rocky Mountains.",
+    siteName: "Emily & Tyler Wedding",
+  },
 };
 
 export default function RootLayout({

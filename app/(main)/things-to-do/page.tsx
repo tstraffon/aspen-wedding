@@ -8,7 +8,7 @@ const activities = [
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuC-e3F8GEmzgR-G5Gc-vp2iUhgKaffv0tIlOuaXlgxwhbwi7R3XUN9YOg1NHp-vCtIFsSq5nfA3pQsjx690JubuFycS3gPLt7hWzI7PpNK1c1DqCMPbD3T6PpkHL8bwvjNZZo09igMyL2GgkpDOAAEkZ0DQiXEhG2Y0z8wxIl9sRJexkNkOZXDSYZwH8pEvQ9ooasIFJVCn0ZnoH4-r-dGVHuyN9bZwZkm8XhI_wy20bTwu1ocVIVYEuepWHX56mWF90g4_9qOgFBk",
     alt: "Hiking Maroon Bells",
-    link: "https://www.aspenchamber.org/explore/maroon-bells",
+    link: "https://www.aspensnowmass.com/discover/experiences/guides/maroon-bells-101-all-you-need-to-know",
   },
   {
     title: "Aspen Art Museum",
@@ -22,7 +22,7 @@ const activities = [
   {
     title: "Downtown Stroll",
     description:
-      "Spend an afternoon exploring the high-end boutiques and historic architecture of downtown Aspen, just steps from Hotel Jerome.",
+      "Spend an afternoon exploring the high-end boutiques or taking a tour of the historic architecture of downtown Aspen, just steps from Hotel Jerome.",
     image:
       "https://www.aspensnowmass.com/-/media/aspen-snowmass/images/hero/guidehero/summer/2025/roadtrip_hero_2425.png",
     alt: "Shopping on Main St",
@@ -35,7 +35,7 @@ const activities = [
     image:
       "https://tense-deer.transforms.svdcdn.com/production/galleries/2023_PARKS_Web_HerronPark_Aug-2023-15.jpg?w=576&h=432&q=60&fm=jpg&fit=crop&dm=1734063376&s=6037b601623cf20bd163e29b01497f45",
     alt: "Horseback Riding",
-    link: "https://www.cityofaspen.com/facilities/facility/details/Herron-Park-19",
+    link: "https://www.earthscapeplay.com/projects/herron-park-playground-sculpture-aspen-colorado/",
   },
   {
     title: "The John Denver Sanctuary",
@@ -44,7 +44,7 @@ const activities = [
     image:
       "https://johndenversanctuary.com/wp-content/uploads/2023/04/John_Denver_Sanctuary-scaled.jpg",
     alt: "The John Denver Sanctuary",
-    link: "https://www.aspenchamber.org/explore/john-denver-sanctuary",
+    link: "https://johndenversanctuary.com/",
   },
   {
     title: "Gondola Summit",
@@ -53,7 +53,7 @@ const activities = [
     image:
       "https://www.uncovercolorado.com/wp-content/uploads/2021/09/aspen-snowmass-silver-queen-gondola-colorado-summer.jpeg",
     alt: "Silver Queen Gondola",
-    link: "https://www.aspensnowmass.com/visit/aspen-mountain-gondola",
+    link: "https://www.aspensnowmass.com/visit/tickets-and-passes/sightseeing-and-tickets/summer",
   },
 ];
 
@@ -91,10 +91,22 @@ export default function ThingsToDoPage() {
         </div>
       </section>
 
+      {/* Mobile jump-links */}
+      <nav className="sticky top-20 z-30 bg-background/95 backdrop-blur-sm border-b border-outline/10 md:hidden">
+        <div className="flex">
+          <a href="#activities" className="flex-1 py-4 text-center font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary transition-colors">
+            Activities
+          </a>
+          <a href="#restaurants" className="flex-1 py-4 text-center font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary transition-colors">
+            Restaurants
+          </a>
+        </div>
+      </nav>
+
       {/* Activity Grid Section */}
-      <section className="py-16 bg-background relative overflow-hidden">
+      <section id="activities" className="py-16 bg-background relative overflow-hidden scroll-mt-32">
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 relative z-10">
-          <div className="mb-24 reveal-on-scroll">
+          <div className="mb-12 md:mb-24 reveal-on-scroll">
             <span className="font-label text-xs uppercase tracking-[0.4em] text-primary mb-6 block">
               Curated Experiences
             </span>
@@ -103,7 +115,7 @@ export default function ThingsToDoPage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24 reveal-on-scroll-stagger">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12 md:gap-y-24 reveal-on-scroll-stagger">
             {activities.map((activity) => (
               <a key={activity.title} href={activity.link} target="_blank" rel="noopener noreferrer" className="group cursor-pointer block">
                 <div className="aspect-[4/5] bg-surface-variant/50 mb-8 overflow-hidden relative">
@@ -131,7 +143,7 @@ export default function ThingsToDoPage() {
       </section>
 
       {/* Restaurant Recommendations */}
-      <section className="py-32 bg-surface border-y border-outline/10 relative overflow-hidden">
+      <section id="restaurants" className="py-32 bg-surface border-y border-outline/10 relative overflow-hidden scroll-mt-32">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(212,163,115,0.04)_0%,transparent_60%)] pointer-events-none" />
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 relative z-10">
           <div className="mb-20 reveal-on-scroll">
@@ -183,7 +195,7 @@ export default function ThingsToDoPage() {
               <div className="group relative overflow-hidden aspect-[16/9] mb-8 cursor-pointer">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80"
+                  src="https://swiftmedia.s3.amazonaws.com/mountain.swiftcom.com/images/sites/5/2022/08/10031822/b8bb5da2-6d07-502c-a147-06d4b0ee7def.jpg"
                   alt="Fine dining table setting"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 scale-105 group-hover:scale-110"
                 />
@@ -216,9 +228,9 @@ export default function ThingsToDoPage() {
               <div className="group relative overflow-hidden aspect-[16/9] mb-8 cursor-pointer">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80"
-                  alt="Cafe lunch setting"
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 scale-105 group-hover:scale-110"
+                  src="https://swiftmedia.s3.amazonaws.com/mountain.swiftcom.com/images/sites/5/2022/08/10180235/d940d959-8a64-51da-9409-44e08912d658-1024x1024.jpg"
+                  alt="Grateful Deli shop"
+                  className="absolute inset-0 w-full h-full object-cover object-[50%_15%] transition-transform duration-1000 scale-105 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-background/20 group-hover:bg-transparent transition-colors duration-500" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background/90 via-background/50 to-transparent">

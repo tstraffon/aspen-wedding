@@ -7,6 +7,7 @@ const VENUE_IMAGES = {
   reception: "/images/itinerary/reception.jpg",
   brunch:
     "https://lh3.googleusercontent.com/aida-public/AB6AXuAY5vnewEs-XeyzX02ow_KOZqGhPnvPP4y5sh8hCXxHP0eZJdzemwJNEfT1eqpYhU_zDfB_vYRWmgjZj3-wjRqlSYBW6IYjfBfmeaq-m722O7X6LrTMAYF4Ne-isWIUWnrHhZdCmpudF1Fh3Zn3hOmnibO88QnGTxXfnP2vcwowlYOyuDoAjDtFKSbQq9KQwoBRbjC-5dE_PxynjpdiHt9c_9QFcmYIIdkHvP8NhvbGdjxnqF57b9feCmHvxVq_LuJGAAgmZTzu0yU",
+  afterparty: "https://s3-media0.fl.yelpcdn.com/bphoto/BAQarK_FU8g3vNZaxwJbNg/348s.jpg",
 };
 
 export default function ItineraryPage() {
@@ -84,8 +85,8 @@ export default function ItineraryPage() {
                   <div className="absolute inset-0 z-[1] event-card-overlay" />
                   {/* Warm top accent line */}
                   <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent z-20" />
-                  <div className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-16">
-                    <div className="md:w-48 shrink-0 p-8 md:pr-0">
+                  <div className="relative z-10 flex flex-col md:flex-row gap-2 md:gap-16">
+                    <div className="md:w-48 shrink-0 px-6 pt-6 pb-1 md:p-8 md:pr-0">
                       <span className="font-headline text-5xl md:text-6xl text-on-surface group-hover:text-primary transition-colors duration-500">
                         7:00
                       </span>
@@ -93,7 +94,7 @@ export default function ItineraryPage() {
                         Evening &bull; PM
                       </span>
                     </div>
-                    <div className="flex-1 border-l border-primary/20 pl-8 md:pl-16 py-8 pr-8">
+                    <div className="flex-1 md:border-l border-primary/20 px-6 pb-6 pt-2 md:pl-16 md:py-8 md:pr-8">
                       <div className="flex items-center gap-3 text-primary mb-4">
                         <span className="material-symbols-outlined text-xl itinerary-icon">restaurant</span>
                         <span className="font-label text-[11px] uppercase tracking-[0.2em]">
@@ -155,8 +156,8 @@ export default function ItineraryPage() {
                     />
                     <div className="absolute inset-0 z-[1] event-card-overlay" />
                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent z-20" />
-                    <div className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-16">
-                      <div className="md:w-48 shrink-0 p-8 md:pr-0">
+                    <div className="relative z-10 flex flex-col md:flex-row gap-2 md:gap-16">
+                      <div className="md:w-48 shrink-0 px-6 pt-6 pb-1 md:p-8 md:pr-0">
                         <span className="font-headline text-5xl md:text-6xl text-on-surface group-hover:text-primary transition-colors duration-500">
                           3:00
                         </span>
@@ -164,7 +165,7 @@ export default function ItineraryPage() {
                           Afternoon &bull; PM
                         </span>
                       </div>
-                      <div className="flex-1 border-l border-primary/20 pl-8 md:pl-16 py-8 pr-8">
+                      <div className="flex-1 md:border-l border-primary/20 px-6 pb-6 pt-2 md:pl-16 md:py-8 md:pr-8">
                         <div className="flex items-center gap-3 text-primary mb-4">
                           <span className="material-symbols-outlined text-xl itinerary-icon">church</span>
                           <span className="font-label text-[11px] uppercase tracking-[0.2em]">
@@ -196,8 +197,8 @@ export default function ItineraryPage() {
                     />
                     <div className="absolute inset-0 z-[1] event-card-overlay" />
                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent z-20" />
-                    <div className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-16">
-                      <div className="md:w-48 shrink-0 p-8 md:pr-0">
+                    <div className="relative z-10 flex flex-col md:flex-row gap-2 md:gap-16">
+                      <div className="md:w-48 shrink-0 px-6 pt-6 pb-1 md:p-8 md:pr-0">
                         <span className="font-headline text-5xl md:text-6xl text-on-surface group-hover:text-primary transition-colors duration-500">
                           5:00
                         </span>
@@ -205,7 +206,7 @@ export default function ItineraryPage() {
                           Evening &bull; PM
                         </span>
                       </div>
-                      <div className="flex-1 border-l border-primary/20 pl-8 md:pl-16 py-8 pr-8">
+                      <div className="flex-1 md:border-l border-primary/20 px-6 pb-6 pt-2 md:pl-16 md:py-8 md:pr-8">
                         <div className="flex items-center gap-3 text-primary mb-4">
                           <span className="material-symbols-outlined text-xl itinerary-icon">local_bar</span>
                           <span className="font-label text-[11px] uppercase tracking-[0.2em]">
@@ -213,7 +214,7 @@ export default function ItineraryPage() {
                           </span>
                         </div>
                         <h4 className="font-headline text-3xl text-on-surface mb-4">
-                          Cocktails - Hotel Jerome
+                          Cocktails - Hotel Jerome Courtyard
                         </h4>
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                           A magical (👀) outdoor cocktail hour in the Hotel Jerome courtyard before dinner. Just a 3 minute walk from St. Mary's!
@@ -257,8 +258,8 @@ export default function ItineraryPage() {
                     />
                     <div className="absolute inset-0 z-[1] event-card-overlay" />
                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent z-20" />
-                    <div className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-16">
-                      <div className="md:w-48 shrink-0 p-8 md:pr-0">
+                    <div className="relative z-10 flex flex-col md:flex-row gap-2 md:gap-16">
+                      <div className="md:w-48 shrink-0 px-6 pt-6 pb-1 md:p-8 md:pr-0">
                         <span className="font-headline text-5xl md:text-6xl text-on-surface group-hover:text-primary transition-colors duration-500">
                           6:00
                         </span>
@@ -266,7 +267,7 @@ export default function ItineraryPage() {
                           Evening &bull; PM
                         </span>
                       </div>
-                      <div className="flex-1 border-l border-primary/20 pl-8 md:pl-16 py-8 pr-8">
+                      <div className="flex-1 md:border-l border-primary/20 px-6 pb-6 pt-2 md:pl-16 md:py-8 md:pr-8">
                         <div className="flex items-center gap-3 text-primary mb-4">
                           <span className="material-symbols-outlined text-xl itinerary-icon">restaurant</span>
                           <span className="font-label text-[11px] uppercase tracking-[0.2em]">
@@ -274,7 +275,7 @@ export default function ItineraryPage() {
                           </span>
                         </div>
                         <h4 className="font-headline text-3xl text-on-surface mb-4">
-                          Dinner &amp; Dancing - Hotel Jerome
+                          Dinner &amp; Dancing - Hotel Jerome Grand Ballroom
                         </h4>
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                           A formal seated dinner at Hotel Jerome followed by dancing! Bring your appetite and your dancing shoes.
@@ -285,6 +286,57 @@ export default function ItineraryPage() {
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+
+                {/* Afterparty — Card left, image right */}
+                <div className="flex flex-col md:flex-row gap-8 md:gap-12 reveal-on-scroll">
+                  {/* Event details */}
+                  <div className="flex-1 min-w-0 group relative overflow-hidden rounded-lg border border-outline/10 shadow-[0_4px_30px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(212,163,115,0.06)] itinerary-card">
+                    <div
+                      className="absolute inset-0 z-0 opacity-20 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                      style={{ backgroundImage: `url('${VENUE_IMAGES.afterparty}')` }}
+                    />
+                    <div className="absolute inset-0 z-[1] event-card-overlay" />
+                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent z-20" />
+                    <div className="relative z-10 flex flex-col md:flex-row gap-2 md:gap-16">
+                      <div className="md:w-48 shrink-0 px-6 pt-6 pb-1 md:p-8 md:pr-0">
+                        <span className="font-headline text-5xl md:text-6xl text-on-surface group-hover:text-primary transition-colors duration-500">
+                          10:00
+                        </span>
+                        <span className="font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant block mt-2">
+                          Late Night &bull; PM
+                        </span>
+                      </div>
+                      <div className="flex-1 md:border-l border-primary/20 px-6 pb-6 pt-2 md:pl-16 md:py-8 md:pr-8">
+                        <div className="flex items-center gap-3 text-primary mb-4">
+                          <span className="material-symbols-outlined text-xl itinerary-icon">nightlife</span>
+                          <span className="font-label text-[11px] uppercase tracking-[0.2em]">
+                            Late Night
+                          </span>
+                        </div>
+                        <h4 className="font-headline text-3xl text-on-surface mb-4">
+                          The Afterparty - The Buck 
+                        </h4>
+                        <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
+                          The night is still young! Keep the celebration going with drinks, music, and good company.
+                        </p>
+                        <div className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
+                          <span className="material-symbols-outlined text-sm">location_on</span>
+                          508 East Cooper Ave Unit 001. Aspen, CO 81611
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Venue image */}
+                  <div className="md:w-80 shrink-0 relative rounded-lg overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.4)] group/img">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={VENUE_IMAGES.afterparty}
+                      alt="The Buck in Aspen"
+                      className="w-full h-full object-cover min-h-[280px] transition-transform duration-700 group-hover/img:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
                   </div>
                 </div>
               </div>
@@ -310,8 +362,8 @@ export default function ItineraryPage() {
                   />
                   <div className="absolute inset-0 z-[1] event-card-overlay" />
                   <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent z-20" />
-                  <div className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-16">
-                    <div className="md:w-48 shrink-0 p-8 md:pr-0">
+                  <div className="relative z-10 flex flex-col md:flex-row gap-2 md:gap-16">
+                    <div className="md:w-48 shrink-0 px-6 pt-6 pb-1 md:p-8 md:pr-0">
                       <span className="font-headline text-5xl md:text-6xl text-on-surface group-hover:text-primary transition-colors duration-500">
                         10:00
                       </span>
@@ -319,7 +371,7 @@ export default function ItineraryPage() {
                         Morning &bull; AM
                       </span>
                     </div>
-                    <div className="flex-1 border-l border-primary/20 pl-8 md:pl-16 py-8 pr-8">
+                    <div className="flex-1 md:border-l border-primary/20 px-6 pb-6 pt-2 md:pl-16 md:py-8 md:pr-8">
                       <div className="flex items-center gap-3 text-primary mb-4">
                         <span className="material-symbols-outlined text-xl itinerary-icon">bakery_dining</span>
                         <span className="font-label text-[11px] uppercase tracking-[0.2em]">
@@ -327,15 +379,17 @@ export default function ItineraryPage() {
                         </span>
                       </div>
                       <h4 className="font-headline text-3xl text-on-surface mb-4">
-                        TBD
+                        Farewell Brunch
                       </h4>
                       <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
-                        Details coming soon - stay tuned.
+                        One last gathering before we part ways. Venue and details will be shared closer to the date &mdash; check back soon!
                       </p>
-                      {/* <div className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
-                        <span className="material-symbols-outlined text-sm">location_on</span>
-                        The Little Nell
-                      </div> */}
+                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full">
+                        <span className="material-symbols-outlined text-primary text-sm">schedule</span>
+                        <span className="font-label text-[11px] uppercase tracking-[0.1em] text-primary">
+                          Details coming soon
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>

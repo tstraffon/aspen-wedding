@@ -4,19 +4,19 @@ const faqs = [
   {
     question: "What is the dress code for the weekend?",
     answer:
-      "For the wedding ceremony and reception, the dress code is Black Tie Optional. The groom will be wearing a dark suit and gentlemen are encouraged to do the same. Ladies are invited to wear floor-length gowns or elegant cocktail dresses. For the welcome drinks, the attire is \u201cMountain Elegance\u201d\u2014think dressy but comfortable for the crisp evening air.",
+      "For the wedding ceremony and reception, the dress code is Black Tie Optional. Tuxes are absolutely welcome, but the groom will be in a dark suit - so a nice suit is just as perfect. Ladies are invited to wear floor-length gowns or elegant cocktail dresses. \n\nFor the welcome party, the attire is Western Elegance - think dressy but comfortable, and finally giving those cowboy boots, hats, or bolo ties (!) the moment they deserve at Aspen’s oldest saloon!",
     icon: "checkroom",
   },
   {
     question: "Will there be transportation provided?",
     answer:
-      "In short, no. Downtown Aspen is very walkable and our recommended hotels are all within 10 mins of all the weekend's events. With Aspen's beautiful fall weather, walking too and from each venue will be idyllic!",
+      "In short, no. Downtown Aspen is very walkable and our recommended hotels are all within a 10 min walk of all the weekend's events. With Aspen's beautiful fall weather, walking too and from each venue will be idyllic!",
     icon: "directions_car",
   },
   {
     question: "How should I prepare for the altitude?",
     answer:
-      "Aspen sits at nearly 8,000 feet. We recommend drinking plenty of water, starting several days before you arrive. Limit alcohol consumption on your first night, and consider arriving a day early to acclimate if you are sensitive to elevation. Hydration stations will be available throughout the venue.",
+      "Aspen sits at nearly 8,000 feet. We recommend drinking plenty of water, starting several days before you arrive. Limit alcohol consumption on your first night, and consider arriving a day early to acclimate if you are sensitive to elevation.",
     icon: "landscape",
   },
   {
@@ -42,7 +42,7 @@ const faqs = [
   {
     question: "Are children invited to the celebration?",
     answer:
-      "While we love your little ones, our wedding ceremony and reception will be an adults-only event. We hope you will understand and enjoy the night off to celebrate with us. We can provide recommendations for local childcare services if needed.",
+      "While we love your little ones, our wedding ceremony and reception will be an adults-only event. We hope you will understand and enjoy the night off to celebrate with us.",
     icon: "family_restroom",
   },
   {
@@ -107,7 +107,7 @@ export default function FAQPage() {
                     <div className="px-6 pb-6 pl-16 md:px-8 md:pb-8 md:pl-[5.25rem]">
                       <div className="border-l-2 border-primary/15 pl-5 py-1 bg-primary/[0.02] rounded-r-lg">
                         <div className="w-8 h-px bg-primary/20 mb-4 rounded-full" />
-                        <p className="text-on-surface-variant leading-relaxed font-light">
+                        <p className="text-on-surface-variant leading-relaxed font-light whitespace-pre-line">
                           {faq.answer}
                           {"link" in faq && faq.link && (
                             <>
@@ -140,7 +140,7 @@ export default function FAQPage() {
               contact us directly.
             </p>
             <Link
-              href="mailto:hello@emilyandtyler.com"
+              href="mailto:tylerstraffon@gmail.com"
               className="link-editorial inline-flex items-center gap-3 text-primary font-headline italic text-lg pb-1"
             >
               Send us a message

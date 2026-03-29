@@ -151,6 +151,7 @@ export default function TravelPage() {
                     <a
                       className="link-editorial inline-block text-[11px] uppercase tracking-[0.2em] text-primary pb-1 hover:opacity-80 transition-all"
                       href="https://maps.app.goo.gl/TtyBXdxejcwhLkXe6"
+                      target="_blank"
                     >
                       Open in Google Maps
                     </a>
