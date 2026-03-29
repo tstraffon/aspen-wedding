@@ -382,7 +382,7 @@ export default function ItineraryPage() {
                         TBD
                       </h4>
                       <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
-                        One last gathering before we part ways. Details will be shared closer to the date &mdash; check back soon!
+                        We plan on hanging around downtown Aspen on Sunday for some informal fun. Stop by to share a quick bevy with us or celebrate with us all day long!  Details will be shared closer to the date &mdash; check back soon!
                       </p>
                       <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full">
                         <span className="material-symbols-outlined text-primary text-sm">schedule</span>
