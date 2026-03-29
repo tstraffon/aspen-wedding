@@ -44,7 +44,7 @@ export default function HomePage() {
       </section>
 
       {/* Details Section */}
-      <section className="cinematic-section items-start pt-24 md:items-center md:pt-0" id="details">
+      <section className="cinematic-section items-start pt-24 pb-16 md:items-center md:pt-0 md:pb-0" id="details">
         <div
           className="full-bleed-bg parallax-bg"
           style={{
@@ -113,7 +113,7 @@ export default function HomePage() {
       </section>
 
       {/* Our Story Section */}
-      <section className="cinematic-section items-start pt-24 md:items-center md:pt-0" id="our-story">
+      <section className="cinematic-section items-start pt-24 pb-16 md:items-center md:pt-0 md:pb-0" id="our-story">
         <div
           className="full-bleed-bg parallax-bg"
           style={{ backgroundImage: "url('/propose.jpg')" }}
