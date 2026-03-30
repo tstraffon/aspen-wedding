@@ -201,7 +201,7 @@ export default function TravelPage() {
                     </h4>
                     <p className="text-on-surface-variant text-sm leading-relaxed">
                       All of the weekend&apos;s events are within walking distance of
-                      downtown Aspen. We highly recommend booking a hotel in the
+                      downtown Aspen. We highly recommend booking a hotel or a AirBnB/Vrbo in the
                       downtown area so you can walk to everything with ease!
                     </p>
                   </div>

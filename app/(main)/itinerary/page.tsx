@@ -107,10 +107,10 @@ export default function ItineraryPage() {
                       <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                         Hors d'oeuvres & cocktails to kick off the weekend at Aspen's oldest mountain saloon, Silver City. Western elegance attire.
                       </p>
-                      <div className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
+                      <a href="https://maps.google.com/?q=210+S+Galena+St,+Aspen,+CO+81611" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500 hover:text-primary/80">
                         <span className="material-symbols-outlined text-sm">location_on</span>
                         210 S Galena St, Aspen, CO 81611
-                      </div>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -178,10 +178,10 @@ export default function ItineraryPage() {
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                            A traditional Catholic wedding ceremony without a full Mass, officiated by Uncle Father Henry! Please arrive early as we will start at 3pm sharp. Black tie optional attire.
                         </p>
-                        <div className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
+                        <a href="https://maps.google.com/?q=533+E+Main+St,+Aspen,+CO+81611" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500 hover:text-primary/80">
                           <span className="material-symbols-outlined text-sm">location_on</span>
                          533 E Main St #533, Aspen, CO 81611
-                        </div>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -219,10 +219,10 @@ export default function ItineraryPage() {
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                           A magical (👀) outdoor cocktail hour in the Hotel Jerome courtyard before dinner. Just a 3 minute walk from St. Mary's!
                         </p>
-                        <div className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
+                        <a href="https://maps.google.com/?q=330+E+Main+St,+Aspen,+CO+81611" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500 hover:text-primary/80">
                           <span className="material-symbols-outlined text-sm">location_on</span>
                           330 East Main St, Aspen, CO 81611, USA.
-                        </div>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -280,10 +280,10 @@ export default function ItineraryPage() {
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                           A formal seated dinner at Hotel Jerome followed by dancing! Bring your appetite and your dancing shoes.
                         </p>
-                        <div className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
+                        <a href="https://maps.google.com/?q=330+E+Main+St,+Aspen,+CO+81611" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500 hover:text-primary/80">
                           <span className="material-symbols-outlined text-sm">location_on</span>
                           330 East Main St, Aspen, CO 81611, USA.
-                        </div>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -321,10 +321,10 @@ export default function ItineraryPage() {
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                           The night is still young! Keep the celebration going with drinks, music, and good company.
                         </p>
-                        <div className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500">
+                        <a href="https://maps.google.com/?q=508+E+Cooper+Ave,+Aspen,+CO+81611" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500 hover:text-primary/80">
                           <span className="material-symbols-outlined text-sm">location_on</span>
                           508 East Cooper Ave Unit 001. Aspen, CO 81611
-                        </div>
+                        </a>
                       </div>
                     </div>
                   </div>
