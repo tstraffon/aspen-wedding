@@ -130,7 +130,7 @@ export default function HomePage() {
             </h2>
             <div className="space-y-8 text-on-surface text-xl font-light leading-relaxed">
               <p>
-                After living parallel lives in Cleveland/Pittsburgh and Washington, D.C., Em and Tyler independently made their way to Colorado (quarter-life crisis  ?!?!). They met through an elite friend group (hi guys!) and spent a year skiing, biking, hiking, and camping as fanastic friends.
+                After living parallel lives in Cleveland/Pittsburgh and Washington, D.C., Em and Tyler independently made their way to Colorado (quarter-life crisis  ?!?!). They met through an elite friend group (hi guys!) and spent a year skiing, biking, hiking, and camping as fantastic friends.
               </p>
               <p>
                 Then - thanks to a little bourbon - that changed...
