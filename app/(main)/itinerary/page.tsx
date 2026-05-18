@@ -105,7 +105,7 @@ export default function ItineraryPage() {
                         The Welcome Party - Silver City
                       </h4>
                       <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
-                        Hors d'oeuvres & cocktails to kick off the weekend at Aspen's oldest mountain saloon, Silver City. Western elegance attire.
+                        Hors d'oeuvres & cocktails to kick off the weekend at Aspen's oldest mountain saloon, Silver City. Aspen Western attire.
                       </p>
                       <a href="https://maps.google.com/?q=210+S+Galena+St,+Aspen,+CO+81611" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500 hover:text-primary/80">
                         <span className="material-symbols-outlined text-sm">location_on</span>

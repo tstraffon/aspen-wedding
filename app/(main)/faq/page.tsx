@@ -4,7 +4,7 @@ const faqs = [
   {
     question: "What is the dress code for the weekend?",
     answer:
-      "For the wedding ceremony and reception, the dress code is Black Tie Optional. Tuxes are absolutely welcome, but the groom will be in a dark suit - so a nice suit is just as perfect. Ladies are invited to wear floor-length gowns or elegant cocktail dresses. \n\nFor the welcome party, the attire is Western Elegance - think dressy but comfortable, and finally giving those cowboy boots, hats, or bolo ties (!) the moment they deserve at Aspen’s oldest saloon!",
+      "For the wedding ceremony and reception, the dress code is Black Tie Optional. Tuxes are absolutely welcome, but the groom will be in a dark suit - so a nice suit is just as perfect. Ladies are invited to wear floor-length gowns or elegant cocktail dresses. \n\nFor the welcome party, the attire is Aspen Western - think dressy but comfortable, and finally giving those cowboy boots, hats, or bolo ties (!) the moment they deserve at Aspen’s oldest saloon!",
     icon: "checkroom",
   },
   {
