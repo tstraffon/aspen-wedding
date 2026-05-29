@@ -162,7 +162,7 @@ export default function RSVPPage() {
     <main className="pt-32 min-h-screen">
       <div className="max-w-screen-2xl mx-auto px-8 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
         {/* Left: Editorial Content */}
-        <div className="lg:col-span-5 sticky top-40">
+        <div className="lg:col-span-5 lg:sticky lg:top-40">
           <span className="font-label text-xs uppercase tracking-[0.3em] text-primary mb-6 block font-semibold">
             Join Us in Aspen
           </span>
