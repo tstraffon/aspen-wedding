@@ -1,25 +1,27 @@
 ---
 phase: 01-rsvp-enablement
 verified: 2026-05-29T00:00:00Z
-status: human_needed
-score: 5/5 must-haves verified (code-level); 2 human verifications pending
+status: verified
+score: 5/5 must-haves verified (code + human re-verification complete via 01-HUMAN-UAT.md)
 overrides_applied: 0
 re_verification:
   is_re_verification: false
 human_verification:
   - test: "Re-verify mobile sticky fix on the /rsvp page in a real browser at 375px viewport"
     expected: "Scrolling the form no longer leaves the 'Kindly Respond' headline pinned behind the form on mobile. On lg+ viewports, the headline still sticks to the left as before."
-    why_human: "Plan 01-04 SUMMARY explicitly states the inline fix (commit 349b6fd, scoping `sticky top-40` to `lg:sticky lg:top-40`) was committed but not re-tested in a browser. Code-level verification confirms the class change shipped, but visual/layout behavior on a real viewport cannot be grep-verified."
+    result: pass
+    resolved_in: 01-HUMAN-UAT.md (Test 1)
   - test: "Run the cleanup SQL block at the bottom of 01-SMOKE.md once in Supabase Studio"
-    expected: "The DELETE statement removes diagnostic test rows (smoke@example.com, sqldirect@test.com, test@example.com, rebuild@test.com, pubpolicy@test.com, session@test.com, final-legacy_anon@example.com, final-publishable@example.com, pg@test.com, local-smoke@example.com, role@test.com, smoke-accept@example.com, smoke-decline@example.com) from public.rsvps. Re-running is safe (idempotent)."
-    why_human: "Plan 01-01 RLS-diagnostic test rows and Plan 01-04 smoke-test rows live in Supabase, not the repo. The cleanup SQL is documented in 01-SMOKE.md but has not been executed by the user yet. Production-readiness of the rsvps table requires this be empty of test data before invitations go out."
+    expected: "The DELETE statement removes diagnostic test rows from public.rsvps. Re-running is safe (idempotent)."
+    result: pass
+    resolved_in: 01-HUMAN-UAT.md (Test 2)
 ---
 
 # Phase 1: RSVP Enablement Verification Report
 
 **Phase Goal:** Make the existing RSVP flow production-ready and discoverable.
 **Verified:** 2026-05-29
-**Status:** human_needed
+**Status:** verified (human re-verification resolved via 01-HUMAN-UAT.md)
 **Re-verification:** No — initial verification
 
 ## Goal Achievement
