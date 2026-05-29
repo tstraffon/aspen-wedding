@@ -1,0 +1,10 @@
+{
+  "project_code": "ASPEN",
+  "project_title": "Aspen Wedding",
+  "milestone_version": "0.1",
+  "workflow": {
+    "discuss_mode": "discuss",
+    "granularity": "balanced",
+    "commit_docs": true
+  }
+}
