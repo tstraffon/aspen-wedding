@@ -46,6 +46,17 @@ export default function RegistryPage() {
           </div>
         </div>
       </section>
+
+      {/* Framing Block */}
+      <section className="py-16 bg-background">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+          <div className="max-w-2xl mx-auto text-center reveal-on-scroll">
+            <p className="text-on-surface-variant text-lg font-light leading-relaxed">
+              Your presence is the greatest gift. If you&apos;d like to celebrate with something more, here are a few places we&apos;ve registered.
+            </p>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
