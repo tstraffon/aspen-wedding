@@ -14,10 +14,10 @@ Guests get every answer they need about the wedding from one polished site, and 
 
 - Home, Travel & Stay, Itinerary, Things To Do, FAQ pages
 - RSVP form and `/api/rsvp` Supabase POST endpoint (built, not yet exposed in nav)
+- RSVP: live Supabase wiring (anon-only route, GRANT-based write-only access), polished form with full a11y pass, nav link enabled, smoke-tested locally and Vercel env vars confirmed *(validated in Phase 1)*
 
 ### Active
 
-- [ ] RSVP: enable in nav, verify Supabase schema, polish submission UX
 - [ ] Registry: `/registry` page with linked gift items, enable nav link
 - [ ] Bridal Party: `/bridal-party` page with member cards and photos
 
@@ -50,4 +50,4 @@ Guests get every answer they need about the wedding from one polished site, and 
 | RSVP without guest auth | Email + name is enough identity for a wedding; no login friction | ✓ Good |
 
 ---
-*Last updated: 2026-05-28 after milestone scoping*
+*Last updated: 2026-05-29 after Phase 1 (RSVP Enablement) closed*
