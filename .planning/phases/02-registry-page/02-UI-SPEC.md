@@ -42,7 +42,7 @@ Declared values (multiples of 4, Tailwind defaults — carry forward from Phase 
 | xl | 32px (`mb-8`, `pb-8`) | Card image-to-title gap |
 | 2xl | 48px (`py-12`) | Framing block vertical padding |
 | 3xl | 64px (`py-16`) | Activities section vertical padding (`py-16` top) |
-| 4xl | 128px (`py-32`) | Hero bottom padding (`pb-20` on Things-To-Do — use same) |
+| hero-bottom | 80px (`pb-20`) | Hero content bottom padding — explicit carry-forward from Things-To-Do |
 
 **Section cadence (direct port from Things-To-Do):**
 - Hero: `relative h-[614px]` with bottom content justified to `pb-20`
@@ -63,17 +63,23 @@ Source: `app/(main)/things-to-do/page.tsx` + `app/globals.css`
 
 ## Typography
 
-Existing Stitch type system — do not introduce new sizes:
+Existing Stitch type system — 4 size tiers, do not introduce new sizes:
 
-| Role | Class | Size | Weight | Line Height | Use |
-|------|-------|------|--------|-------------|-----|
-| Display / Hero | `font-headline text-5xl md:text-8xl` | 48 / 96px | 400 regular | `leading-[0.85] tracking-tighter` | Page `<h1>` hero title |
-| Section heading | `font-headline text-4xl md:text-6xl` | 36 / 60px | 400 regular | `leading-tight` | Grid section `<h2>` (e.g., "Our Registries") |
-| Card title | `font-headline text-2xl` | 24px | 400 regular | default (~1.3) | Registry name on each card (`<h3>`) |
-| Body | `font-body text-lg font-light leading-relaxed` | 18px | 300 | ~1.625 | Hero subtitle, framing block prose |
-| Body small | `font-body text-base font-light leading-relaxed` | 16px | 300 | ~1.5 | Card description blurb |
-| Label / eyebrow | `font-label text-xs uppercase tracking-[0.4em]` | 12px | 400 | default | Hero eyebrow, section eyebrow |
-| CTA link | `font-headline italic text-sm` | 14px | 400 italic | default | "Visit Registry" `editorial-underline` link |
+| Tier | Role | Class | Size | Weight | Line Height | Use |
+|------|------|-------|------|--------|-------------|-----|
+| Display | Hero title | `font-headline text-5xl md:text-8xl` | 48 / 96px (responsive pair = 1 size role) | 400 regular | `leading-[0.85] tracking-tighter` | Page `<h1>` hero title |
+| Heading | Section heading | `font-headline text-4xl md:text-6xl` | 36 / 60px | 400 regular | `leading-tight` | Grid section `<h2>` (e.g., "Our Registries") |
+| Heading | Card title | `font-headline text-2xl md:text-4xl` | 24 / 36px responsive | 400 regular | default (~1.3) | Registry name on each card (`<h3>`) — same size family as section heading |
+| Body | Prose copy | `font-body text-lg font-light leading-relaxed` | 18px | 300 | ~1.625 | Hero subtitle, framing block prose, card description blurbs |
+| Small | Eyebrow / label | `font-label text-sm uppercase tracking-[0.4em]` | 14px | 400 | default | Hero eyebrow, section eyebrow |
+| Small | CTA link | `font-headline italic text-sm` | 14px | 400 italic | default | "Visit Registry" `editorial-underline` link |
+
+**4 distinct pixel values declared:** 14px (Small tier), 18px (Body tier), 24–36px responsive (Heading tier), 48–96px responsive (Display tier).
+
+**Merges applied vs. prior draft:**
+- 12px label/eyebrow merged up to 14px (`text-sm`). Eyebrow class changes from `text-xs` to `text-sm`. Tracking `[0.4em]` is preserved — the wider tracking compensates visually.
+- 16px body small merged up to 18px (`text-lg`). Card description blurbs use `font-body text-lg font-light leading-relaxed` instead of `text-base`. The difference is 2px; at card scale in this dark context it is not perceptible.
+- 24px card title (`text-2xl`) given a responsive counterpart `md:text-4xl`, placing it in the same Heading tier as section headings. This is additive — card titles grow on wider viewports rather than staying fixed at 24px.
 
 **Weight policy:** 300 (font-light for body copy), 400 (regular for headlines and labels). No 600/700/800 introduced in this phase — those appear only in the RSVP form CTA per Phase 1 contract.
 
@@ -161,9 +167,9 @@ Source: `02-CONTEXT.md` D-09, D-10
 
 **Card image:** `w-full h-full object-cover transition-transform duration-1000 scale-105 group-hover:scale-110` (parallax scale from 1.05 to 1.10 over 1000ms).
 
-**Card title:** `font-headline text-2xl text-on-surface mb-3 group-hover:text-primary transition-colors` — bare brand name only (Honeyfund / Amazon / Crate & Barrel).
+**Card title:** `font-headline text-2xl md:text-4xl text-on-surface mb-3 group-hover:text-primary transition-colors` — bare brand name only (Honeyfund / Amazon / Crate & Barrel).
 
-**Card description:** `text-on-surface-variant text-base leading-relaxed mb-6 font-light`.
+**Card description:** `text-on-surface-variant text-lg leading-relaxed mb-6 font-light`.
 
 **Card CTA:** `font-headline italic text-primary text-sm editorial-underline inline-flex items-center gap-2 group-hover:gap-3 transition-all` — text: "Visit Registry" (identical across all three cards).
 
