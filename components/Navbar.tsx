@@ -12,7 +12,7 @@ const links = [
   { label: "Things To Do", href: "/things-to-do" },
   // { label: "Registry", href: "/#registry" },
   { label: "FAQ", href: "/faq" },
-  // { label: "RSVP", href: "/rsvp" },
+  { label: "RSVP", href: "/rsvp" },
 ];
 
 export default function Navbar() {
@@ -72,7 +72,6 @@ export default function Navbar() {
           </span>
         </button>
 
-        {/* RSVP button — re-enable when ready to collect responses */}
       </div>
 
       <div
