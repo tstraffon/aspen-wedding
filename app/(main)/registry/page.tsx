@@ -90,6 +90,60 @@ export default function RegistryPage() {
           </div>
         </div>
       </section>
+
+      {/* Registry Card Grid */}
+      <section className="py-16 bg-background relative overflow-hidden">
+        <div
+          className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(212,163,115,0.04)_0%,transparent_60%)] pointer-events-none"
+          aria-hidden="true"
+        />
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12 relative z-10">
+          <div className="mb-12 md:mb-24 reveal-on-scroll">
+            <span className="font-label text-xs uppercase tracking-[0.4em] text-primary mb-6 block">
+              Gift Registries
+            </span>
+            <h2 className="font-headline text-4xl md:text-6xl text-on-surface">
+              A Few of Our{" "}
+              <span className="italic font-light text-primary/80">Favorites</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12 md:gap-y-24 reveal-on-scroll-stagger">
+            {registries.map((r) => (
+              <a
+                key={r.title}
+                href={r.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Visit ${r.title} registry (opens in new tab)`}
+                className="group cursor-pointer block"
+              >
+                <div className="aspect-[4/5] bg-surface-variant/50 mb-8 overflow-hidden relative">
+                  <div
+                    className="absolute inset-0 bg-background/20 group-hover:bg-transparent transition-colors duration-500 z-10"
+                    aria-hidden="true"
+                  />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    alt={r.alt}
+                    className="w-full h-full object-cover transition-transform duration-1000 scale-105 group-hover:scale-110"
+                    src={r.image}
+                  />
+                </div>
+                <h3 className="font-headline text-2xl md:text-4xl text-on-surface mb-3 group-hover:text-primary transition-colors">
+                  {r.title}
+                </h3>
+                <p className="text-on-surface-variant text-lg leading-relaxed mb-6 font-light">
+                  {r.description}
+                </p>
+                <span className="font-headline italic text-primary text-sm editorial-underline inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+                  Visit Registry
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
