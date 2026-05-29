@@ -13,6 +13,7 @@
 **UI hint:** yes
 
 **Scope:**
+
 - Verify the Supabase `rsvps` table schema matches the form payload (`full_name`, `email`, `attending`, `guest_count`, `dietary_restrictions`, `note`)
 - Confirm `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` are wired and RLS / insert policy allows anonymous inserts
 - Enable the commented-out RSVP nav link in `components/Navbar.tsx`
@@ -21,10 +22,11 @@
 
 **Dependencies:** none
 
-**Plans:** 4 plans
+**Plans:** 1/4 plans executed
 
 Plans:
-- [ ] 01-01-PLAN.md — Backend infrastructure: schema + RLS verify, anon-only API route, env var docs
+
+- [x] 01-01-PLAN.md — Backend infrastructure: schema + RLS verify, anon-only API route, env var docs
 - [ ] 01-02-PLAN.md — Form polish: validation, focus management, success/error variants, a11y attributes
 - [ ] 01-03-PLAN.md — Navbar enable: uncomment RSVP link, delete dead comment slot
 - [ ] 01-04-PLAN.md — Smoke checklist: five-step manual verification + production env check
@@ -38,6 +40,7 @@ Plans:
 **UI hint:** yes
 
 **Scope:**
+
 - New route `app/(main)/registry/page.tsx`
 - Content model: a registries list (Honeyfund / Amazon / Crate & Barrel / etc.) — decide static config vs. data file
 - Card or list layout with logo, short blurb, "Visit Registry" CTA per item
@@ -55,6 +58,7 @@ Plans:
 **UI hint:** yes
 
 **Scope:**
+
 - New route `app/(main)/bridal-party/page.tsx`
 - Content model: party members grouped (e.g., Bride's Side / Groom's Side) with name, role (Maid of Honor, Best Man, etc.), photo, 1-2 sentence bio
 - Responsive grid; image optimization via `next/image`
