@@ -22,14 +22,14 @@
 
 **Dependencies:** none
 
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 
 - [x] 01-01-PLAN.md — Backend infrastructure: schema + RLS verify, anon-only API route, env var docs
 - [x] 01-02-PLAN.md — Form polish: validation, focus management, success/error variants, a11y attributes
 - [x] 01-03-PLAN.md — Navbar enable: uncomment RSVP link, delete dead comment slot
-- [ ] 01-04-PLAN.md — Smoke checklist: five-step manual verification + production env check
+- [x] 01-04-PLAN.md — Smoke checklist: five-step manual verification + production env check
 
 ---
 
