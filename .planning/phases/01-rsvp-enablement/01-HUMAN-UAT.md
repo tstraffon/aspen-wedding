@@ -1,5 +1,5 @@
 ---
-status: partial
+status: complete
 phase: 01-rsvp-enablement
 source: [01-VERIFICATION.md]
 started: 2026-05-29
@@ -8,13 +8,13 @@ updated: 2026-05-29
 
 ## Current Test
 
-[awaiting human testing]
+[testing complete]
 
 ## Tests
 
 ### 1. Re-verify mobile sticky fix at 375px viewport
 expected: After commit 349b6fd (`sticky top-40` → `lg:sticky lg:top-40`), the "Kindly Respond" editorial column no longer pins behind the form on mobile. Open `/rsvp` at 375 × 812 in Chrome devtools device mode — the hero scrolls naturally above the form instead of staying fixed.
-result: [pending]
+result: pass
 
 ### 2. Run the cleanup SQL block in Supabase Studio
 expected: Open Studio SQL Editor → new query → paste the SQL block from the bottom of `01-SMOKE.md` (or copy below) → Run. After running, `SELECT count(*) FROM public.rsvps` should return 0 (or only intentional rows).
@@ -29,14 +29,14 @@ DELETE FROM public.rsvps WHERE email IN (
 );
 ```
 
-result: [pending]
+result: pass
 
 ## Summary
 
 total: 2
-passed: 0
+passed: 2
 issues: 0
-pending: 2
+pending: 0
 skipped: 0
 blocked: 0
 
