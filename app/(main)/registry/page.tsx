@@ -5,6 +5,39 @@ export const metadata: Metadata = {
   description: "A few places we've registered for our Aspen wedding.",
 };
 
+const registries = [
+  {
+    title: "Honeyfund",
+    description:
+      "Our honeymoon adventure fund. Help us celebrate by contributing to the trip of a lifetime.",
+    image:
+      "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80",
+    alt: "Mountain landscape with a passport and journal evoking honeymoon travel",
+    // TODO: replace with real registry URL
+    link: "#",
+  },
+  {
+    title: "Amazon",
+    description:
+      "From everyday essentials to home upgrades — our Amazon wishlist has a little of everything.",
+    image:
+      "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=800&q=80",
+    alt: "Wrapped gift box with neutral linen ribbon on a wooden surface",
+    // TODO: replace with real registry URL
+    link: "#",
+  },
+  {
+    title: "Crate & Barrel",
+    description:
+      "Tableware, linens, and kitchen goods we've been eyeing for our first home together.",
+    image:
+      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80",
+    alt: "Curated tabletop with linen napkins, glassware, and warm afternoon light",
+    // TODO: replace with real registry URL
+    link: "#",
+  },
+];
+
 export default function RegistryPage() {
   return (
     <main>
