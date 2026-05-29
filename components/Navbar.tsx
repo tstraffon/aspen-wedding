@@ -10,8 +10,8 @@ const links = [
   { label: "Travel & Stay", href: "/travel" },
   { label: "Itinerary", href: "/itinerary" },
   { label: "Things To Do", href: "/things-to-do" },
-  // { label: "Registry", href: "/#registry" },
   { label: "FAQ", href: "/faq" },
+  { label: "Registry", href: "/registry" },
   { label: "RSVP", href: "/rsvp" },
 ];
 
