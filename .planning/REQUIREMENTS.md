@@ -64,4 +64,22 @@
 
 ## Traceability
 
-(Filled by roadmap — each requirement maps to exactly one phase.)
+Each v0.2 requirement maps to exactly one phase. Coverage: 11/11.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| GUEST-01 | Phase 4 | Pending |
+| GUEST-02 | Phase 5 | Pending |
+| GUEST-03 | Phase 5 | Pending |
+| GUEST-04 | Phase 4 | Pending |
+| GROUP-01 | Phase 6 | Pending |
+| GROUP-02 | Phase 4 | Pending |
+| GROUP-03 | Phase 4 | Pending |
+| GROUP-04 | Phase 6 | Pending |
+| MEAL-01 | Phase 6 | Pending |
+| MEAL-02 | Phase 6 | Pending |
+| MEAL-03 | Phase 4 | Pending |
+
+**Notes:**
+- GUEST-01 (Tyler populates the list via Studio/CSV) is enabled in Phase 4 (the `guests` table is created there) and exercised end-to-end in Phase 7 (CSV import flow + runbook). Primary phase = 4 because that's where the requirement is satisfied; Phase 7 is operational hardening, not a duplicate mapping.
+- GROUP-03 (re-look-up + upsert) is the backend contract (Phase 4: upsert endpoint) plus a UI affordance ("edit response" link in Phase 6). Primary phase = 4 because the upsert semantics are what GROUP-03 names; Phase 6 surfaces the UI for it.
