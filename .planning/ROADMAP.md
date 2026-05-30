@@ -136,7 +136,13 @@ Plans:
 4. The `rsvps` table no longer has `guest_count`; it does have `household_id`, `guest_id`, and `meal_choice`.
 5. Anon role can SELECT `guests` and INSERT/UPDATE `rsvps`, but cannot SELECT `rsvps` (verified via direct REST call returning 401).
 
-**Plans:** TBD
+**Plans:** 3 plans
+
+Plans:
+
+- [ ] 04-01-PLAN.md — SCHEMA.sql artifact + Studio apply (CREATE TABLE guests, ALTER rsvps add/drop, partial unique index, GRANT layer, gated dev seed) [Wave 1, autonomous=false]
+- [ ] 04-02-PLAN.md — `/api/rsvp/lookup` POST route: case-insensitive trim match + household fetch + curl smokes [Wave 2, autonomous=true]
+- [ ] 04-03-PLAN.md — `/api/rsvp/submit` POST route: validation + cross-household authz + batched upsert via onConflict:guest_id + curl smokes [Wave 2, autonomous=true]
 
 ---
 
@@ -243,7 +249,7 @@ Plans:
 | 1. RSVP Enablement | 4/4 | Shipped | 2026-05-29 |
 | 2. Registry Page | 3/3 | Shipped | 2026-05-30 |
 | 3. Bridal Party | 3/3 | Shipped | 2026-05-30 |
-| 4. Guest List Schema & Lookup API | 0/0 | Not started | — |
+| 4. Guest List Schema & Lookup API | 0/3 | Planned | — |
 | 5. Name-Lookup Gate UI | 0/0 | Not started | — |
 | 6. Group Form & Meal Selection | 0/0 | Not started | — |
 | 7. Tyler-Facing Handoff | 0/0 | Not started | — |
