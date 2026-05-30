@@ -137,6 +137,55 @@ const groomSide: Member[] = [
   },
 ];
 
+function MemberRow({ member, i }: { member: Member; i: number }) {
+  const isTextRight = i % 2 === 1;
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-y-8 md:gap-x-12 lg:gap-x-16 items-center reveal-on-scroll">
+      <div
+        className={`md:col-span-7 ${isTextRight ? "md:col-start-6" : ""}`}
+      >
+        <span className="font-label text-xs uppercase tracking-[0.4em] text-primary mb-4 block">
+          {member.role}
+        </span>
+        <h3 className="font-headline text-2xl md:text-4xl text-on-surface mb-4">
+          {member.name}
+        </h3>
+        <p className="text-on-surface-variant text-lg font-light leading-relaxed">
+          {member.bio}
+        </p>
+      </div>
+      <div
+        className={`md:col-span-5 ${isTextRight ? "md:col-start-1 md:row-start-1" : ""}`}
+      >
+        <div className="aspect-[4/5] bg-surface-variant/50 overflow-hidden relative">
+          {member.photo ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt={`Portrait of ${member.name}`}
+                className="w-full h-full object-cover"
+                src={member.photo}
+              />
+            </>
+          ) : (
+            <div
+              className="absolute inset-0 flex items-center justify-center bg-surface-container"
+              aria-hidden="true"
+            >
+              <span
+                className="font-headline italic text-5xl md:text-7xl text-primary"
+                aria-hidden="true"
+              >
+                {getInitials(member.name)}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function BridalPartyPage() {
   return (
     <main>
@@ -179,17 +228,45 @@ export default function BridalPartyPage() {
         </div>
       </section>
 
-      {/* Bride's Side — populated in Plan 03-02 */}
+      {/* Bride's Side */}
       <section id="bride-side" className="py-24 md:py-32 bg-background">
         <div className="max-w-[1440px] mx-auto px-6 md:px-12">
-          {/* TODO(03-02): Bride's Side section header + 8 magazine rows */}
+          <div className="mb-16 md:mb-24 reveal-on-scroll">
+            <span className="font-label text-xs uppercase tracking-[0.4em] text-primary mb-6 block">
+              THE BRIDE&apos;S SIDE
+            </span>
+            <h2 className="font-headline text-4xl md:text-6xl text-on-surface">
+              Bride&apos;s{" "}
+              <span className="italic font-light text-primary/80">Side</span>
+            </h2>
+          </div>
+
+          <div className="flex flex-col gap-y-16 md:gap-y-24 lg:gap-y-32">
+            {brideSide.map((member, i) => (
+              <MemberRow key={member.name} member={member} i={i} />
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Groom's Side — populated in Plan 03-02 */}
+      {/* Groom's Side */}
       <section id="groom-side" className="py-24 md:py-32 bg-background">
         <div className="max-w-[1440px] mx-auto px-6 md:px-12">
-          {/* TODO(03-02): Groom's Side section header + 8 magazine rows */}
+          <div className="mb-16 md:mb-24 reveal-on-scroll">
+            <span className="font-label text-xs uppercase tracking-[0.4em] text-primary mb-6 block">
+              THE GROOM&apos;S SIDE
+            </span>
+            <h2 className="font-headline text-4xl md:text-6xl text-on-surface">
+              Groom&apos;s{" "}
+              <span className="italic font-light text-primary/80">Side</span>
+            </h2>
+          </div>
+
+          <div className="flex flex-col gap-y-16 md:gap-y-24 lg:gap-y-32">
+            {groomSide.map((member, i) => (
+              <MemberRow key={member.name} member={member} i={i} />
+            ))}
+          </div>
         </div>
       </section>
     </main>
