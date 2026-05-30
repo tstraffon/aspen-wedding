@@ -137,50 +137,43 @@ const groomSide: Member[] = [
   },
 ];
 
-function MemberRow({ member, i }: { member: Member; i: number }) {
-  const isTextRight = i % 2 === 1;
+function MemberCard({ member }: { member: Member }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-y-8 md:gap-x-12 lg:gap-x-16 items-center reveal-on-scroll">
-      <div
-        className={`md:col-span-7 ${isTextRight ? "md:col-start-6" : ""}`}
-      >
-        <span className="font-label text-xs uppercase tracking-[0.4em] text-primary mb-4 block">
-          {member.role}
-        </span>
-        <h3 className="font-headline text-2xl md:text-4xl text-on-surface mb-4">
-          {member.name}
-        </h3>
-        <p className="text-on-surface-variant text-lg font-light leading-relaxed">
-          {member.bio}
-        </p>
-      </div>
-      <div
-        className={`md:col-span-5 ${isTextRight ? "md:col-start-1 md:row-start-1" : ""}`}
-      >
-        <div className="aspect-[4/5] bg-surface-variant/50 overflow-hidden relative">
-          {member.photo ? (
-            <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt={`Portrait of ${member.name}`}
-                className="w-full h-full object-cover"
-                src={member.photo}
-              />
-            </>
-          ) : (
-            <div
-              className="absolute inset-0 flex items-center justify-center bg-surface-container"
+    <div className="reveal-on-scroll">
+      <div className="aspect-[4/5] bg-surface-variant/50 overflow-hidden relative max-w-xs mx-auto mb-6">
+        {member.photo ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt={`Portrait of ${member.name}`}
+              className="w-full h-full object-cover"
+              src={member.photo}
+            />
+          </>
+        ) : (
+          <div
+            className="absolute inset-0 flex items-center justify-center bg-surface-container"
+            aria-hidden="true"
+          >
+            <span
+              className="font-headline italic text-4xl md:text-5xl text-primary"
               aria-hidden="true"
             >
-              <span
-                className="font-headline italic text-5xl md:text-7xl text-primary"
-                aria-hidden="true"
-              >
-                {getInitials(member.name)}
-              </span>
-            </div>
-          )}
-        </div>
+              {getInitials(member.name)}
+            </span>
+          </div>
+        )}
+      </div>
+      <div className="max-w-xs mx-auto text-center">
+        <span className="font-label text-[10px] uppercase tracking-[0.3em] text-primary mb-3 block">
+          {member.role}
+        </span>
+        <h3 className="font-headline text-xl md:text-2xl text-on-surface mb-3">
+          {member.name}
+        </h3>
+        <p className="text-on-surface-variant text-base font-light leading-relaxed">
+          {member.bio}
+        </p>
       </div>
     </div>
   );
@@ -228,44 +221,45 @@ export default function BridalPartyPage() {
         </div>
       </section>
 
-      {/* Bride's Side */}
-      <section id="bride-side" className="py-24 md:py-32 bg-background">
+      {/* Wedding Party — side-by-side columns */}
+      <section className="py-24 md:py-32 bg-background">
         <div className="max-w-[1440px] mx-auto px-6 md:px-12">
-          <div className="mb-16 md:mb-24 reveal-on-scroll">
-            <span className="font-label text-xs uppercase tracking-[0.4em] text-primary mb-6 block">
-              THE BRIDE&apos;S SIDE
-            </span>
-            <h2 className="font-headline text-4xl md:text-6xl text-on-surface">
-              Bride&apos;s{" "}
-              <span className="italic font-light text-primary/80">Side</span>
-            </h2>
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-16 gap-y-20 md:gap-y-0">
+            {/* Bride's Side column */}
+            <div id="bride-side">
+              <div className="mb-12 md:mb-16 text-center reveal-on-scroll">
+                <span className="font-label text-xs uppercase tracking-[0.4em] text-primary mb-4 block">
+                  THE BRIDE&apos;S SIDE
+                </span>
+                <h2 className="font-headline text-3xl md:text-5xl text-on-surface">
+                  Bride&apos;s{" "}
+                  <span className="italic font-light text-primary/80">Side</span>
+                </h2>
+              </div>
+              <div className="flex flex-col gap-y-16 md:gap-y-20">
+                {brideSide.map((member) => (
+                  <MemberCard key={member.name} member={member} />
+                ))}
+              </div>
+            </div>
 
-          <div className="flex flex-col gap-y-16 md:gap-y-24 lg:gap-y-32">
-            {brideSide.map((member, i) => (
-              <MemberRow key={member.name} member={member} i={i} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Groom's Side */}
-      <section id="groom-side" className="py-24 md:py-32 bg-background">
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12">
-          <div className="mb-16 md:mb-24 reveal-on-scroll">
-            <span className="font-label text-xs uppercase tracking-[0.4em] text-primary mb-6 block">
-              THE GROOM&apos;S SIDE
-            </span>
-            <h2 className="font-headline text-4xl md:text-6xl text-on-surface">
-              Groom&apos;s{" "}
-              <span className="italic font-light text-primary/80">Side</span>
-            </h2>
-          </div>
-
-          <div className="flex flex-col gap-y-16 md:gap-y-24 lg:gap-y-32">
-            {groomSide.map((member, i) => (
-              <MemberRow key={member.name} member={member} i={i} />
-            ))}
+            {/* Groom's Side column */}
+            <div id="groom-side">
+              <div className="mb-12 md:mb-16 text-center reveal-on-scroll">
+                <span className="font-label text-xs uppercase tracking-[0.4em] text-primary mb-4 block">
+                  THE GROOM&apos;S SIDE
+                </span>
+                <h2 className="font-headline text-3xl md:text-5xl text-on-surface">
+                  Groom&apos;s{" "}
+                  <span className="italic font-light text-primary/80">Side</span>
+                </h2>
+              </div>
+              <div className="flex flex-col gap-y-16 md:gap-y-20">
+                {groomSide.map((member) => (
+                  <MemberCard key={member.name} member={member} />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
