@@ -1,27 +1,26 @@
 ---
 gsd_state_version: 1.0
-milestone: v0.1
-milestone_name: milestone
-current_phase: complete
-status: milestone-complete
-stopped_at: Milestone v0.1 complete — all 3 phases shipped
-last_updated: "2026-05-30T16:34:29.421Z"
+milestone: v0.2
+milestone_name: Gated RSVP & Meal Selection
+status: planning
+last_updated: "2026-05-30T16:44:13.141Z"
+last_activity: 2026-05-30
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 10
-  completed_plans: 10
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # STATE
 
 **Project:** Aspen Wedding
-**Milestone:** v0.1 — Interactive Guest Features
-**Status:** Milestone v0.1 complete
-**Current phase:** complete
-**Stopped at:** Milestone v0.1 complete — all 3 phases shipped
-**Resume file:** None (next milestone via `/gsd:new-milestone`)
+**Milestone:** v0.2 — Gated RSVP & Meal Selection
+**Status:** Defining requirements
+**Current phase:** Not yet defined (roadmap pending)
+**Stopped at:** Milestone v0.2 started — gathering requirements
+**Resume file:** .planning/REQUIREMENTS.md (pending)
 
 ## Decisions
 
@@ -41,9 +40,17 @@ progress:
 - 2026-05-29: Phase 2 (Registry Page) context gathered — 4 areas discussed (list & data, layout & hero, brand presentation, personal note). CONTEXT.md + DISCUSSION-LOG.md written. Ready for `/gsd:plan-phase 2`.
 - 2026-05-30: Phase 2 (Registry Page) closed — all 3 plans shipped (hero + framing, card grid with tabnabbing mitigation, navbar wiring). 28-item smoke checklist passed with one hero-contrast fix (`e82d7d4`). gsd-verifier PASS 13/13.
 - 2026-05-30: Phase 3 (Bridal Party) closed — all 3 plans shipped with two design pivots during smoke check (layout: magazine rows → side-by-side columns; hero swap after Option 1 vs Option 3 comparison). Verifier caught a real D-07 bug (broken `<img>` src instead of monogram fallback) fixed in `1da1a1d`. Milestone v0.1 complete: 10/10 plans across 3 phases.
+- 2026-05-30: Milestone v0.2 (Gated RSVP & Meal Selection) started. Phase numbering continues from v0.1 (next = Phase 4). Approach: name-lookup gate, no auth, no magic link. Phases TBD (roadmapper next).
 
 ## Performance Metrics
 
 | Phase | Plan | Duration | Notes |
 |-------|------|----------|-------|
 | Phase 03 P01 | 1m13s | 1 tasks | 1 files |
+
+## Current Position
+
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-05-30 — Milestone v0.2 started
