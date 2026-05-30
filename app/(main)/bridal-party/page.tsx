@@ -5,6 +5,138 @@ export const metadata: Metadata = {
   description: "The 16 people standing with us on our Aspen wedding weekend.",
 };
 
+type Member = {
+  name: string;
+  role: string;
+  photo: string | null;
+  bio: string;
+};
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  const first = parts[0]?.[0] ?? "";
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
+  return (first + last).toUpperCase();
+}
+
+const brideSide: Member[] = [
+  {
+    name: "Sarah Else",
+    role: "MAID OF HONOR",
+    photo: "/bridal-party/sarah-else.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Emily Asinger",
+    role: "BRIDESMAID",
+    photo: "/bridal-party/emily-asinger.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Lindsay Carr",
+    role: "BRIDESMAID",
+    photo: "/bridal-party/lindsay-carr.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Sarah Horan",
+    role: "BRIDESMAID",
+    photo: "/bridal-party/sarah-horan.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Sam Jones",
+    role: "BRIDESMAID",
+    photo: "/bridal-party/sam-jones.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Shannon Robins",
+    role: "BRIDESMAID",
+    photo: "/bridal-party/shannon-robins.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Michelle Spencer",
+    role: "BRIDESMAID",
+    photo: "/bridal-party/michelle-spencer.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Ryan Hindle",
+    role: "BRIDESMAID",
+    photo: "/bridal-party/ryan-hindle.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+];
+
+const groomSide: Member[] = [
+  {
+    name: "Dylan Straffon",
+    role: "BEST MAN",
+    photo: "/bridal-party/dylan-straffon.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Aaron Sorge",
+    role: "GROOMSMAN",
+    photo: "/bridal-party/aaron-sorge.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Jack Cardello",
+    role: "GROOMSMAN",
+    photo: "/bridal-party/jack-cardello.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Ken Kinoshita",
+    role: "GROOMSMAN",
+    photo: "/bridal-party/ken-kinoshita.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Jon Metz",
+    role: "GROOMSMAN",
+    photo: "/bridal-party/jon-metz.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Ian Adams",
+    role: "GROOMSMAN",
+    photo: "/bridal-party/ian-adams.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Collin DeMatt",
+    role: "GROOMSMAN",
+    photo: "/bridal-party/collin-dematt.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+  {
+    name: "Josh Tallman",
+    role: "GROOMSMAN",
+    photo: "/bridal-party/josh-tallman.jpg",
+    // TODO: replace with real bio
+    bio: "A dear friend to both of us — we're so glad they're standing with us.",
+  },
+];
+
 export default function BridalPartyPage() {
   return (
     <main>
