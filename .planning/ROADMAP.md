@@ -75,13 +75,13 @@ Plans:
 
 **Dependencies:** none (independent of Phase 1 & 2)
 
-**Plans:** 1/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 
-- [x] 03-01-PLAN.md — Page scaffold: metadata, Server Component shell, hero (verbatim 2-axis scrim recipe + locked copy), two empty section placeholders
-- [ ] 03-02-PLAN.md — Magazine row body: Member type + getInitials helper + locked 16-person data arrays + Bride's Side + Groom's Side section headers and 8 alternating rows each with monogram fallback
-- [ ] 03-03-PLAN.md — Navbar integration (index 4, between Things To Do and FAQ) + end-to-end 53-item smoke checklist + 7-route regression sweep
+- [x] 03-01-PLAN.md — Page scaffold: metadata, Server Component shell, hero, two empty section placeholders
+- [x] 03-02-PLAN.md — Member type + getInitials helper + 16-person data arrays + section bodies (originally magazine rows; pivoted to side-by-side columns in Plan 03)
+- [x] 03-03-PLAN.md — Navbar integration + layout pivot to side-by-side columns + hero swap + smoke checklist
 
 ---
 
