@@ -4,8 +4,8 @@ milestone: v0.1
 milestone_name: milestone
 current_phase: 03
 status: Ready to start next phase
-stopped_at: Phase 3 context gathered
-last_updated: "2026-05-30T14:58:23.265Z"
+stopped_at: Phase 3 UI-SPEC approved
+last_updated: "2026-05-30T15:06:20.453Z"
 progress:
   total_phases: 3
   completed_phases: 2
@@ -20,8 +20,8 @@ progress:
 **Milestone:** v0.1 — Interactive Guest Features
 **Status:** Ready to start next phase
 **Current phase:** 03
-**Stopped at:** Phase 3 context gathered
-**Resume file:** .planning/phases/03-bridal-party/03-CONTEXT.md
+**Stopped at:** Phase 3 UI-SPEC approved
+**Resume file:** .planning/phases/03-bridal-party/03-UI-SPEC.md
 
 ## Decisions
 
