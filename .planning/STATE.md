@@ -1,16 +1,18 @@
 ---
 gsd_state_version: 1.0
 milestone: v0.2
-milestone_name: Gated RSVP & Meal Selection
+milestone_name: - Guest accounts / passwords / magic links — name-lookup gate is the identity layer
+current_phase: Phase 4 — Guest List Schema & Lookup API (next)
 status: planning
-last_updated: "2026-05-30T17:30:00.000Z"
-last_activity: 2026-05-30
+stopped_at: Phase 4 context gathered
+last_updated: "2026-05-30T17:09:58.899Z"
+last_activity: 2026-05-30 — v0.2 roadmap written
 progress:
   total_phases: 4
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  completed_phases: 3
+  total_plans: 10
+  completed_plans: 10
+  percent: 75
 ---
 
 # STATE
@@ -19,8 +21,8 @@ progress:
 **Milestone:** v0.2 — Gated RSVP & Meal Selection
 **Status:** Roadmap drafted; awaiting phase planning
 **Current phase:** Phase 4 — Guest List Schema & Lookup API (next)
-**Stopped at:** Roadmap for v0.2 written (Phases 4-7); REQUIREMENTS traceability filled
-**Resume file:** .planning/ROADMAP.md (Phase 4 ready for `/gsd:plan-phase 4`)
+**Stopped at:** Phase 4 context gathered
+**Resume file:** .planning/phases/04-guest-list-and-api/04-CONTEXT.md
 
 ## Decisions
 
