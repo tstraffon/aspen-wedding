@@ -58,7 +58,7 @@ export default function RegistryPage() {
             aria-hidden="true"
             style={{
               background:
-                "linear-gradient(to bottom, rgba(13,27,30,0.05), rgba(13,27,30,0.3))",
+                "linear-gradient(to bottom, rgba(13,27,30,0.15) 0%, rgba(13,27,30,0.5) 55%, rgba(13,27,30,0.85) 100%), linear-gradient(to right, rgba(13,27,30,0.45) 0%, rgba(13,27,30,0.15) 45%, transparent 70%)",
             }}
           />
         </div>
