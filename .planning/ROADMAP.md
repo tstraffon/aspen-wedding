@@ -49,13 +49,13 @@ Plans:
 
 **Dependencies:** none (independent of Phase 1)
 
-**Plans:** 3 plans
+**Plans:** 3/3 plans complete
 
 Plans:
 
-- [ ] 02-01-PLAN.md — Page scaffold: hero section + framing block (Server Component, metadata export)
-- [ ] 02-02-PLAN.md — Card grid: inline registries array + 3-col grid with a11y and tabnabbing mitigation
-- [ ] 02-03-PLAN.md — Navbar integration + end-to-end smoke checklist
+- [x] 02-01-PLAN.md — Page scaffold: hero section + framing block (Server Component, metadata export)
+- [x] 02-02-PLAN.md — Card grid: inline registries array + 3-col grid with a11y and tabnabbing mitigation
+- [x] 02-03-PLAN.md — Navbar integration + end-to-end smoke checklist
 
 ---
 
