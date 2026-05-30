@@ -4,13 +4,13 @@ milestone: v0.2
 milestone_name: - Guest accounts / passwords / magic links — name-lookup gate is the identity layer
 current_phase: Phase 4 — Guest List Schema & Lookup API (next)
 status: planning
-stopped_at: Phase 4 context gathered
-last_updated: "2026-05-30T17:09:58.899Z"
+stopped_at: Phase 4 plans created and verified
+last_updated: "2026-05-30T20:07:18.534Z"
 last_activity: 2026-05-30 — v0.2 roadmap written
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 10
+  total_plans: 13
   completed_plans: 10
   percent: 75
 ---
@@ -21,8 +21,8 @@ progress:
 **Milestone:** v0.2 — Gated RSVP & Meal Selection
 **Status:** Roadmap drafted; awaiting phase planning
 **Current phase:** Phase 4 — Guest List Schema & Lookup API (next)
-**Stopped at:** Phase 4 context gathered
-**Resume file:** .planning/phases/04-guest-list-and-api/04-CONTEXT.md
+**Stopped at:** Phase 4 plans created and verified
+**Resume file:** .planning/phases/04-guest-list-and-api/04-01-PLAN.md
 
 ## Decisions
 
