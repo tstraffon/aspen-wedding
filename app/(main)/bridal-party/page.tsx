@@ -190,7 +190,7 @@ export default function BridalPartyPage() {
             className="w-full h-full bg-cover bg-center hero-parallax-bg"
             style={{
               backgroundImage:
-                "url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=1600&q=80')",
+                "url('https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=1600&q=80')",
             }}
             aria-hidden="true"
           />
@@ -215,7 +215,7 @@ export default function BridalPartyPage() {
               </span>
             </h1>
             <p className="text-on-surface-variant text-lg max-w-2xl font-light leading-relaxed hero-reveal-subtitle">
-              Eight on each side — the people we&apos;ve leaned on, laughed with, and could not picture this weekend without.
+              The people we&apos;ve leaned on, laughed with, and could not picture this weekend without.
             </p>
           </div>
         </div>
