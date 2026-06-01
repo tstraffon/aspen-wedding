@@ -1,18 +1,18 @@
 ---
 gsd_state_version: 1.0
 milestone: v0.2
-milestone_name: Gated RSVP & Meal Selection
-current_phase: 05
-status: ready
-stopped_at: Phase 4 closed — ready for Phase 5 (Name-Lookup Gate UI)
-last_updated: "2026-06-01T21:53:21.950Z"
-last_activity: 2026-06-01 — Phase 4 shipped, verifier PASS
+milestone_name: - Guest accounts / passwords / magic links — name-lookup gate is the identity layer
+current_phase: Phase 5 — Name-Lookup Gate UI (next)
+status: Phase 4 shipped — ready for Phase 5
+stopped_at: Phase 5 context gathered
+last_updated: "2026-06-01T22:38:25.664Z"
+last_activity: 2026-06-01 — Phase 4 closed, verifier PASS
 progress:
-  total_phases: 4
-  completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
-  percent: 25
+  total_phases: 5
+  completed_phases: 4
+  total_plans: 13
+  completed_plans: 13
+  percent: 80
 ---
 
 # STATE
@@ -21,8 +21,8 @@ progress:
 **Milestone:** v0.2 — Gated RSVP & Meal Selection
 **Status:** Phase 4 shipped — ready for Phase 5
 **Current phase:** Phase 5 — Name-Lookup Gate UI (next)
-**Stopped at:** Phase 4 closed; verifier PASS 5/5 REQ + 19/19 D-IDs
-**Resume file:** .planning/ROADMAP.md (Phase 5 not yet discussed)
+**Stopped at:** Phase 5 context gathered
+**Resume file:** .planning/phases/05-name-lookup-gate-ui/05-CONTEXT.md
 
 ## Decisions
 
