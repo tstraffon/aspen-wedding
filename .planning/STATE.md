@@ -1,28 +1,28 @@
 ---
 gsd_state_version: 1.0
 milestone: v0.2
-milestone_name: - Guest accounts / passwords / magic links — name-lookup gate is the identity layer
-current_phase: Phase 4 — Guest List Schema & Lookup API (next)
-status: planning
-stopped_at: Phase 4 plans created and verified
-last_updated: "2026-05-30T20:07:18.534Z"
-last_activity: 2026-05-30 — v0.2 roadmap written
+milestone_name: Gated RSVP & Meal Selection
+current_phase: 05
+status: ready
+stopped_at: Phase 4 closed — ready for Phase 5 (Name-Lookup Gate UI)
+last_updated: "2026-06-01T21:53:21.950Z"
+last_activity: 2026-06-01 — Phase 4 shipped, verifier PASS
 progress:
   total_phases: 4
-  completed_phases: 3
-  total_plans: 13
-  completed_plans: 10
-  percent: 75
+  completed_phases: 1
+  total_plans: 3
+  completed_plans: 3
+  percent: 25
 ---
 
 # STATE
 
 **Project:** Aspen Wedding
 **Milestone:** v0.2 — Gated RSVP & Meal Selection
-**Status:** Roadmap drafted; awaiting phase planning
-**Current phase:** Phase 4 — Guest List Schema & Lookup API (next)
-**Stopped at:** Phase 4 plans created and verified
-**Resume file:** .planning/phases/04-guest-list-and-api/04-01-PLAN.md
+**Status:** Phase 4 shipped — ready for Phase 5
+**Current phase:** Phase 5 — Name-Lookup Gate UI (next)
+**Stopped at:** Phase 4 closed; verifier PASS 5/5 REQ + 19/19 D-IDs
+**Resume file:** .planning/ROADMAP.md (Phase 5 not yet discussed)
 
 ## Decisions
 
@@ -48,6 +48,7 @@ progress:
 - 2026-05-30: Phase 3 (Bridal Party) closed — all 3 plans shipped with two design pivots during smoke check (layout: magazine rows → side-by-side columns; hero swap after Option 1 vs Option 3 comparison). Verifier caught a real D-07 bug (broken `<img>` src instead of monogram fallback) fixed in `1da1a1d`. Milestone v0.1 complete: 10/10 plans across 3 phases.
 - 2026-05-30: Milestone v0.2 (Gated RSVP & Meal Selection) started. Phase numbering continues from v0.1 (next = Phase 4). Approach: name-lookup gate, no auth, no magic link.
 - 2026-05-30: v0.2 roadmap drafted: Phase 4 (backend schema + lookup/submit API), Phase 5 (lookup gate UI), Phase 6 (group form + meals), Phase 7 (Tyler handoff: CSV import, meal report, runbook). All 11 requirements mapped to a single phase each; coverage 11/11.
+- 2026-06-01: Phase 4 (Guest List Schema & Lookup API) closed — all 3 plans shipped (SCHEMA.sql + Studio apply with 10 verification queries; /api/rsvp/lookup; /api/rsvp/submit). Five mid-phase schema/route patches surfaced during smoke runs and were folded into SCHEMA.sql: REVOKE ALL before GRANT SELECT on guests (Supabase default-grants), DISABLE RLS on guests (Phase 1 quirk repeating), DROP NOT NULL on rsvps.full_name+email (v0.2 upserts omit), swap partial UNIQUE index for plain UNIQUE constraint (PostgREST on_conflict), introduce SECURITY DEFINER function submit_rsvps for the upsert (anon has no SELECT on rsvps). Submit route refactored to .rpc(). Lookup smokes 7/7 PASS, submit smokes 9/9 PASS including atomicity Smoke #9 (verified zero partial writes via Studio query). Verifier PASS 5/5 REQ + 19/19 D-IDs.
 
 ## Performance Metrics
 
@@ -57,7 +58,7 @@ progress:
 
 ## Current Position
 
-Phase: Phase 4 — Guest List Schema & Lookup API (planning pending)
+Phase: Phase 5 — Name-Lookup Gate UI (next; CONTEXT not yet gathered)
 Plan: —
-Status: Roadmap drafted; awaiting `/gsd:plan-phase 4`
-Last activity: 2026-05-30 — v0.2 roadmap written
+Status: Phase 4 shipped; ready for `/gsd:discuss-phase 5` or `/gsd:ui-phase 5`
+Last activity: 2026-06-01 — Phase 4 closed, verifier PASS

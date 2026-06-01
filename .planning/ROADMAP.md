@@ -99,7 +99,7 @@ Plans:
 
 ## Phases
 
-- [ ] **Phase 4: Guest List Schema & Lookup API** — Database schema + server-side lookup/upsert endpoints
+- [x] **Phase 4: Guest List Schema & Lookup API** — Database schema + server-side lookup/upsert endpoints (shipped 2026-06-01)
 - [ ] **Phase 5: Name-Lookup Gate UI** — `/rsvp` revamp: lookup screen, hit/miss UX, group-form scaffold
 - [ ] **Phase 6: Group Form & Meal Selection** — Per-member rows, attending toggle, meal dropdown, dietary notes, submit
 - [ ] **Phase 7: Tyler-Facing Handoff** — CSV import flow, meal-count report query, runbook, end-to-end smoke
