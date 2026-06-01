@@ -96,8 +96,17 @@ CREATE UNIQUE INDEX IF NOT EXISTS rsvps_guest_id_uniq
 -- ============================================================
 -- 3. GRANT layer — carry forward Phase 1 pattern (D-06, D-07)
 -- ============================================================
+-- CRITICAL: Supabase enables Row-Level Security by default on every new public
+-- table via the dashboard. With RLS enabled and no policies, anon receives a
+-- SILENT empty-array response on SELECT (HTTP 200, body []) — NOT an error.
+-- Phase 1 documented this same quirk for rsvps and disabled RLS there. We
+-- carry forward the same pattern: GRANT-based access, RLS disabled. Without
+-- this DISABLE, the lookup_guest_by_name() RPC returns empty even when rows
+-- exist, because the inner SELECT runs under the caller's (anon's) RLS context.
+ALTER TABLE public.guests DISABLE ROW LEVEL SECURITY;
+
 -- guests: anon reads ONLY (lookup gate), authenticated full access (Tyler in Studio).
--- IMPORTANT: Supabase's default grants anon ALL privileges on new public tables.
+-- IMPORTANT: Supabase's default also grants anon ALL privileges on new public tables.
 -- The REVOKE below strips DELETE/INSERT/UPDATE/REFERENCES/TRIGGER/TRUNCATE before
 -- granting just SELECT — same posture Phase 1 used for rsvps. Without this REVOKE,
 -- anon could DELETE the entire guest list via the Supabase REST API.
