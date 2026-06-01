@@ -68,6 +68,15 @@ ALTER TABLE public.rsvps ADD COLUMN IF NOT EXISTS meal_choice  text;
 -- server-defined (the lookup endpoint returns the full household).
 ALTER TABLE public.rsvps DROP COLUMN IF EXISTS guest_count;
 
+-- RELAX: v0.2 upserts identify guests by guest_id (uuid), not full_name + email.
+-- The submit route's payload omits full_name and email entirely — and CONTEXT D-02
+-- explicitly skipped adding email to guests. Dropping NOT NULL on these v0.1
+-- columns lets v0.2 rsvps rows coexist with v0.1 rows (which still have data in
+-- these columns). Discovered post-Wave-2 dispatch: original SCHEMA.sql kept the
+-- columns per D-03 but didn't realize the v0.2 upsert path would NULL them.
+ALTER TABLE public.rsvps ALTER COLUMN full_name DROP NOT NULL;
+ALTER TABLE public.rsvps ALTER COLUMN email     DROP NOT NULL;
+
 -- Partial unique index on guest_id — lets v0.1 NULL rows coexist while
 -- enforcing one rsvp per guest going forward. Plan 04-03's submit route
 -- relies on this for its upsert: .upsert(rows, { onConflict: "guest_id" }).
