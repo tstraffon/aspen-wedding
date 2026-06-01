@@ -87,9 +87,14 @@ CREATE UNIQUE INDEX IF NOT EXISTS rsvps_guest_id_uniq
 -- ============================================================
 -- 3. GRANT layer — carry forward Phase 1 pattern (D-06, D-07)
 -- ============================================================
--- guests: anon reads (lookup gate), authenticated full access (Tyler in Studio).
-GRANT SELECT ON public.guests TO anon;
-GRANT ALL    ON public.guests TO authenticated;
+-- guests: anon reads ONLY (lookup gate), authenticated full access (Tyler in Studio).
+-- IMPORTANT: Supabase's default grants anon ALL privileges on new public tables.
+-- The REVOKE below strips DELETE/INSERT/UPDATE/REFERENCES/TRIGGER/TRUNCATE before
+-- granting just SELECT — same posture Phase 1 used for rsvps. Without this REVOKE,
+-- anon could DELETE the entire guest list via the Supabase REST API.
+REVOKE ALL    ON public.guests FROM anon;
+GRANT  SELECT ON public.guests TO anon;
+GRANT  ALL    ON public.guests TO authenticated;
 
 -- rsvps: re-state Phase 1's GRANT matrix. Table-level grants cover ALTERed
 -- columns automatically, but re-stating documents the intended posture and
