@@ -214,3 +214,71 @@ Files exist:
 
 Commits exist:
 - FOUND: `09df8c3 feat(04-03): add POST /api/rsvp/submit batched upsert endpoint`
+
+---
+
+## AMENDMENT — All smokes verified PASS (2026-06-01)
+
+The original SUMMARY above documented deferred verification because the dev seed was missing and `rsvps.full_name`/`email` were `NOT NULL`. Both fixes landed, plus three more schema/route fixes surfaced during re-verification. Final state:
+
+### Schema patches landed (committed in SCHEMA.sql)
+
+1. **`24745a0`** — Drop `NOT NULL` on `rsvps.full_name` + `rsvps.email`. v0.2 upserts omit these; v0.1 rows preserved.
+2. **`a29e803`** — `ALTER TABLE public.guests DISABLE ROW LEVEL SECURITY`. Supabase enables RLS by default on new tables; with RLS on and no policies, anon's SELECT returned silent empty arrays (HTTP 200, body `[]`). Same Phase 1 quirk repeating.
+3. **`215e61c`** — Swap partial unique index `(guest_id) WHERE guest_id IS NOT NULL` for a plain `UNIQUE` constraint. PostgREST's `on_conflict=guest_id` query param can't match a partial index (PG error 42P10). Plain UNIQUE on nullable column is functionally equivalent (SQL spec: NULL distinct from NULL).
+4. **`d332e21`** — Expose the upsert through a `SECURITY DEFINER` function `public.submit_rsvps(p_rows jsonb)`. PostgreSQL `INSERT ... ON CONFLICT DO UPDATE` requires SELECT on the conflict-target column; anon has no SELECT on rsvps. SECURITY DEFINER lets the function run as the table owner; anon only gets EXECUTE. Asymmetric with `lookup_guest_by_name` (no SECURITY DEFINER, runs as caller against guests which anon CAN read).
+
+### Route patch (committed in same `d332e21`)
+
+`app/(main)/api/rsvp/submit/route.ts` refactored from `supabase.from("rsvps").upsert(...)` to `supabase.rpc("submit_rsvps", { p_rows: rows })`. All other validation (UUID format, enum check, cross-household authz, sanitized errors) preserved.
+
+### Studio interventions (Tyler-run, no SCHEMA.sql changes needed — already in artifact)
+
+1. Re-seeded `guests` with literal UUIDs matching `DEV-SEED-IDS.md` (the rows were never actually deleted — RLS quirk masked them).
+2. Ran `REVOKE DELETE, INSERT, REFERENCES, TRIGGER, TRUNCATE, UPDATE ON public.guests FROM anon;` (already captured in Plan 04-01 amendment).
+3. Cleanup: `DELETE FROM public.guests WHERE full_name = '__schema_verify_delete_me__';` removed the orphan probe row from Plan 04-01 Step 7.
+
+### Final smoke results (all PASS via SECURITY DEFINER RPC)
+
+| Smoke | Result |
+|---|---|
+| #0 proxy gate inheritance (unauth) | HTTP 307 → /login ✅ |
+| #1 positive (Tyler+Emily attending) | HTTP 200 `{success:true, count:2}` ✅ |
+| #2 idempotency (same payload) | HTTP 200 `{success:true, count:2}` (upsert, no duplicate rows) ✅ |
+| #3 update (Tyler not attending) | HTTP 200 `{success:true, count:2}` ✅ |
+| #4 attending no meal | HTTP 400 ✅ |
+| #5 invalid meal "lobster" | HTTP 400 ✅ |
+| #6 cross-household authz (ELSE in H1) | HTTP 400 ✅ |
+| #7 bad household_id "not-a-uuid" | HTTP 400 ✅ |
+| #8 empty body | HTTP 400 ✅ |
+| #9 atomicity (dup guest_id H3) | HTTP 500 ✅, post-call Studio query confirmed 0 rows in household 3333 ✅ |
+
+### Verified rsvps state (Studio query post-Smoke-#3)
+
+```
+household 1111-1111-...-111: 2 rows
+  Emily Riley   (26a564b5...) attending=true  meal=chicken     dietary='no shellfish'
+  Tyler Straffon (e3be61dd...) attending=false meal=NULL       dietary=NULL
+household 3333-3333-...-333: 0 rows  ← atomicity verified, Smoke #9 rolled back cleanly
+```
+
+### Outstanding Tyler-Cleanup (deferred to Phase 7 runbook)
+
+The verified state above is dev-seed test data. Phase 7's pre-ship cleanup runbook truncates these rows:
+
+```sql
+DELETE FROM public.rsvps WHERE household_id IN (
+  '11111111-1111-1111-1111-111111111111',
+  '22222222-2222-2222-2222-222222222222',
+  '33333333-3333-3333-3333-333333333333'
+);
+DELETE FROM public.guests WHERE household_id IN (
+  '11111111-1111-1111-1111-111111111111',
+  '22222222-2222-2222-2222-222222222222',
+  '33333333-3333-3333-3333-333333333333'
+);
+```
+
+### Plan 04-03 status: COMPLETE
+
+GROUP-02 (atomicity), GROUP-03 (idempotent upsert), and all derived smokes pass live against the deployed Supabase project + dev server. Verification gap noted in the original SUMMARY is now closed.

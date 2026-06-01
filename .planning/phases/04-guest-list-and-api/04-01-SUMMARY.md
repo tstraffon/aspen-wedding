@@ -67,4 +67,32 @@ Plans 04-02 and 04-03 can now run in parallel. Both read `DEV-SEED-IDS.md` to co
 
 ## Outstanding pre-Wave-2 cleanup
 
-- User asked to run `DELETE FROM public.guests WHERE full_name = '__schema_verify_delete_me__';` to remove the Step 7 INSERT residue. This row is harmless (orphan household `99999999…` referenced by no rsvps row), but cleaner without it.
+- User asked to run `DELETE FROM public.guests WHERE full_name = '__schema_verify_delete_me__';` to remove the Step 7 INSERT residue. Confirmed cleaned up during Wave 2 troubleshooting.
+
+---
+
+## AMENDMENT — RLS quirk discovered during Wave 2 (2026-06-01)
+
+During Wave 2 smoke runs, the `guests` table appeared empty to both the anon REST API AND to the route handlers, even though `authenticated`-role Studio queries (`SELECT * FROM public.guests`) returned all 4 dev-seed rows. Attempting to re-INSERT the same UUIDs errored with `23505 duplicate_key`, confirming the rows existed but were invisible to anon.
+
+**Root cause:** Supabase enables Row-Level Security by default on every public table created via the dashboard. With RLS enabled and no policies, anon's `SELECT` returns a silent empty result (HTTP 200, body `[]`) — NOT an error. This is the same quirk Phase 1 hit on `rsvps` and disabled RLS to work around. SCHEMA.sql originally only set the GRANT layer; it did not also disable RLS.
+
+**Fix (`a29e803`):**
+- Patched SCHEMA.sql to add `ALTER TABLE public.guests DISABLE ROW LEVEL SECURITY` immediately before the GRANT block.
+- User ran the same statement in Studio. Verified via `SELECT relname, relrowsecurity FROM pg_class` — both `guests` and `rsvps` now show `relrowsecurity=false`.
+- After RLS disable: anon REST API returns all 4 rows. Lookup route Smoke #1 (Tyler Straffon) returns the full household. RPC also works.
+
+**Lesson:** Whenever a new public table is created in this project, SCHEMA.sql must explicitly `DISABLE ROW LEVEL SECURITY` (sibling to the GRANT layer) to match Phase 1's posture. Future phases creating new tables should encode this in the migration SQL by default.
+
+## Wave 2 verified state
+
+After Wave 2 smokes completed (all 7 lookup smokes + all 9 submit smokes PASS, including atomicity Smoke #9), the database contained:
+
+- `guests`: 4 dev-seed rows (Emily Riley, Tyler Straffon, Sarah Else, Sarah Horan) at the locked UUIDs from `DEV-SEED-IDS.md`
+- `rsvps`: 2 rows in household `1111` (Emily attending=true with chicken+'no shellfish', Tyler attending=false from Smoke #3 update); 0 rows in household `3333` (Smoke #9's atomicity rollback verified)
+
+These rows are dev-seed test data. Phase 7's runbook will document the pre-ship cleanup SQL.
+
+## Plan 04-01 status: COMPLETE
+
+GUEST-01 (schema half) and MEAL-03 (column added). RLS-disable patch landed in SCHEMA.sql so future re-applies are correct. Wave 2 fully unblocked.
