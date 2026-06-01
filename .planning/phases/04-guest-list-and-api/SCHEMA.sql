@@ -77,11 +77,19 @@ ALTER TABLE public.rsvps DROP COLUMN IF EXISTS guest_count;
 ALTER TABLE public.rsvps ALTER COLUMN full_name DROP NOT NULL;
 ALTER TABLE public.rsvps ALTER COLUMN email     DROP NOT NULL;
 
--- Partial unique index on guest_id — lets v0.1 NULL rows coexist while
--- enforcing one rsvp per guest going forward. Plan 04-03's submit route
--- relies on this for its upsert: .upsert(rows, { onConflict: "guest_id" }).
-CREATE UNIQUE INDEX IF NOT EXISTS rsvps_guest_id_uniq
-  ON public.rsvps (guest_id) WHERE guest_id IS NOT NULL;
+-- UNIQUE constraint on guest_id — enforces one rsvp per guest. NULLs are
+-- treated as distinct per SQL spec, so v0.1 rows (guest_id IS NULL) coexist
+-- without limit. Plan 04-03's submit route relies on this constraint name
+-- being inferrable by PostgREST's `on_conflict=guest_id` query param.
+--
+-- NOTE: Earlier draft used `CREATE UNIQUE INDEX ... WHERE guest_id IS NOT NULL`
+-- (a partial unique index). That enforces uniqueness correctly but PostgREST
+-- cannot match a partial index to `on_conflict=guest_id`, so .upsert() fails
+-- with Postgres error 42P10. The plain UNIQUE constraint below is functionally
+-- equivalent for our case (NULL is distinct from NULL in SQL) and IS matched
+-- by PostgREST.
+ALTER TABLE public.rsvps DROP CONSTRAINT IF EXISTS rsvps_guest_id_uniq;
+ALTER TABLE public.rsvps ADD  CONSTRAINT     rsvps_guest_id_uniq UNIQUE (guest_id);
 
 -- NOTE: No FK constraint on rsvps.guest_id → guests.id (D-04). Trade-off
 -- accepted: cleaner backward compat with v0.1 rows + flexibility if the
