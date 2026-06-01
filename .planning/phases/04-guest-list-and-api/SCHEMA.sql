@@ -125,9 +125,74 @@ GRANT  ALL    ON public.guests TO authenticated;
 -- rsvps: re-state Phase 1's GRANT matrix. Table-level grants cover ALTERed
 -- columns automatically, but re-stating documents the intended posture and
 -- guards against any silent regression during the migration.
+--
+-- NOTE: anon has INSERT + UPDATE only. The v0.2 submit path needs to do an
+-- upsert (INSERT ... ON CONFLICT DO UPDATE) which Postgres requires SELECT
+-- for. We sidestep this by exposing the upsert through a SECURITY DEFINER
+-- function (submit_rsvps below) — anon gets EXECUTE on the function, the
+-- function runs as the table owner. anon STILL cannot directly read rsvps.
 GRANT INSERT, UPDATE ON public.rsvps TO anon;
 REVOKE SELECT        ON public.rsvps FROM anon;
 GRANT ALL            ON public.rsvps TO authenticated;
+
+
+-- ============================================================
+-- 4b. submit_rsvps(p_rows jsonb) — SECURITY DEFINER upsert function
+-- ============================================================
+-- Why SECURITY DEFINER (asymmetric with lookup_guest_by_name):
+--   The lookup function uses LANGUAGE sql STABLE (no SECURITY DEFINER) because
+--   anon already has SELECT on guests — the function inherits the caller's
+--   privileges and just engages the lookup index.
+--   The submit function MUST use SECURITY DEFINER because anon has no SELECT
+--   on rsvps — Postgres' INSERT ... ON CONFLICT DO UPDATE requires SELECT
+--   privilege on the conflict-target column (PG error 42501 otherwise). Rather
+--   than granting anon SELECT on rsvps (which would let any anon caller read
+--   every RSVP via PostgREST), we expose the upsert through this function.
+--   The function runs as its owner (postgres / authenticated) which has full
+--   table access; anon only gets EXECUTE.
+--
+-- Validation contract:
+--   This function does NOT re-validate the caller's input (route does that).
+--   The route at app/(main)/api/rsvp/submit/route.ts is the gatekeeper. The
+--   function trusts whatever jsonb it receives and lets Postgres errors
+--   propagate (cast failures, ON CONFLICT atomicity violations, etc.). The
+--   route catches the error and returns a sanitized 500.
+--
+-- Atomicity:
+--   The INSERT ... ON CONFLICT clause is ONE SQL statement → statement-level
+--   atomic. Smoke #9 in Plan 04-03 (duplicate guest_id within p_rows) verifies
+--   that intra-payload duplicates trigger a single rollback (PG21000: "ON
+--   CONFLICT DO UPDATE command cannot affect row a second time") with zero
+--   partial writes.
+CREATE OR REPLACE FUNCTION public.submit_rsvps(p_rows jsonb)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  INSERT INTO public.rsvps (household_id, guest_id, attending, meal_choice, dietary_restrictions)
+  SELECT
+    (r->>'household_id')::uuid,
+    (r->>'guest_id')::uuid,
+    (r->>'attending')::boolean,
+    CASE WHEN (r->>'attending')::boolean THEN r->>'meal_choice' ELSE NULL END,
+    r->>'dietary_restrictions'
+  FROM jsonb_array_elements(p_rows) AS r
+  ON CONFLICT (guest_id) DO UPDATE SET
+    household_id         = EXCLUDED.household_id,
+    attending            = EXCLUDED.attending,
+    meal_choice          = EXCLUDED.meal_choice,
+    dietary_restrictions = EXCLUDED.dietary_restrictions;
+
+  RETURN jsonb_build_object('count', jsonb_array_length(p_rows));
+END;
+$$;
+
+REVOKE ALL    ON FUNCTION public.submit_rsvps(jsonb) FROM public;
+REVOKE ALL    ON FUNCTION public.submit_rsvps(jsonb) FROM anon;
+GRANT EXECUTE ON FUNCTION public.submit_rsvps(jsonb) TO anon;
+GRANT EXECUTE ON FUNCTION public.submit_rsvps(jsonb) TO authenticated;
 
 -- NOTE: No RLS enabled on either table (D-06). Phase 1 hit a Supabase quirk
 -- where anon was denied even by PERMISSIVE policies under SET LOCAL ROLE

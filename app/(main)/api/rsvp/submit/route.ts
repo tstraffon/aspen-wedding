@@ -164,17 +164,31 @@ export async function POST(request: NextRequest) {
   // unique index from Plan 04-01. If any row in the batch violates a constraint
   // (e.g. intra-payload duplicate guest_id), the entire statement rolls back and
   // zero rows are written. Smoke #9 verifies.
-  const { error: upsertErr, count } = await supabase
-    .from("rsvps")
-    .upsert(rows, { onConflict: "guest_id", count: "exact" });
+  // Why .rpc() instead of .upsert():
+  //   Postgres requires SELECT permission on the conflict-target column for
+  //   INSERT ... ON CONFLICT DO UPDATE. Anon has only INSERT + UPDATE on
+  //   rsvps (D-07) — direct .upsert() fails with PG error 42501. The
+  //   submit_rsvps(jsonb) function in SCHEMA.sql is SECURITY DEFINER, so it
+  //   runs as the table owner; anon only gets EXECUTE on the function.
+  //   Statement-level atomicity is preserved (the function does one INSERT
+  //   ... ON CONFLICT statement and lets Postgres errors propagate).
+  const { error: rpcErr } = await supabase.rpc("submit_rsvps", {
+    p_rows: rows,
+  });
 
-  if (upsertErr) {
-    console.error("RSVP upsert error:", upsertErr);
+  if (rpcErr) {
+    console.error(
+      "RSVP submit_rsvps error:",
+      JSON.stringify({
+        code: (rpcErr as { code?: string }).code,
+        message: rpcErr.message,
+      })
+    );
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },
       { status: 500 }
     );
   }
 
-  return NextResponse.json({ success: true, count: count ?? rows.length });
+  return NextResponse.json({ success: true, count: rows.length });
 }
