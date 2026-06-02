@@ -1,136 +1,148 @@
+// Decisions implemented: D-01, D-02, D-03, D-04, D-05, D-06, L-01..L-07, F-01..F-05.
+//
+// RESEARCH deviation (Q6): Entrance animation for form-stage rows uses the
+// `hero-fade-up` keyframe (time-based) via inline `animation` style. The
+// scroll-driven CSS utility (animation-timeline: view()) is intentionally
+// NOT used — elements mounting already in-viewport never trigger its entry
+// range, leaving them permanently at opacity: 0. Plan 05-01 prepares no
+// animation hook on the lookup stage itself. Plan 05-02 implements the staggered
+// entrance on member rows using the pattern documented in RESEARCH Q6 lines 670-685.
+//
+// FormState.submissions.attending is a `"yes" | "no" | null` UI string union
+// per D-02. Phase 6 transforms `"yes" → true`, `"no" → false` before POSTing
+// to /api/rsvp/submit (the Phase 4 endpoint expects `attending: boolean`).
+// Documented per RESEARCH Q12-tail.
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 
-type FormState = {
-  fullName: string;
-  email: string;
-  attending: "accept" | "decline" | null;
-  guestCount: string;
-  dietaryRestrictions: string;
-  note: string;
+// ── v0.2 FormState types (D-02 — locked shape, Phase 6 consumes without refactor) ──
+
+type Stage = "lookup" | "form" | "success";
+type ErrorKind = "network" | "server" | "validation" | "miss";
+
+type Submission = {
+  guest_id: string;
+  full_name: string;
+  attending: "yes" | "no" | null; // "yes"|"no" UI value. Phase 6 maps to boolean for POST /api/rsvp/submit.
+  meal_choice: string | null;
+  dietary_restrictions: string;
 };
 
-type FormErrors = Partial<Record<"fullName" | "email" | "attending", string>>;
-type ErrorKind = "network" | "server" | "validation";
+type FormState = {
+  stage: Stage;
+  lookupName: string;
+  household: { id: string; members: { guest_id: string; full_name: string }[] } | null;
+  submissions: Submission[];
+  errorKind: ErrorKind | null;
+};
 
 export default function RSVPPage() {
   const [form, setForm] = useState<FormState>({
-    fullName: "",
-    email: "",
-    attending: null,
-    guestCount: "1 Guest",
-    dietaryRestrictions: "",
-    note: "",
+    stage: "lookup",
+    lookupName: "",
+    household: null,
+    submissions: [],
+    errorKind: null,
   });
-  const [status, setStatus] = useState<
-    "idle" | "submitting" | "success" | "error"
-  >("idle");
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [errorKind, setErrorKind] = useState<ErrorKind | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Refs: errorBannerRef + formHeadingRef + lookupInputRef (RESEARCH Q3 + Q4)
   const errorBannerRef = useRef<HTMLParagraphElement>(null);
-  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+  const formHeadingRef = useRef<HTMLHeadingElement>(null);
+  const lookupInputRef = useRef<HTMLInputElement>(null);
 
-  function validate(): FormErrors {
-    const next: FormErrors = {};
-    if (!form.fullName.trim()) {
-      next.fullName = "We need your name to find your invitation.";
-    }
-    if (!form.email.trim()) {
-      next.email = "Where should we reach you with details?";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      next.email = "That email doesn't look right — double-check the spelling.";
-    }
-    if (!form.attending) {
-      next.attending = "Let us know if you can make it.";
-    }
-    return next;
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
+  // ── handleLookup (L-05 flow, RESEARCH Q2 + Q10) ──────────────────────────
+  async function handleLookup(e: React.FormEvent) {
     e.preventDefault();
-    setErrorKind(null);
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      queueMicrotask(() => {
-        const firstInvalid = (
-          Object.keys(validationErrors) as Array<keyof FormErrors>
-        )[0];
-        const fieldId =
-          firstInvalid === "attending"
-            ? "rsvp-attending-accept"
-            : firstInvalid === "fullName"
-              ? "rsvp-full-name"
-              : "rsvp-email";
-        document.getElementById(fieldId)?.focus();
-      });
+    setForm((f) => ({ ...f, errorKind: null }));
+    const trimmed = form.lookupName.trim();
+    if (!trimmed) {
+      setForm((f) => ({ ...f, errorKind: "validation" }));
       return;
     }
-    setErrors({});
-    setStatus("submitting");
+    setIsSearching(true);
     try {
-      const res = await fetch("/api/rsvp", {
+      const res = await fetch("/api/rsvp/lookup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ name: trimmed }),
       });
-      if (!res.ok) {
-        setErrorKind(res.status >= 500 ? "server" : "validation");
-        throw new Error("Submission failed");
+      if (res.status >= 500) {
+        setForm((f) => ({ ...f, errorKind: "server" }));
+        return;
       }
-      setStatus("success");
+      if (!res.ok) {
+        setForm((f) => ({ ...f, errorKind: "validation" }));
+        return;
+      }
+      const data: {
+        found: boolean;
+        household_id?: string;
+        members?: { guest_id: string; full_name: string }[];
+      } = await res.json();
+      if (!data.found) {
+        setForm((f) => ({ ...f, errorKind: "miss" }));
+        return;
+      }
+      const members = data.members ?? [];
+      // Atomic setForm — sets stage + household + submissions in ONE call to
+      // avoid an intermediate render with `stage: 'form'` but empty `submissions`
+      // (RESEARCH Q10, Pitfall 3).
+      setForm({
+        stage: "form",
+        lookupName: trimmed,
+        household: { id: data.household_id!, members },
+        submissions: members.map((m) => ({
+          guest_id: m.guest_id,
+          full_name: m.full_name,
+          attending: null,
+          meal_choice: null,
+          dietary_restrictions: "",
+        })),
+        errorKind: null,
+      });
     } catch {
-      setErrorKind((prev) => prev ?? "network");
-      setStatus("error");
+      setForm((f) => ({ ...f, errorKind: "network" }));
+    } finally {
+      setIsSearching(false);
     }
   }
 
-  useEffect(() => {
-    if (status === "success") successHeadingRef.current?.focus();
-    if (status === "error") errorBannerRef.current?.focus();
-  }, [status]);
-
-  if (status === "success") {
-    const successBody =
-      form.attending === "decline"
-        ? "We'll miss you in Aspen, but thank you for letting us know. We're holding good thoughts for you."
-        : "We can't wait to celebrate with you in Aspen. We'll send venue and timing details closer to the wedding.";
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-background px-8">
-        <div className="text-center max-w-md">
-          <span
-            aria-hidden="true"
-            className="material-symbols-outlined text-primary mb-8 block"
-            style={{ fontSize: "64px" }}
-          >
-            favorite
-          </span>
-          <h1
-            ref={successHeadingRef}
-            tabIndex={-1}
-            className="font-headline text-5xl text-on-surface mb-6"
-          >
-            Thank You
-          </h1>
-          <p className="font-body text-on-surface-variant text-lg leading-relaxed">
-            {successBody}
-          </p>
-        </div>
-      </main>
-    );
+  // ── handleTryAgain (L-03, GUEST-03) ──────────────────────────────────────
+  function handleTryAgain() {
+    setForm((f) => ({ ...f, lookupName: "", errorKind: null }));
+    lookupInputRef.current?.focus();
   }
 
-  const errorCopy = {
+  // ── Focus effects (RESEARCH Q3 + Q9 + Q11, Pitfall 2) ───────────────────
+
+  // Stage transition: lookup → form moves focus to the form heading.
+  useEffect(() => {
+    if (form.stage === "form") formHeadingRef.current?.focus();
+  }, [form.stage]);
+
+  // Error focus: validation routes back to the INPUT (the user needs to type,
+  // not read). All other kinds (network/server/miss) route to the banner heading
+  // for SR announcement. Guard against null to avoid misfocus on clear.
+  useEffect(() => {
+    if (form.errorKind === null) return;
+    if (form.errorKind === "validation") {
+      lookupInputRef.current?.focus();
+    } else {
+      errorBannerRef.current?.focus();
+    }
+  }, [form.errorKind]);
+
+  // ── errorCopy (RESEARCH Q12 — verbatim from UI-SPEC §Copywriting Contract) ─
+  const errorCopy: Record<ErrorKind, { heading: string; body: React.ReactNode }> = {
     network: {
-      heading: "We couldn't send your RSVP",
+      heading: "We couldn't search the list",
       body: (
         <>
           Check your connection and try again. Still stuck? Email us at{" "}
-          <a
-            href="mailto:hello@emilyandtyler.com"
-            className="underline underline-offset-2"
-          >
+          <a href="mailto:hello@emilyandtyler.com" className="underline underline-offset-2">
             hello@emilyandtyler.com
           </a>
           .
@@ -142,325 +154,202 @@ export default function RSVPPage() {
       body: (
         <>
           Try again in a minute. If it keeps happening, email us at{" "}
-          <a
-            href="mailto:hello@emilyandtyler.com"
-            className="underline underline-offset-2"
-          >
+          <a href="mailto:hello@emilyandtyler.com" className="underline underline-offset-2">
             hello@emilyandtyler.com
           </a>{" "}
-          and we&apos;ll add you manually.
+          and we&apos;ll sort it out.
         </>
       ),
     },
     validation: {
-      heading: "One of your answers needs a tweak",
-      body: "Scroll up and check the highlighted field, then try again.",
+      heading: "Something didn't look right",
+      body: "Try again — make sure you entered your full name.",
     },
-  }[errorKind ?? "network"];
+    miss: {
+      heading: "We couldn't find you on the list",
+      body: (
+        <>
+          Double-check the spelling, or reach out to{" "}
+          <a href="mailto:hello@emilyandtyler.com" className="underline underline-offset-2">
+            hello@emilyandtyler.com
+          </a>{" "}
+          and we&apos;ll sort it out.{" "}
+          <button
+            type="button"
+            onClick={handleTryAgain}
+            className="font-label text-xs uppercase tracking-wider text-on-surface-variant underline underline-offset-2 ml-1"
+          >
+            Try again
+          </button>
+        </>
+      ),
+    },
+  };
 
+  // ── Success stage (F-05 — Phase 6 owns the entire success view) ──────────
+  if (form.stage === "success") {
+    // Plan 05-02 / Phase 6: success view + edit-response link (GROUP-03)
+    return null;
+  }
+
+  // ── Editorial left column — shared across all stages (D-05) ──────────────
+  const leftColumn = (
+    <div className="lg:col-span-5 lg:sticky lg:top-40">
+      <span className="font-label text-xs uppercase tracking-[0.3em] text-primary mb-6 block font-semibold">
+        Join Us in Aspen
+      </span>
+      <h1
+        id="rsvp-heading"
+        className="font-headline text-6xl md:text-8xl text-on-surface leading-[1.1] mb-8"
+      >
+        Kindly <br />
+        <span className="italic text-primary">Respond</span>
+      </h1>
+      <p className="font-body text-lg text-on-surface-variant max-w-md leading-relaxed mb-12">
+        We look forward to celebrating this new chapter with our closest
+        family and friends. Please confirm your attendance by{" "}
+        <span className="font-bold text-primary">September 1st</span>.
+      </p>
+      <div className="aspect-[4/5] relative rounded-lg overflow-hidden bg-surface-container-highest ring-1 ring-white/10">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className="object-cover w-full h-full opacity-80"
+          alt="Panoramic view of the Maroon Bells peaks in Aspen"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSFj0oU-OqYeYgIdZGz479vEvTJLubdqcyGdcrMGTs6TcsvepaRtRzjlhQIk8mYo7DfqFLcMOHleS27HvqFlcIeDE3KUohZCvIEjGFo37TYxb-N9bMoQmFnLvBhbtIXRzT1vuslQdXmEoP5hC67glOtQ8nMkOydppL9QTjnmB3XR6y1cZX3yJfJ4h22HBPnITsmiAj3ly2OrsKS8iiDh2Oh7RAbAhnLdg81eWJ0xtr_qjBlZ5qRbKI7ZkLc33ZmIi3J1RRHHbeebE"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+      </div>
+    </div>
+  );
+
+  // ── Form stage (placeholder — Plan 05-02 fills this branch) ─────────────
+  if (form.stage === "form") {
+    return (
+      <main className="pt-32 min-h-screen">
+        <div className="max-w-screen-2xl mx-auto px-8 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+          {leftColumn}
+          <div className="lg:col-span-7 bg-surface-container-lowest p-8 md:p-16 lg:p-24 shadow-2xl border border-white/5">
+            {/* Plan 05-02 fills this: "Your Group" heading + submissions.map(...) member rows + disabled "Confirm Group RSVP" button. */}
+            <h2
+              ref={formHeadingRef}
+              tabIndex={-1}
+              className="font-headline text-4xl md:text-5xl text-on-surface mb-12 outline-none"
+            >
+              Your Group
+            </h2>
+            <p className="font-body text-sm text-on-surface-variant">
+              Plan 05-02 renders {form.submissions.length} member row(s) here.
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // ── Lookup stage render (form.stage === "lookup") ─────────────────────────
   return (
     <main className="pt-32 min-h-screen">
       <div className="max-w-screen-2xl mx-auto px-8 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
-        {/* Left: Editorial Content */}
-        <div className="lg:col-span-5 lg:sticky lg:top-40">
-          <span className="font-label text-xs uppercase tracking-[0.3em] text-primary mb-6 block font-semibold">
-            Join Us in Aspen
-          </span>
-          <h1
-            id="rsvp-heading"
-            className="font-headline text-6xl md:text-8xl text-on-surface leading-[1.1] mb-8"
-          >
-            Kindly <br />
-            <span className="italic text-primary">Respond</span>
-          </h1>
-          <p className="font-body text-lg text-on-surface-variant max-w-md leading-relaxed mb-12">
-            We look forward to celebrating this new chapter with our closest
-            family and friends. Please confirm your attendance by{" "}
-            <span className="font-bold text-primary">September 1st</span>.
-          </p>
-          <div className="aspect-[4/5] relative rounded-lg overflow-hidden bg-surface-container-highest ring-1 ring-white/10">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className="object-cover w-full h-full opacity-80"
-              alt="Panoramic view of the Maroon Bells peaks in Aspen"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSFj0oU-OqYeYgIdZGz479vEvTJLubdqcyGdcrMGTs6TcsvepaRtRzjlhQIk8mYo7DfqFLcMOHleS27HvqFlcIeDE3KUohZCvIEjGFo37TYxb-N9bMoQmFnLvBhbtIXRzT1vuslQdXmEoP5hC67glOtQ8nMkOydppL9QTjnmB3XR6y1cZX3yJfJ4h22HBPnITsmiAj3ly2OrsKS8iiDh2Oh7RAbAhnLdg81eWJ0xtr_qjBlZ5qRbKI7ZkLc33ZmIi3J1RRHHbeebE"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
-          </div>
-        </div>
+        {leftColumn}
 
-        {/* Right: Form */}
+        {/* Right: Lookup form card (L-01 — reuse v0.1 chrome verbatim) */}
         <div className="lg:col-span-7 bg-surface-container-lowest p-8 md:p-16 lg:p-24 shadow-2xl border border-white/5">
           <form
             noValidate
             aria-labelledby="rsvp-heading"
-            aria-busy={status === "submitting"}
+            aria-busy={isSearching}
+            onSubmit={handleLookup}
             className="space-y-12"
-            onSubmit={handleSubmit}
           >
-            {/* Identity */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="relative">
-                <label
-                  htmlFor="rsvp-full-name"
-                  className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80"
-                >
-                  Full Name
-                </label>
-                <input
-                  id="rsvp-full-name"
-                  aria-required="true"
-                  aria-invalid={errors.fullName ? "true" : undefined}
-                  aria-describedby={
-                    errors.fullName ? "rsvp-full-name-error" : undefined
-                  }
-                  type="text"
-                  placeholder="E.g. Julianne Moore"
-                  value={form.fullName}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, fullName: e.target.value }))
-                  }
-                  className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface placeholder:text-on-surface-variant/40"
-                />
-                {errors.fullName && (
-                  <p
-                    id="rsvp-full-name-error"
-                    role="alert"
-                    className="mt-2 text-error text-xs font-body"
-                  >
-                    {errors.fullName}
-                  </p>
-                )}
-              </div>
-              <div className="relative">
-                <label
-                  htmlFor="rsvp-email"
-                  className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80"
-                >
-                  Email Address
-                </label>
-                <input
-                  id="rsvp-email"
-                  aria-required="true"
-                  aria-invalid={errors.email ? "true" : undefined}
-                  aria-describedby={
-                    errors.email ? "rsvp-email-error" : undefined
-                  }
-                  type="email"
-                  placeholder="hello@example.com"
-                  value={form.email}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, email: e.target.value }))
-                  }
-                  className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface placeholder:text-on-surface-variant/40"
-                />
-                {errors.email && (
-                  <p
-                    id="rsvp-email-error"
-                    role="alert"
-                    className="mt-2 text-error text-xs font-body"
-                  >
-                    {errors.email}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Attendance */}
+            {/* Label + input block (L-02, L-07) */}
             <div>
               <label
-                id="rsvp-attending-label"
-                htmlFor="rsvp-attending-accept"
-                className="font-label text-[11px] uppercase tracking-widest text-primary block mb-4 opacity-80"
+                htmlFor="rsvp-lookup-name"
+                className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80"
               >
-                Will you be attending?
+                Your Full Name
               </label>
-              <fieldset
-                aria-labelledby="rsvp-attending-label"
+              <input
+                ref={lookupInputRef}
+                id="rsvp-lookup-name"
+                type="text"
+                autoFocus
+                autoComplete="name"
                 aria-required="true"
-                aria-invalid={errors.attending ? "true" : undefined}
-                aria-describedby={
-                  errors.attending ? "rsvp-attending-error" : undefined
-                }
+                placeholder="E.g. Tyler Straffon"
+                value={form.lookupName}
+                onChange={(e) => setForm((f) => ({ ...f, lookupName: e.target.value }))}
+                className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface placeholder:text-on-surface-variant/40"
+              />
+            </div>
+
+            {/* Banner slot — Option A from RESEARCH Pitfall 5: two separate conditional
+                renders, one per palette family. Avoids accidental token bleed on miss. */}
+
+            {/* Destructive palette: network / server / validation */}
+            {form.errorKind !== null && form.errorKind !== "miss" && (
+              <div
+                role="alert"
+                aria-live="assertive"
+                className="flex items-start gap-3 p-4 bg-error/10 border border-error/20 rounded-lg mb-6"
               >
-                <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-6">
-                  <label className="flex items-center space-x-3 cursor-pointer group">
-                    <input
-                      id="rsvp-attending-accept"
-                      type="radio"
-                      name="attending"
-                      checked={form.attending === "accept"}
-                      onChange={() =>
-                        setForm((f) => ({ ...f, attending: "accept" }))
-                      }
-                      className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary"
-                    />
-                    <span className="font-label text-xs uppercase tracking-wider group-hover:text-primary transition-colors text-on-surface-variant">
-                      Delightfully Accept
-                    </span>
-                  </label>
-                  <label className="flex items-center space-x-3 cursor-pointer group">
-                    <input
-                      id="rsvp-attending-decline"
-                      type="radio"
-                      name="attending"
-                      checked={form.attending === "decline"}
-                      onChange={() =>
-                        setForm((f) => ({ ...f, attending: "decline" }))
-                      }
-                      className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary"
-                    />
-                    <span className="font-label text-xs uppercase tracking-wider group-hover:text-primary transition-colors text-on-surface-variant">
-                      Regretfully Decline
-                    </span>
-                  </label>
-                </div>
-              </fieldset>
-              {errors.attending && (
-                <p
-                  id="rsvp-attending-error"
-                  role="alert"
-                  className="mt-2 text-error text-xs font-body"
-                >
-                  {errors.attending}
-                </p>
-              )}
-            </div>
-
-            {/* Guest details — only shown when accepting */}
-            <div aria-live="polite">
-              {form.attending !== "decline" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
-                  <div>
-                    <label
-                      htmlFor="rsvp-guest-count"
-                      className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80"
-                    >
-                      Number of Guests
-                    </label>
-                    <select
-                      id="rsvp-guest-count"
-                      value={form.guestCount}
-                      onChange={(e) =>
-                        setForm((f) => ({ ...f, guestCount: e.target.value }))
-                      }
-                      className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary py-4 px-4 font-body text-on-surface appearance-none"
-                    >
-                      <option>1 Guest</option>
-                      <option>2 Guests</option>
-                      <option>3 Guests</option>
-                      <option>4 Guests</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="rsvp-dietary-restrictions"
-                      className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80"
-                    >
-                      Dietary Restrictions
-                    </label>
-                    <input
-                      id="rsvp-dietary-restrictions"
-                      type="text"
-                      placeholder="Gluten-free, Vegan, Allergies..."
-                      value={form.dietaryRestrictions}
-                      onChange={(e) =>
-                        setForm((f) => ({
-                          ...f,
-                          dietaryRestrictions: e.target.value,
-                        }))
-                      }
-                      className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface placeholder:text-on-surface-variant/40"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Note */}
-            <div className="space-y-8 pt-4">
-              <div>
-                <label
-                  htmlFor="rsvp-note"
-                  className="font-label text-[11px] uppercase tracking-widest text-primary block mb-2 opacity-80"
-                >
-                  A Personal Note for the Couple
-                </label>
-                <textarea
-                  id="rsvp-note"
-                  placeholder={form.attending === "decline" ? "We'll miss you! Leave a note if you'd like..." : "Share a memory or a wish..."}
-                  rows={4}
-                  value={form.note}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, note: e.target.value }))
-                  }
-                  className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface placeholder:text-on-surface-variant/40 resize-none"
-                />
-              </div>
-            </div>
-
-            {/* Submit */}
-            <div className="pt-8">
-              {status === "error" && (
-                <div
-                  aria-live="assertive"
-                  className="flex items-start gap-3 p-4 bg-error/10 border border-error/20 rounded-lg mb-6"
-                  role="alert"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="material-symbols-outlined text-error text-lg shrink-0 mt-0.5"
+                <span aria-hidden="true" className="material-symbols-outlined text-error text-lg shrink-0 mt-0.5">
+                  error
+                </span>
+                <div>
+                  <p
+                    ref={errorBannerRef}
+                    tabIndex={-1}
+                    className="text-error text-sm font-body font-medium mb-1 outline-none"
                   >
-                    error
-                  </span>
-                  <div>
-                    <p
-                      ref={errorBannerRef}
-                      tabIndex={-1}
-                      className="text-error text-sm font-body font-medium mb-1"
-                    >
-                      {errorCopy.heading}
-                    </p>
-                    <p className="text-error/80 text-sm font-body font-light">
-                      {errorCopy.body}
-                    </p>
-                  </div>
+                    {errorCopy[form.errorKind].heading}
+                  </p>
+                  <p className="text-error/80 text-sm font-body font-light">
+                    {errorCopy[form.errorKind].body}
+                  </p>
                 </div>
-              )}
-              <button
-                type="submit"
-                disabled={status === "submitting"}
-                className="w-full py-6 bg-primary text-on-primary font-label text-sm uppercase tracking-[0.4em] hover:bg-white transition-all duration-500 group flex items-center justify-center space-x-4 font-bold disabled:opacity-60 disabled:cursor-not-allowed"
+              </div>
+            )}
+
+            {/* Neutral palette: miss (D-03 — NOT destructive) */}
+            {form.errorKind === "miss" && (
+              <div
+                role="alert"
+                aria-live="assertive"
+                className="flex items-start gap-3 p-4 bg-surface-container-low border border-white/10 rounded-lg mb-6"
               >
-                <span>
-                  {status === "submitting" ? "Sending…" : "Submit Response"}
+                <span aria-hidden="true" className="material-symbols-outlined text-on-surface-variant text-lg shrink-0 mt-0.5">
+                  info
                 </span>
-                <span
-                  aria-hidden="true"
-                  className="material-symbols-outlined text-sm group-hover:translate-x-2 transition-transform"
-                >
-                  east
-                </span>
-              </button>
-            </div>
+                <div>
+                  <p
+                    ref={errorBannerRef}
+                    tabIndex={-1}
+                    className="text-on-surface-variant text-sm font-body font-medium mb-1 outline-none"
+                  >
+                    {errorCopy.miss.heading}
+                  </p>
+                  <p className="text-on-surface-variant/80 text-sm font-body font-light">
+                    {errorCopy.miss.body}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Submit button (L-06, verbatim styling from v0.1 line 430-444) */}
+            <button
+              type="submit"
+              disabled={isSearching}
+              className="w-full py-6 bg-primary text-on-primary font-label text-sm uppercase tracking-[0.4em] hover:bg-white transition-all duration-500 group flex items-center justify-center space-x-4 font-bold disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              <span>{isSearching ? "Searching…" : "Find My Invitation"}</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-sm group-hover:translate-x-2 transition-transform">
+                east
+              </span>
+            </button>
           </form>
         </div>
       </div>
-
-      {/* Quote Section */}
-      <section className="mt-48 px-8 md:px-12 max-w-7xl mx-auto text-center pb-24">
-        <div className="inline-block relative">
-          <span
-            aria-hidden="true"
-            className="material-symbols-outlined text-5xl text-primary absolute -top-12 -left-16 opacity-60"
-          >
-            format_quote
-          </span>
-          <h2 className="font-headline text-3xl md:text-5xl text-on-surface max-w-2xl leading-relaxed italic">
-            &ldquo;In the silence of the mountains, we found our forever.&rdquo;
-          </h2>
-        </div>
-      </section>
     </main>
   );
 }
