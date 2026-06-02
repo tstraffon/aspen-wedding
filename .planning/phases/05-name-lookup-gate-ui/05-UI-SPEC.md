@@ -474,7 +474,7 @@ No external component imports. No registry installs. Implementation uses native 
 - [ ] `aria-disabled="true"` on form-stage disabled submit.
 - [ ] All decorative Material Symbols have `aria-hidden="true"`.
 - [ ] Member attending radios namespaced per member to prevent cross-member arrow-key bleed.
-- [ ] `reveal-on-scroll` class on form-stage member row container; disabled automatically by `prefers-reduced-motion` global rule.
+- [ ] `hero-fade-up` keyframe applied via inline `animation` style on form-stage member rows with per-row stagger delay (see RESEARCH Q6 — `reveal-on-scroll` cannot fire on elements that mount already in viewport); honors `prefers-reduced-motion` via `globals.css` global rule.
 
 ### Testing
 
