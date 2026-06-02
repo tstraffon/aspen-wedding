@@ -5,14 +5,14 @@ milestone_name: - Guest accounts / passwords / magic links — name-lookup gate 
 current_phase: Phase 5 — Name-Lookup Gate UI (next)
 status: Phase 4 shipped — ready for Phase 5
 stopped_at: Phase 5 UI-SPEC approved
-last_updated: "2026-06-02T03:46:40.471Z"
+last_updated: "2026-06-02T03:52:20.353Z"
 last_activity: 2026-06-01 — Phase 4 closed, verifier PASS
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 15
-  completed_plans: 14
-  percent: 80
+  completed_plans: 15
+  percent: 100
 ---
 
 # STATE
