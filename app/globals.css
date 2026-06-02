@@ -614,7 +614,8 @@
   .hero-reveal-label, .hero-reveal-title, .hero-reveal-subtitle,
   .reveal-on-scroll, .reveal-on-scroll-stagger > *, .gallery-grid > *,
   .parallax-bg, .hero-parallax-bg,
-  .ampersand-breathe, .diamond-scroll-reveal, .arrow-bounce-hint {
+  .ampersand-breathe, .diamond-scroll-reveal, .arrow-bounce-hint,
+  [style*="hero-fade-up"] {
     animation: none !important;
   }
   .btn-press:active { transform: none; }

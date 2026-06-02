@@ -237,9 +237,86 @@ export default function RSVPPage() {
             >
               Your Group
             </h2>
-            <p className="font-body text-sm text-on-surface-variant">
-              Plan 05-02 renders {form.submissions.length} member row(s) here.
-            </p>
+            <div className="space-y-12">
+              {form.submissions.map((sub, i) => (
+                <div
+                  key={sub.guest_id}
+                  className="space-y-6"
+                  style={{ animation: `hero-fade-up 700ms ease-out ${100 + i * 120}ms both` }}
+                >
+                  {/* Member identity: warm-gold eyebrow + headline full_name */}
+                  <div>
+                    <span className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-2">Guest {i + 1}</span>
+                    <h3 className="font-headline text-2xl text-on-surface">{sub.full_name}</h3>
+                  </div>
+
+                  {/* Attending Y/N radios — per-member name namespace per RESEARCH Q5 */}
+                  <fieldset>
+                    <legend className="sr-only">Will {sub.full_name} be attending?</legend>
+                    <span aria-hidden="true" className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-3">Will you be attending?</span>
+                    <div className="flex gap-6">
+                      <label className="flex items-center space-x-3 cursor-pointer group">
+                        <input
+                          type="radio"
+                          name={`attending-${sub.guest_id}`}
+                          value="yes"
+                          className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary"
+                        />
+                        <span className="font-label text-xs uppercase tracking-wider text-on-surface-variant group-hover:text-primary transition-colors">Yes</span>
+                      </label>
+                      <label className="flex items-center space-x-3 cursor-pointer group">
+                        <input
+                          type="radio"
+                          name={`attending-${sub.guest_id}`}
+                          value="no"
+                          className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary"
+                        />
+                        <span className="font-label text-xs uppercase tracking-wider text-on-surface-variant group-hover:text-primary transition-colors">No</span>
+                      </label>
+                    </div>
+                  </fieldset>
+
+                  {/* Meal select — Option A/B/C placeholder per F-02 (Phase 6 / MEAL-02 replaces with real menu) */}
+                  <div>
+                    <label htmlFor={`meal-${sub.guest_id}`} className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-2">Meal Choice</label>
+                    <select
+                      id={`meal-${sub.guest_id}`}
+                      defaultValue=""
+                      className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary py-4 px-4 font-body text-on-surface appearance-none"
+                    >
+                      <option value="" disabled>Select a meal…</option>
+                      <option value="Option A">Option A</option>
+                      <option value="Option B">Option B</option>
+                      <option value="Option C">Option C</option>
+                    </select>
+                  </div>
+
+                  {/* Dietary input */}
+                  <div>
+                    <label htmlFor={`dietary-${sub.guest_id}`} className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-2">Dietary Restrictions</label>
+                    <input
+                      id={`dietary-${sub.guest_id}`}
+                      type="text"
+                      placeholder="Gluten-free, Vegan, Allergies..."
+                      className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface placeholder:text-on-surface-variant/40"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Disabled submit — Phase 6 wires the handler */}
+            <div className="pt-12">
+              <button
+                type="button"
+                disabled
+                aria-disabled="true"
+                className="w-full py-6 bg-primary text-on-primary font-label text-sm uppercase tracking-[0.4em] hover:bg-white transition-all duration-500 group flex items-center justify-center space-x-4 font-bold disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                <span>Confirm Group RSVP</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-sm group-hover:translate-x-2 transition-transform">east</span>
+              </button>
+            </div>
           </div>
         </div>
       </main>
