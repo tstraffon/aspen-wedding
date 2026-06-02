@@ -173,7 +173,7 @@ Plans:
 4. The "try again" button clears the input and returns focus to it; screen reader announces both hit and miss states via a polite live region.
 5. Loading state is visible during the network round-trip; network and server errors render the same error banner pattern v0.1 established (no white-screen failures).
 
-**Plans:** TBD
+**Plans:** 1/2 plans executed
 
 **UI hint:** yes
 
@@ -250,7 +250,7 @@ Plans:
 | 2. Registry Page | 3/3 | Shipped | 2026-05-30 |
 | 3. Bridal Party | 3/3 | Shipped | 2026-05-30 |
 | 4. Guest List Schema & Lookup API | 0/3 | Planned | — |
-| 5. Name-Lookup Gate UI | 0/0 | Not started | — |
+| 5. Name-Lookup Gate UI | 1/2 | In Progress|  |
 | 6. Group Form & Meal Selection | 0/0 | Not started | — |
 | 7. Tyler-Facing Handoff | 0/0 | Not started | — |
 

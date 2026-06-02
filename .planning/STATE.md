@@ -4,14 +4,14 @@ milestone: v0.2
 milestone_name: - Guest accounts / passwords / magic links — name-lookup gate is the identity layer
 current_phase: Phase 5 — Name-Lookup Gate UI (next)
 status: Phase 4 shipped — ready for Phase 5
-stopped_at: Phase 5 context gathered
-last_updated: "2026-06-01T22:38:25.664Z"
+stopped_at: Phase 5 UI-SPEC approved
+last_updated: "2026-06-02T03:46:40.471Z"
 last_activity: 2026-06-01 — Phase 4 closed, verifier PASS
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 15
+  completed_plans: 14
   percent: 80
 ---
 
@@ -21,8 +21,8 @@ progress:
 **Milestone:** v0.2 — Gated RSVP & Meal Selection
 **Status:** Phase 4 shipped — ready for Phase 5
 **Current phase:** Phase 5 — Name-Lookup Gate UI (next)
-**Stopped at:** Phase 5 context gathered
-**Resume file:** .planning/phases/05-name-lookup-gate-ui/05-CONTEXT.md
+**Stopped at:** Phase 5 UI-SPEC approved
+**Resume file:** None
 
 ## Decisions
 
