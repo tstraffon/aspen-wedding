@@ -297,9 +297,9 @@ export default function RSVPPage() {
       (s) => s.attending === "yes"
     ).length;
     return (
-      <main className="pt-32 min-h-screen">
+      <main className="pt-32 pb-24 min-h-screen flex flex-col justify-center">
         {pageBackdrop}
-        <div className="max-w-screen-2xl mx-auto px-8 md:px-12">
+        <div className="max-w-screen-2xl mx-auto w-full px-8 md:px-12">
           <div className="max-w-2xl mx-auto text-center py-16">
             <span className="font-label text-xs uppercase tracking-[0.3em] text-primary mb-6 block font-semibold">
               RSVP Received
@@ -366,7 +366,7 @@ export default function RSVPPage() {
   // ── Form stage (placeholder — Plan 05-02 fills this branch) ─────────────
   if (form.stage === "form") {
     return (
-      <main className="pt-32 min-h-screen">
+      <main className="pt-32 pb-24 min-h-screen">
         {pageBackdrop}
         <div className="max-w-screen-2xl mx-auto px-8 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
           {leftColumn}
@@ -549,9 +549,9 @@ export default function RSVPPage() {
 
   // ── Lookup stage render (form.stage === "lookup") ─────────────────────────
   return (
-    <main className="pt-32 min-h-screen">
+    <main className="pt-32 pb-24 min-h-screen flex flex-col justify-center">
       {pageBackdrop}
-      <div className="max-w-screen-2xl mx-auto px-8 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
+      <div className="max-w-screen-2xl mx-auto w-full px-8 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
         {leftColumn}
 
         {/* Right: Lookup form card. Shares cardClass with the form stage so the
