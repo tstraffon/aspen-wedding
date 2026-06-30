@@ -649,9 +649,15 @@ export async function PATCH(
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **RLS status on `rsvps` and `guests`**
+> RESOLVED during planning (Phase 6 plans 06-01..06-05): (1) RLS status is verified by the
+> blocking human-action checkpoint in Plan 06-01 Task 1 before any admin read. (2) Admin
+> cookie path follows D-04 (`path: "/"`); separation is by cookie *name* (`admin_session`).
+> (3) Household grouping is done in-JS in the Server Component (Plan 06-03 Task 1), not a SQL
+> GROUP BY. Original notes retained below for context.
+
+1. **RLS status on `rsvps` and `guests`** — RESOLVED: handled by the Plan 06-01 Task 1 checkpoint.
    - What we know: Phase 4 disabled anon SELECT on `rsvps` via REVOKE (not RLS). The `RSVP-S1-SECURITY-FIX.sql` shows `REVOKE INSERT, UPDATE ON public.rsvps FROM anon` — column-level grants, not RLS policies.
    - What's unclear: Whether RLS is enabled (via `ALTER TABLE ... ENABLE ROW LEVEL SECURITY`) or just disabled (default). If RLS is on with no permissive policies, even the service-role client may be blocked on some Supabase configurations.
    - Recommendation: Verify in Supabase Studio (Authentication -> Policies) before implementing. If RLS is off (default), service-role has full access. If RLS is on with SECURITY INVOKER policies, service-role still bypasses. If there's a restrictive policy overriding service-role, that would be unusual and needs investigation.

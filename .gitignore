@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Raw guest contact export (PII: emails, phones, addresses, birthdays) — kept out of git.
+# The import-ready derivative (guests-import.csv: household_id,full_name) is tracked.
+.planning/address-book.csv
