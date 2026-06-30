@@ -1,26 +1,26 @@
 ---
 gsd_state_version: 1.0
 milestone: v0.2
-milestone_name: Gated RSVP & Meal Selection
-current_phase: Phase 6 — Admin Console (planned)
-status: Phase 6 planned — 5 plans, verification PASSED (0 blockers); ready for /gsd:execute-phase 6
-stopped_at: Phase 6 planned — 5 PLAN.md files, plan-checker PASSED
-last_updated: "2026-06-30T00:00:00.000Z"
-last_activity: 2026-06-30 — Phase 6 planned (research + patterns + 5 plans + checker PASS)
+milestone_name: - Guest accounts / passwords / magic links — name-lookup gate is the identity layer
+current_phase: 06
+status: executing
+stopped_at: Phase 5 UI-SPEC approved
+last_updated: "2026-06-30T17:46:34.272Z"
+last_activity: 2026-06-30
 progress:
-  total_phases: 7
-  completed_phases: 5
-  total_plans: 20
-  completed_plans: 15
-  percent: 71
+  total_phases: 4
+  completed_phases: 2
+  total_plans: 10
+  completed_plans: 6
+  percent: 50
 ---
 
 # STATE
 
 **Project:** Aspen Wedding
 **Milestone:** v0.2 — Gated RSVP & Meal Selection
-**Status:** Phase 5 shipped — roadmap re-sequenced; ready to discuss Phase 6 (Admin Console)
-**Current phase:** Phase 5 — Name-Lookup Gate UI (next)
+**Status:** Ready to execute
+**Current phase:** 06
 **Stopped at:** Phase 5 UI-SPEC approved
 **Resume file:** None
 
@@ -35,6 +35,7 @@ progress:
 - 2026-05-30: `guest_count` column to be dropped from `rsvps` in Phase 4 — no longer meaningful when household membership is fixed server-side; v0.1 rows are nullable on the new `household_id`/`guest_id` columns for backward compat.
 - 2026-06-30: Real guest list parsed from the address-book export into `household_id,full_name` (138 guests / 75 households) via `.planning/build-guests-csv.py`; ambiguous rows (two "Family" households, two "And Guest" plus-ones, Alan Veeck Sr./Jr. name collision) resolved by hand. Import path = Supabase Studio CSV import. Artifact: `.planning/guests-import.csv`.
 - 2026-06-30: Reversed the v0.2 "no built-in admin UI" out-of-scope decision. The couple needs to validate household groupings before invitations go out, so an Admin Console was inserted as Phase 6 (the group form renumbered to Phase 7) and the former thin Phase 7 (Tyler-Facing Handoff) was folded into it. Promoted deferred ADMIN-01 into ADMIN-01..05. Renumbering was safe — both affected phases were unstarted.
+- [Phase ?]: Admin gate uses admin_session cookie distinct from guest session cookie
 
 ## Blockers
 
@@ -59,11 +60,12 @@ progress:
 | Phase | Plan | Duration | Notes |
 |-------|------|----------|-------|
 | Phase 03 P01 | 1m13s | 1 tasks | 1 files |
+| Phase 06 P01 | 20 | 2 tasks | 5 files |
 
 ## Current Position
 
-Phase: Phase 6 — Admin Console (planned)
-Plan: 5 plans across 4 waves (06-01..06-05)
-Status: Plans created + verified (checker PASS, 0 blockers). Ready for `/gsd:execute-phase 6`
+Phase: 06 (admin-console) — EXECUTING
+Plan: 2 of 5
+Status: Ready to execute
 Resume file: .planning/phases/06-admin-console/06-01-PLAN.md
-Last activity: 2026-06-30 — Phase 6 plan-phase complete
+Last activity: 2026-06-30

@@ -207,11 +207,11 @@ Plans:
 5. The couple can export the guest list and the RSVPs as CSV files with correct contents.
 6. A documented runbook + end-to-end smoke passes: swap-in the real list, run a full lookup → submit, see it in the admin view, and export it.
 
-**Plans:** 5 plans
+**Plans:** 1/5 plans executed
 
 Plans:
 
-- [ ] 06-01-PLAN.md — Admin auth gate: separate `admin_session` cookie, proxy.ts admin branch, service-role client, login route + page [Wave 1, autonomous=false]
+- [x] 06-01-PLAN.md — Admin auth gate: separate `admin_session` cookie, proxy.ts admin branch, service-role client, login route + page [Wave 1, autonomous=false]
 - [ ] 06-02-PLAN.md — Guest CRUD API: add / rename / move / cascade-delete handlers via service-role [Wave 2]
 - [ ] 06-03-PLAN.md — Households view: grouped Server Component + inline-edit client island [Wave 3]
 - [ ] 06-04-PLAN.md — RSVP view + meal-count summary + two CSV exports [Wave 2]
@@ -264,7 +264,7 @@ Plans:
 | 3. Bridal Party | 3/3 | Shipped | 2026-05-30 |
 | 4. Guest List Schema & Lookup API | 0/3 | Planned | — |
 | 5. Name-Lookup Gate UI | 2/2 | Complete   | 2026-06-02 |
-| 6. Admin Console | 0/5 | Planned | — |
+| 6. Admin Console | 1/5 | In Progress|  |
 | 7. Group Form & Meal Selection | 0/0 | Not started | — |
 
 ---

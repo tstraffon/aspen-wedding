@@ -89,7 +89,7 @@ Each v0.2 requirement maps to exactly one phase. Coverage: 16/16.
 | MEAL-01 | Phase 7 | Pending |
 | MEAL-02 | Phase 7 | Pending |
 | MEAL-03 | Phase 4 | Pending |
-| ADMIN-01 | Phase 6 | Pending |
+| ADMIN-01 | Phase 6 | Complete |
 | ADMIN-02 | Phase 6 | Pending |
 | ADMIN-03 | Phase 6 | Pending |
 | ADMIN-04 | Phase 6 | Pending |
