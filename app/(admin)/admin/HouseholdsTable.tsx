@@ -2,15 +2,21 @@
 
 // Phase 06 Plan 03 — Task 2: HouseholdsTable client island
 // Inline rename, add, remove (with confirm, D-09), move (merge/split, D-10).
-// All mutations go to /api/admin/guests and /api/admin/guests/[id] — no
+// Change 3/4 (06-05): GuestRow extended with RSVP fields; inline RSVP editing.
+// All mutations go to /api/admin/guests, /api/admin/guests/[id], /api/admin/rsvps — no
 // supabaseAdmin import here (T-06-09 mitigate: service-role key stays server-only).
 
 import { useState } from "react";
+import { MEAL_OPTIONS } from "@/lib/rsvp/meal-options";
 
 export type GuestRow = {
   id: string;
   household_id: string;
   full_name: string;
+  // RSVP state — null means no response on file.
+  attending: boolean | null;
+  meal_choice: string | null;
+  dietary_restrictions: string | null;
 };
 
 export type HouseholdGroup = {
@@ -22,6 +28,7 @@ export type HouseholdGroup = {
 type RowMode =
   | { type: "rename"; value: string }
   | { type: "move"; value: string }
+  | { type: "rsvp"; attending: boolean | null; meal_choice: string; dietary_restrictions: string }
   | null;
 
 // Fetch error ordering mirrors app/(main)/rsvp/page.tsx: >=500 first, then !res.ok.
@@ -235,7 +242,12 @@ export default function HouseholdsTable({
       setGuestError(key, result.msg);
       return;
     }
-    const newGuest = result.data.guest;
+    const newGuest: GuestRow = {
+      ...result.data.guest,
+      attending: null,
+      meal_choice: null,
+      dietary_restrictions: null,
+    };
     setHouseholds((hs) =>
       hs.map((h) =>
         h.household_id === householdId
@@ -254,6 +266,73 @@ export default function HouseholdsTable({
       return n;
     });
     setAddOpen((ao) => ({ ...ao, [householdId]: false }));
+  }
+
+  // ── RSVP SAVE ──────────────────────────────────────────────────────────────
+  async function handleRsvpSave(
+    guest: GuestRow,
+    mode: { attending: boolean | null; meal_choice: string; dietary_restrictions: string }
+  ) {
+    if (mode.attending === null) return; // must pick Yes or No
+    setGuestBusy(guest.id, true);
+    clearGuestError(guest.id);
+    const result = await adminFetch("/api/admin/rsvps", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        guest_id: guest.id,
+        household_id: guest.household_id,
+        attending: mode.attending,
+        meal_choice: mode.attending ? mode.meal_choice : null,
+        dietary_restrictions: mode.attending ? mode.dietary_restrictions : null,
+      }),
+    });
+    setGuestBusy(guest.id, false);
+    if (!result.ok) {
+      setGuestError(guest.id, result.msg);
+      return;
+    }
+    setHouseholds((hs) =>
+      hs.map((h) => ({
+        ...h,
+        members: h.members.map((m) =>
+          m.id === guest.id
+            ? {
+                ...m,
+                attending: mode.attending,
+                meal_choice: mode.attending ? mode.meal_choice || null : null,
+                dietary_restrictions: mode.attending
+                  ? mode.dietary_restrictions || null
+                  : null,
+              }
+            : m
+        ),
+      }))
+    );
+    clearRowMode(guest.id);
+  }
+
+  // ── RSVP STATUS HINT ───────────────────────────────────────────────────────
+  function rsvpStatusHint(guest: GuestRow) {
+    if (guest.attending === null) {
+      return (
+        <span className="font-body text-xs text-on-surface-variant/50">
+          No response
+        </span>
+      );
+    }
+    if (!guest.attending) {
+      return (
+        <span className="font-body text-xs text-on-surface-variant">
+          Not attending
+        </span>
+      );
+    }
+    return (
+      <span className="font-body text-xs text-primary">
+        Attending{guest.meal_choice ? ` · ${guest.meal_choice}` : ""}
+      </span>
+    );
   }
 
   // ── RENDER ──────────────────────────────────────────────────────────────────
@@ -379,47 +458,170 @@ export default function HouseholdsTable({
                         Cancel
                       </button>
                     </div>
-                  ) : (
-                    // ── Display mode ────────────────────────────────────────
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <span className="font-body text-sm text-on-surface flex-1 min-w-0 truncate">
+                  ) : mode?.type === "rsvp" ? (
+                    // ── RSVP edit mode ──────────────────────────────────────
+                    <div className="space-y-2">
+                      <span className="font-body text-sm text-on-surface">
                         {guest.full_name}
                       </span>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setRowModes((rm) => ({
-                            ...rm,
-                            [guest.id]: {
-                              type: "rename",
-                              value: guest.full_name,
-                            },
-                          }))
-                        }
-                        className="font-label text-xs uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors shrink-0"
-                      >
-                        Rename
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setRowModes((rm) => ({
-                            ...rm,
-                            [guest.id]: { type: "move", value: "" },
-                          }))
-                        }
-                        className="font-label text-xs uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors shrink-0"
-                      >
-                        Move
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleRemove(guest)}
-                        disabled={isBusy}
-                        className="font-label text-xs uppercase tracking-wider text-on-surface-variant hover:text-error transition-colors disabled:opacity-40 shrink-0"
-                      >
-                        Remove
-                      </button>
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className="font-label text-xs uppercase tracking-wider text-on-surface-variant">
+                          Attending?
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setRowModes((rm) => ({
+                              ...rm,
+                              [guest.id]: { ...mode, attending: true },
+                            }))
+                          }
+                          className={`font-label text-xs uppercase tracking-wider px-2 py-1 rounded border transition-colors ${
+                            mode.attending === true
+                              ? "border-primary text-primary"
+                              : "border-white/20 text-on-surface-variant hover:border-primary hover:text-primary"
+                          }`}
+                        >
+                          Yes
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setRowModes((rm) => ({
+                              ...rm,
+                              [guest.id]: { ...mode, attending: false },
+                            }))
+                          }
+                          className={`font-label text-xs uppercase tracking-wider px-2 py-1 rounded border transition-colors ${
+                            mode.attending === false
+                              ? "border-error text-error"
+                              : "border-white/20 text-on-surface-variant hover:border-error hover:text-error"
+                          }`}
+                        >
+                          No
+                        </button>
+                      </div>
+                      {mode.attending === true && (
+                        <div className="space-y-2">
+                          <select
+                            value={mode.meal_choice}
+                            onChange={(e) =>
+                              setRowModes((rm) => ({
+                                ...rm,
+                                [guest.id]: { ...mode, meal_choice: e.target.value },
+                              }))
+                            }
+                            className="w-full bg-surface-container-low border border-white/20 px-2 py-1.5 font-body text-xs text-on-surface rounded focus:outline-none focus:border-primary transition-colors"
+                          >
+                            <option value="">Select meal…</option>
+                            {MEAL_OPTIONS.map((opt) => (
+                              <option key={opt} value={opt}>
+                                {opt}
+                              </option>
+                            ))}
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Dietary restrictions (optional)"
+                            value={mode.dietary_restrictions}
+                            onChange={(e) =>
+                              setRowModes((rm) => ({
+                                ...rm,
+                                [guest.id]: {
+                                  ...mode,
+                                  dietary_restrictions: e.target.value,
+                                },
+                              }))
+                            }
+                            className="w-full bg-surface-container-low border border-white/20 px-3 py-1.5 font-body text-xs text-on-surface rounded focus:outline-none focus:border-primary transition-colors placeholder:text-on-surface-variant/40"
+                          />
+                        </div>
+                      )}
+                      <div className="flex items-center gap-3 flex-wrap pt-1">
+                        <button
+                          type="button"
+                          onClick={() => handleRsvpSave(guest, mode)}
+                          disabled={
+                            isBusy ||
+                            mode.attending === null ||
+                            (mode.attending === true && !mode.meal_choice)
+                          }
+                          className="font-label text-xs uppercase tracking-wider text-primary hover:text-white transition-colors disabled:opacity-40"
+                        >
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => clearRowMode(guest.id)}
+                          className="font-label text-xs uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    // ── Display mode ────────────────────────────────────────
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className="font-body text-sm text-on-surface flex-1 min-w-0 truncate">
+                          {guest.full_name}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setRowModes((rm) => ({
+                              ...rm,
+                              [guest.id]: {
+                                type: "rename",
+                                value: guest.full_name,
+                              },
+                            }))
+                          }
+                          className="font-label text-xs uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors shrink-0"
+                        >
+                          Rename
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setRowModes((rm) => ({
+                              ...rm,
+                              [guest.id]: { type: "move", value: "" },
+                            }))
+                          }
+                          className="font-label text-xs uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors shrink-0"
+                        >
+                          Move
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setRowModes((rm) => ({
+                              ...rm,
+                              [guest.id]: {
+                                type: "rsvp",
+                                attending: guest.attending,
+                                meal_choice: guest.meal_choice ?? "",
+                                dietary_restrictions:
+                                  guest.dietary_restrictions ?? "",
+                              },
+                            }))
+                          }
+                          className="font-label text-xs uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors shrink-0"
+                        >
+                          RSVP
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleRemove(guest)}
+                          disabled={isBusy}
+                          className="font-label text-xs uppercase tracking-wider text-on-surface-variant hover:text-error transition-colors disabled:opacity-40 shrink-0"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      {/* RSVP status hint */}
+                      {rsvpStatusHint(guest)}
                     </div>
                   )}
 

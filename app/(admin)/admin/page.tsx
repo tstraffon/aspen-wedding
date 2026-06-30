@@ -2,6 +2,7 @@
 // Reads all guests via service-role client (no "use client" — this is a Server Component).
 // Groups guests by household_id in JS (RESEARCH Open Question 3).
 // Passes grouped data to the HouseholdsTable client island.
+// Change 3 (06-05): also fetches rsvps and attaches RSVP state to each guest.
 
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import HouseholdsTable, { type HouseholdGroup } from "./HouseholdsTable";
@@ -47,6 +48,24 @@ export default async function AdminPage() {
     );
   }
 
+  // Change 3: fetch rsvps and build a lookup map by guest_id.
+  // Graceful degrade on error — treat as no RSVPs so households view still renders.
+  const { data: rsvpRows } = await supabaseAdmin
+    .from("rsvps")
+    .select("guest_id, attending, meal_choice, dietary_restrictions");
+
+  const rsvpMap = new Map<
+    string,
+    { attending: boolean | null; meal_choice: string | null; dietary_restrictions: string | null }
+  >();
+  for (const r of rsvpRows ?? []) {
+    rsvpMap.set(r.guest_id, {
+      attending: r.attending ?? null,
+      meal_choice: r.meal_choice ?? null,
+      dietary_restrictions: r.dietary_restrictions ?? null,
+    });
+  }
+
   // Group flat rows by household_id in JS.
   // Query ordered by household_id then full_name, so members within each
   // household are already alpha-sorted.
@@ -60,7 +79,18 @@ export default async function AdminPage() {
 
   const households: HouseholdGroup[] = Array.from(
     householdMap,
-    ([household_id, members]) => ({ household_id, members })
+    ([household_id, members]) => ({
+      household_id,
+      members: members.map((m) => {
+        const rsvp = rsvpMap.get(m.id);
+        return {
+          ...m,
+          attending: rsvp?.attending ?? null,
+          meal_choice: rsvp?.meal_choice ?? null,
+          dietary_restrictions: rsvp?.dietary_restrictions ?? null,
+        };
+      }),
+    })
   );
 
   const householdCount = households.length;
