@@ -16,6 +16,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { MEAL_OPTIONS } from "@/lib/rsvp/meal-options";
+import { CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/site";
 
 // ── v0.2 FormState types (D-02 — locked shape, Phase 6 consumes without refactor) ──
 
@@ -35,6 +37,9 @@ type FormState = {
   lookupName: string;
   household: { id: string; members: { guest_id: string; full_name: string }[] } | null;
   submissions: Submission[];
+  // True when the matched household already has at least one saved response —
+  // drives the "already responded" note and the prefilled inputs.
+  hasExisting: boolean;
   errorKind: ErrorKind | null;
 };
 
@@ -44,9 +49,11 @@ export default function RSVPPage() {
     lookupName: "",
     household: null,
     submissions: [],
+    hasExisting: false,
     errorKind: null,
   });
   const [isSearching, setIsSearching] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Refs: errorBannerRef + formHeadingRef + lookupInputRef (RESEARCH Q3 + Q4)
   const errorBannerRef = useRef<HTMLParagraphElement>(null);
@@ -80,7 +87,14 @@ export default function RSVPPage() {
       const data: {
         found: boolean;
         household_id?: string;
-        members?: { guest_id: string; full_name: string }[];
+        has_existing?: boolean;
+        members?: {
+          guest_id: string;
+          full_name: string;
+          attending?: boolean | null;
+          meal_choice?: string | null;
+          dietary_restrictions?: string | null;
+        }[];
       } = await res.json();
       if (!data.found) {
         setForm((f) => ({ ...f, errorKind: "miss" }));
@@ -89,17 +103,21 @@ export default function RSVPPage() {
       const members = data.members ?? [];
       // Atomic setForm — sets stage + household + submissions in ONE call to
       // avoid an intermediate render with `stage: 'form'` but empty `submissions`
-      // (RESEARCH Q10, Pitfall 3).
+      // (RESEARCH Q10, Pitfall 3). Prefill from any prior response: the API
+      // returns the saved boolean `attending` (or null if unanswered), which
+      // maps back to the "yes"|"no"|null UI value.
       setForm({
         stage: "form",
         lookupName: trimmed,
         household: { id: data.household_id!, members },
+        hasExisting: data.has_existing ?? false,
         submissions: members.map((m) => ({
           guest_id: m.guest_id,
           full_name: m.full_name,
-          attending: null,
-          meal_choice: null,
-          dietary_restrictions: "",
+          attending:
+            m.attending === true ? "yes" : m.attending === false ? "no" : null,
+          meal_choice: m.meal_choice ?? null,
+          dietary_restrictions: m.dietary_restrictions ?? "",
         })),
         errorKind: null,
       });
@@ -114,6 +132,63 @@ export default function RSVPPage() {
   function handleTryAgain() {
     setForm((f) => ({ ...f, lookupName: "", errorKind: null }));
     lookupInputRef.current?.focus();
+  }
+
+  // ── Per-member controlled-input updates (Phase 6) ────────────────────────
+  function updateSubmission(guestId: string, patch: Partial<Submission>) {
+    setForm((f) => ({
+      ...f,
+      submissions: f.submissions.map((s) =>
+        s.guest_id === guestId ? { ...s, ...patch } : s
+      ),
+    }));
+  }
+
+  // ── handleSubmit (Phase 6 — wires the form to POST /api/rsvp/submit) ──────
+  async function handleSubmit() {
+    setForm((f) => ({ ...f, errorKind: null }));
+    if (!form.household) return;
+
+    // Every member needs a Yes/No; anyone attending needs a meal choice.
+    const incomplete = form.submissions.some(
+      (s) => s.attending === null || (s.attending === "yes" && !s.meal_choice)
+    );
+    if (incomplete) {
+      setForm((f) => ({ ...f, errorKind: "validation" }));
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/rsvp/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          household_id: form.household.id,
+          // Map the "yes"|"no" UI value to the boolean the endpoint expects.
+          submissions: form.submissions.map((s) => ({
+            guest_id: s.guest_id,
+            attending: s.attending === "yes",
+            meal_choice:
+              s.attending === "yes" ? s.meal_choice ?? undefined : undefined,
+            dietary_restrictions: s.dietary_restrictions.trim() || undefined,
+          })),
+        }),
+      });
+      if (res.status >= 500) {
+        setForm((f) => ({ ...f, errorKind: "server" }));
+        return;
+      }
+      if (!res.ok) {
+        setForm((f) => ({ ...f, errorKind: "validation" }));
+        return;
+      }
+      setForm((f) => ({ ...f, stage: "success", errorKind: null }));
+    } catch {
+      setForm((f) => ({ ...f, errorKind: "network" }));
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   // ── Focus effects (RESEARCH Q3 + Q9 + Q11, Pitfall 2) ───────────────────
@@ -142,8 +217,8 @@ export default function RSVPPage() {
       body: (
         <>
           Check your connection and try again. Still stuck? Email us at{" "}
-          <a href="mailto:hello@emilyandtyler.com" className="underline underline-offset-2">
-            hello@emilyandtyler.com
+          <a href={CONTACT_MAILTO} className="underline underline-offset-2">
+            {CONTACT_EMAIL}
           </a>
           .
         </>
@@ -154,8 +229,8 @@ export default function RSVPPage() {
       body: (
         <>
           Try again in a minute. If it keeps happening, email us at{" "}
-          <a href="mailto:hello@emilyandtyler.com" className="underline underline-offset-2">
-            hello@emilyandtyler.com
+          <a href={CONTACT_MAILTO} className="underline underline-offset-2">
+            {CONTACT_EMAIL}
           </a>{" "}
           and we&apos;ll sort it out.
         </>
@@ -170,8 +245,8 @@ export default function RSVPPage() {
       body: (
         <>
           Double-check the spelling, or reach out to{" "}
-          <a href="mailto:hello@emilyandtyler.com" className="underline underline-offset-2">
-            hello@emilyandtyler.com
+          <a href={CONTACT_MAILTO} className="underline underline-offset-2">
+            {CONTACT_EMAIL}
           </a>{" "}
           and we&apos;ll sort it out.{" "}
           <button
@@ -186,13 +261,88 @@ export default function RSVPPage() {
     },
   };
 
-  // ── Success stage (F-05 — Phase 6 owns the entire success view) ──────────
+  // ── Full-page Maroon Bells backdrop ──────────────────────────────────────
+  // Fixed and full-bleed, behind the dark editorial palette so the peaks read as
+  // ambient texture, not a bright travel photo. A single gradient scrim does two
+  // jobs: solid background at top/bottom anchors the navbar and footer, and the
+  // dark middle stop (via-background/85) keeps a reliable substrate behind the
+  // left-column text instead of going transparent exactly where the copy sits.
+  // /85 holds on-surface-variant body copy at ≥5:1 even over the brightest sky
+  // region of the photo (WCAG AA). Declared before the success early-return so
+  // every stage can reference it.
+  const pageBackdrop = (
+    <div aria-hidden="true" className="fixed inset-0 -z-10 pointer-events-none">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        className="object-cover w-full h-full"
+        alt=""
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSFj0oU-OqYeYgIdZGz479vEvTJLubdqcyGdcrMGTs6TcsvepaRtRzjlhQIk8mYo7DfqFLcMOHleS27HvqFlcIeDE3KUohZCvIEjGFo37TYxb-N9bMoQmFnLvBhbtIXRzT1vuslQdXmEoP5hC67glOtQ8nMkOydppL9QTjnmB3XR6y1cZX3yJfJ4h22HBPnITsmiAj3ly2OrsKS8iiDh2Oh7RAbAhnLdg81eWJ0xtr_qjBlZ5qRbKI7ZkLc33ZmIi3J1RRHHbeebE"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-background/85 to-background" />
+    </div>
+  );
+
+  // ── Shared form-panel chrome (D-05 consistency) ──────────────────────────
+  // Both the lookup and form stages render the same panel: identical grid
+  // footprint (cols 7–12), fill, padding scale, and edge treatment, so the frame
+  // doesn't shift when the stage changes. The opaque surface + shadow + hairline
+  // border are what separate the panel from the photographic backdrop (the fill
+  // tone equals --color-background). Only the panel's height differs by content.
+  const cardClass =
+    "lg:col-span-6 lg:col-start-7 bg-surface-container-lowest shadow-2xl border border-white/5 p-8 md:p-12 lg:p-16";
+
+  // ── Success stage (Phase 6) ──────────────────────────────────────────────
   if (form.stage === "success") {
-    // Plan 05-02 / Phase 6: success view + edit-response link (GROUP-03)
-    return null;
+    const attendingCount = form.submissions.filter(
+      (s) => s.attending === "yes"
+    ).length;
+    return (
+      <main className="pt-32 min-h-screen">
+        {pageBackdrop}
+        <div className="max-w-screen-2xl mx-auto px-8 md:px-12">
+          <div className="max-w-2xl mx-auto text-center py-16">
+            <span className="font-label text-xs uppercase tracking-[0.3em] text-primary mb-6 block font-semibold">
+              RSVP Received
+            </span>
+            <h1 className="font-headline text-6xl md:text-8xl text-on-surface leading-[1.1] mb-8">
+              Thank <span className="italic text-primary">You</span>
+            </h1>
+            <p className="font-body text-lg text-on-surface-variant leading-relaxed mb-6">
+              Your response has been recorded.{" "}
+              {attendingCount > 0
+                ? "We can't wait to celebrate with you in Aspen."
+                : "We're sorry you can't make it — you'll be missed."}
+            </p>
+            <p className="font-body text-on-surface-variant/80 leading-relaxed">
+              Need to change something? Just{" "}
+              <button
+                type="button"
+                onClick={() =>
+                  setForm({
+                    stage: "lookup",
+                    lookupName: "",
+                    household: null,
+                    submissions: [],
+                    hasExisting: false,
+                    errorKind: null,
+                  })
+                }
+                className="font-label text-xs uppercase tracking-wider text-primary underline underline-offset-2"
+              >
+                look up your name again
+              </button>{" "}
+              and resubmit — your latest response replaces the previous one.
+            </p>
+          </div>
+        </div>
+      </main>
+    );
   }
 
   // ── Editorial left column — shared across all stages (D-05) ──────────────
+  // The Maroon Bells image moved out to a full-page backdrop (pageBackdrop), so
+  // this column stays short and the stages no longer balance against a tall
+  // image that opened up dead space.
   const leftColumn = (
     <div className="lg:col-span-5 lg:sticky lg:top-40">
       <span className="font-label text-xs uppercase tracking-[0.3em] text-primary mb-6 block font-semibold">
@@ -205,20 +355,11 @@ export default function RSVPPage() {
         Kindly <br />
         <span className="italic text-primary">Respond</span>
       </h1>
-      <p className="font-body text-lg text-on-surface-variant max-w-md leading-relaxed mb-12">
+      <p className="font-body text-lg text-on-surface-variant max-w-md leading-relaxed">
         We look forward to celebrating this new chapter with our closest
         family and friends. Please confirm your attendance by{" "}
         <span className="font-bold text-primary">September 1st</span>.
       </p>
-      <div className="aspect-[4/5] relative rounded-lg overflow-hidden bg-surface-container-highest ring-1 ring-white/10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className="object-cover w-full h-full opacity-80"
-          alt="Panoramic view of the Maroon Bells peaks in Aspen"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSFj0oU-OqYeYgIdZGz479vEvTJLubdqcyGdcrMGTs6TcsvepaRtRzjlhQIk8mYo7DfqFLcMOHleS27HvqFlcIeDE3KUohZCvIEjGFo37TYxb-N9bMoQmFnLvBhbtIXRzT1vuslQdXmEoP5hC67glOtQ8nMkOydppL9QTjnmB3XR6y1cZX3yJfJ4h22HBPnITsmiAj3ly2OrsKS8iiDh2Oh7RAbAhnLdg81eWJ0xtr_qjBlZ5qRbKI7ZkLc33ZmIi3J1RRHHbeebE"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
-      </div>
     </div>
   );
 
@@ -226,9 +367,10 @@ export default function RSVPPage() {
   if (form.stage === "form") {
     return (
       <main className="pt-32 min-h-screen">
+        {pageBackdrop}
         <div className="max-w-screen-2xl mx-auto px-8 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
           {leftColumn}
-          <div className="lg:col-span-7 bg-surface-container-lowest p-8 md:p-16 lg:p-24 shadow-2xl border border-white/5">
+          <div className={cardClass}>
             {/* Plan 05-02 fills this: "Your Group" heading + submissions.map(...) member rows + disabled "Confirm Group RSVP" button. */}
             <h2
               ref={formHeadingRef}
@@ -237,6 +379,30 @@ export default function RSVPPage() {
             >
               Your Group
             </h2>
+
+            {/* Prefill note — neutral palette (not destructive), shown only when
+                this household already has a saved response. */}
+            {form.hasExisting && (
+              <div
+                role="status"
+                className="flex items-start gap-3 p-4 bg-surface-container-low border border-white/10 rounded-lg mb-12"
+              >
+                <span aria-hidden="true" className="material-symbols-outlined text-primary text-lg shrink-0 mt-0.5">
+                  info
+                </span>
+                <div>
+                  <p className="text-on-surface text-sm font-body font-medium mb-1">
+                    Your group has already responded
+                  </p>
+                  <p className="text-on-surface-variant/80 text-sm font-body font-light">
+                    Your previous answers are filled in below. Change anything
+                    you&apos;d like and resubmit; your latest response replaces
+                    the earlier one.
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="space-y-12">
               {form.submissions.map((sub, i) => (
                 <div
@@ -260,6 +426,10 @@ export default function RSVPPage() {
                           type="radio"
                           name={`attending-${sub.guest_id}`}
                           value="yes"
+                          checked={sub.attending === "yes"}
+                          onChange={() =>
+                            updateSubmission(sub.guest_id, { attending: "yes" })
+                          }
                           className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary"
                         />
                         <span className="font-label text-xs uppercase tracking-wider text-on-surface-variant group-hover:text-primary transition-colors">Yes</span>
@@ -269,6 +439,13 @@ export default function RSVPPage() {
                           type="radio"
                           name={`attending-${sub.guest_id}`}
                           value="no"
+                          checked={sub.attending === "no"}
+                          onChange={() =>
+                            updateSubmission(sub.guest_id, {
+                              attending: "no",
+                              meal_choice: null,
+                            })
+                          }
                           className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary"
                         />
                         <span className="font-label text-xs uppercase tracking-wider text-on-surface-variant group-hover:text-primary transition-colors">No</span>
@@ -276,44 +453,91 @@ export default function RSVPPage() {
                     </div>
                   </fieldset>
 
-                  {/* Meal select — Option A/B/C placeholder per F-02 (Phase 6 / MEAL-02 replaces with real menu) */}
-                  <div>
-                    <label htmlFor={`meal-${sub.guest_id}`} className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-2">Meal Choice</label>
-                    <select
-                      id={`meal-${sub.guest_id}`}
-                      defaultValue=""
-                      className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary py-4 px-4 font-body text-on-surface appearance-none"
-                    >
-                      <option value="" disabled>Select a meal…</option>
-                      <option value="Option A">Option A</option>
-                      <option value="Option B">Option B</option>
-                      <option value="Option C">Option C</option>
-                    </select>
-                  </div>
+                  {/* Meal + dietary — only for attendees. Meal options come from the
+                      shared MEAL_OPTIONS constant (audit B2), so form and server agree. */}
+                  {sub.attending === "yes" && (
+                    <>
+                      <div>
+                        <label htmlFor={`meal-${sub.guest_id}`} className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-2">Meal Choice</label>
+                        <select
+                          id={`meal-${sub.guest_id}`}
+                          value={sub.meal_choice ?? ""}
+                          onChange={(e) =>
+                            updateSubmission(sub.guest_id, {
+                              meal_choice: e.target.value || null,
+                            })
+                          }
+                          className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface appearance-none"
+                        >
+                          <option value="" disabled>Select a meal…</option>
+                          {MEAL_OPTIONS.map((meal) => (
+                            <option key={meal} value={meal}>
+                              {meal}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
 
-                  {/* Dietary input */}
-                  <div>
-                    <label htmlFor={`dietary-${sub.guest_id}`} className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-2">Dietary Restrictions</label>
-                    <input
-                      id={`dietary-${sub.guest_id}`}
-                      type="text"
-                      placeholder="Gluten-free, Vegan, Allergies..."
-                      className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface placeholder:text-on-surface-variant/40"
-                    />
-                  </div>
+                      <div>
+                        <label htmlFor={`dietary-${sub.guest_id}`} className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-2">Dietary Restrictions</label>
+                        <input
+                          id={`dietary-${sub.guest_id}`}
+                          type="text"
+                          value={sub.dietary_restrictions}
+                          onChange={(e) =>
+                            updateSubmission(sub.guest_id, {
+                              dietary_restrictions: e.target.value,
+                            })
+                          }
+                          placeholder="Gluten-free, Vegan, Allergies..."
+                          className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface placeholder:text-on-surface-variant/40"
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
               ))}
             </div>
 
-            {/* Disabled submit — Phase 6 wires the handler */}
+            {/* Submit error banner (network / server / validation) */}
+            {form.errorKind !== null && (
+              <div
+                role="alert"
+                aria-live="assertive"
+                className="flex items-start gap-3 p-4 bg-error/10 border border-error/20 rounded-lg mt-12"
+              >
+                <span aria-hidden="true" className="material-symbols-outlined text-error text-lg shrink-0 mt-0.5">
+                  error
+                </span>
+                <div>
+                  <p
+                    ref={errorBannerRef}
+                    tabIndex={-1}
+                    className="text-error text-sm font-body font-medium mb-1 outline-none"
+                  >
+                    {form.errorKind === "validation"
+                      ? "Please complete every guest"
+                      : errorCopy[form.errorKind].heading}
+                  </p>
+                  <p className="text-error/80 text-sm font-body font-light">
+                    {form.errorKind === "validation"
+                      ? "Each guest needs a Yes or No, and anyone attending needs a meal choice."
+                      : errorCopy[form.errorKind].body}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Submit — Phase 6: wired handler + double-submit guard */}
             <div className="pt-12">
               <button
                 type="button"
-                disabled
-                aria-disabled="true"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                aria-busy={isSubmitting}
                 className="w-full py-6 bg-primary text-on-primary font-label text-sm uppercase tracking-[0.4em] hover:bg-white transition-all duration-500 group flex items-center justify-center space-x-4 font-bold disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                <span>Confirm Group RSVP</span>
+                <span>{isSubmitting ? "Sending…" : "Confirm Group RSVP"}</span>
                 <span aria-hidden="true" className="material-symbols-outlined text-sm group-hover:translate-x-2 transition-transform">east</span>
               </button>
             </div>
@@ -326,17 +550,21 @@ export default function RSVPPage() {
   // ── Lookup stage render (form.stage === "lookup") ─────────────────────────
   return (
     <main className="pt-32 min-h-screen">
-      <div className="max-w-screen-2xl mx-auto px-8 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+      {pageBackdrop}
+      <div className="max-w-screen-2xl mx-auto px-8 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
         {leftColumn}
 
-        {/* Right: Lookup form card (L-01 — reuse v0.1 chrome verbatim) */}
-        <div className="lg:col-span-7 bg-surface-container-lowest p-8 md:p-16 lg:p-24 shadow-2xl border border-white/5">
+        {/* Right: Lookup form card. Shares cardClass with the form stage so the
+            panel keeps the same grid footprint and chrome across stages; only its
+            height differs (a single field here vs. the group form). items-center
+            on the grid balances this short panel against the editorial column. */}
+        <div className={cardClass}>
           <form
             noValidate
             aria-labelledby="rsvp-heading"
             aria-busy={isSearching}
             onSubmit={handleLookup}
-            className="space-y-12"
+            className="space-y-10"
           >
             {/* Label + input block (L-02, L-07) */}
             <div>
@@ -353,7 +581,8 @@ export default function RSVPPage() {
                 autoFocus
                 autoComplete="name"
                 aria-required="true"
-                placeholder="E.g. Tyler Straffon"
+                aria-describedby="rsvp-lookup-help"
+                placeholder="E.g. Emily Veeck"
                 value={form.lookupName}
                 onChange={(e) => setForm((f) => ({ ...f, lookupName: e.target.value }))}
                 className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface placeholder:text-on-surface-variant/40"
@@ -424,6 +653,18 @@ export default function RSVPPage() {
                 east
               </span>
             </button>
+
+            {/* Reassurance helper (P2 — /clarify). Answers the two unspoken
+                questions at the first action: what the search uses, and that one
+                name surfaces the whole household. Linked to the input via
+                aria-describedby so it's announced on focus. */}
+            <p
+              id="rsvp-lookup-help"
+              className="font-body text-sm text-on-surface-variant/70 leading-relaxed"
+            >
+              Search by the name on your invitation — we&apos;ll pull up your
+              whole party.
+            </p>
           </form>
         </div>
       </div>

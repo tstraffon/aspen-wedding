@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CONTACT_MAILTO } from "@/lib/site";
 
 const faqs = [
   {
@@ -140,7 +141,7 @@ export default function FAQPage() {
               contact us directly.
             </p>
             <Link
-              href="mailto:tylerstraffon@gmail.com"
+              href={CONTACT_MAILTO}
               className="link-editorial inline-flex items-center gap-3 text-primary font-headline italic text-lg pb-1"
             >
               Send us a message
