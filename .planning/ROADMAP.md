@@ -95,18 +95,18 @@ Plans:
 
 **Goal:** Lock the RSVP flow to invited guests only, let one guest RSVP for their entire household, and capture each attendee's meal choice.
 
-**Success criteria:** Only guests on the imported list can submit. A single guest can RSVP for every member of their household in one pass. Each attending person picks one of three meal options. Tyler can pull a meal-count report from Supabase Studio with one query.
+**Success criteria:** Only guests on the imported list can submit. A single guest can RSVP for every member of their household in one pass. Each attending person picks one of three meal options. Tyler and Emily can validate household groupings, manage the guest list, and view and export RSVPs and a meal-count report from a private admin console.
 
 ## Phases
 
 - [x] **Phase 4: Guest List Schema & Lookup API** — Database schema + server-side lookup/upsert endpoints (shipped 2026-06-01)
 - [x] **Phase 5: Name-Lookup Gate UI** — `/rsvp` revamp: lookup screen, hit/miss UX, group-form scaffold (completed 2026-06-02)
-- [ ] **Phase 6: Group Form & Meal Selection** — Per-member rows, attending toggle, meal dropdown, dietary notes, submit
-- [ ] **Phase 7: Tyler-Facing Handoff** — CSV import flow, meal-count report query, runbook, end-to-end smoke
+- [ ] **Phase 6: Admin Console** — Private couple-only admin: household validation, guest CRUD/regroup, RSVP view + meal-count report, CSV export, runbook + e2e smoke
+- [ ] **Phase 7: Group Form & Meal Selection** — Per-member rows, attending toggle, meal dropdown, dietary notes, submit
 
 ## Phase Details
 
-### Phase 4 — Guest List Schema & Lookup API
+### Phase 4: Guest List Schema & Lookup API
 
 **Goal:** Database and server endpoints can answer "is this name on the list?" and "save this household's RSVPs atomically."
 
@@ -146,7 +146,7 @@ Plans:
 
 ---
 
-### Phase 5 — Name-Lookup Gate UI
+### Phase 5: Name-Lookup Gate UI
 
 **Goal:** A guest landing on `/rsvp` first sees a single name-lookup screen and gets a clear hit-or-miss response before any form appears.
 
@@ -179,7 +179,49 @@ Plans:
 
 ---
 
-### Phase 6 — Group Form & Meal Selection
+### Phase 6: Admin Console
+
+**Goal:** Tyler and Emily have a private, access-controlled admin interface to validate and manage the guest list and to view and export RSVPs — before invitations go out and throughout the RSVP window.
+
+**Depends on:** Phase 4 (the `guests` + `rsvps` schema and the lookup/submit RPCs already shipped). Independent of Phase 7 (guest form): the console is built and used now, ahead of the guest-facing form. The RSVP view and export ship now and sit empty until the form (Phase 7) goes live and guests respond.
+
+**Requirements:** ADMIN-01, ADMIN-02, ADMIN-03, ADMIN-04, ADMIN-05 (and operationalizes GUEST-01's import pathway end-to-end)
+
+**Scope:**
+
+- Private admin area under its own route group (e.g. `app/(admin)`), gated separately from the public `SITE_ACCESS_CODE` guest gate — only Tyler and Emily get in. Auth mechanism decided in discuss-phase (candidates: a separate admin passphrase env gate distinct from the guest code; Supabase Auth restricted to a two-email allowlist; or Vercel password protection on the admin paths).
+- Privileged data path: anon has no SELECT on `rsvps` and writes go through SECURITY DEFINER RPCs, so the admin area needs a privileged read/write path (service-role key used server-side only, never shipped to the client, or new admin-scoped RPCs). Chosen approach decided in discuss-phase.
+- Households view: list all households with their members so the couple can confirm everyone is accounted for and grouped correctly (validates the imported 75 households / 138 guests).
+- Guest CRUD + regroup: add a person, rename a person, remove a person, and move a person between households (split a household, merge two households, reassign `household_id`).
+- RSVP view: per-guest submissions (attending, `meal_choice`, `dietary_restrictions`) shown as they arrive, plus a meal-count summary report (absorbs the old Phase 7 meal-count report: `SELECT meal_choice, COUNT(*) ... WHERE attending GROUP BY meal_choice`, with per-household and dietary-notes variants).
+- Export: download the guest list and the RSVPs as CSV (absorbs the old Phase 7 reporting/handoff intent).
+- Runbook + end-to-end smoke (absorbed from the old Phase 7): how to swap the test list for the real one, how to fix a wrong household on request, how to read the meal-count report at the catering deadline; a smoke that exercises lookup → form → submit → admin view → export.
+- Stack constraints: custom Next.js App Router — read `node_modules/next/dist/docs` before coding (per AGENTS.md). Plain `<img>` + eslint-disable for any imagery (site-wide convention).
+
+**Success Criteria** (what must be TRUE):
+
+1. Visiting the admin area without the admin credential is blocked; Tyler and Emily can get in with it, and the public guest `SITE_ACCESS_CODE` does NOT grant admin access.
+2. The households view lists every household with its members, so the couple can spot a miscount or a mis-grouped person at a glance.
+3. The couple can add, rename, and remove a person, and move a person to a different household; the change persists and is reflected in a guest name lookup.
+4. The RSVP view shows each submitted response (attending, meal, dietary notes) and a correct meal-count summary; it renders cleanly with zero submissions.
+5. The couple can export the guest list and the RSVPs as CSV files with correct contents.
+6. A documented runbook + end-to-end smoke passes: swap-in the real list, run a full lookup → submit, see it in the admin view, and export it.
+
+**Plans:** 5 plans
+
+Plans:
+
+- [ ] 06-01-PLAN.md — Admin auth gate: separate `admin_session` cookie, proxy.ts admin branch, service-role client, login route + page [Wave 1, autonomous=false]
+- [ ] 06-02-PLAN.md — Guest CRUD API: add / rename / move / cascade-delete handlers via service-role [Wave 2]
+- [ ] 06-03-PLAN.md — Households view: grouped Server Component + inline-edit client island [Wave 3]
+- [ ] 06-04-PLAN.md — RSVP view + meal-count summary + two CSV exports [Wave 2]
+- [ ] 06-05-PLAN.md — Operator runbook + end-to-end smoke (absorbs former Phase 7 handoff) [Wave 4, autonomous=false]
+
+**UI hint:** yes
+
+---
+
+### Phase 7: Group Form & Meal Selection
 
 **Goal:** After lookup succeeds, a single guest can mark every household member attending or not, pick a meal for each attendee, and submit the household in one click.
 
@@ -213,35 +255,6 @@ Plans:
 
 ---
 
-### Phase 7 — Tyler-Facing Handoff
-
-**Goal:** Tyler can load the real guest list, pull a meal-count report, and trust the whole flow before sending invitations.
-
-**Depends on:** Phase 6 (full flow must be functional)
-
-**Requirements:** (no new REQ-IDs — this phase exercises and operationalizes requirements satisfied in earlier phases; it covers GUEST-01's "CSV import" pathway in concrete terms)
-
-**Scope:**
-
-- CSV import flow: documented format (`household_id,full_name`) plus a one-shot Node script in `scripts/` that reads a CSV and INSERTs into `guests` using the service-role key locally (never deployed, never exposed). Alternative: documented Supabase Studio "Import CSV" UI walkthrough. Pick one based on what Tyler prefers during phase planning.
-- Meal-count report: a saved SQL snippet (in `.planning/phases/07-*/QUERIES.md` or a `scripts/queries/` folder) that runs `SELECT meal_choice, COUNT(*) FROM rsvps WHERE attending = true GROUP BY meal_choice`. Includes variants for per-household breakdown and dietary-notes export.
-- End-to-end smoke checklist: insert 2 test households (3 members + 1 member), run lookup → form → submit for each, verify rows, run the meal-count query, then DELETE the test rows. Mirrors the v0.1 smoke pattern (`01-SMOKE.md`).
-- Pre-ship runbook: how to swap the test guest list for the real one (truncate `guests`, re-import), how to roll back if a guest reports the wrong household, how to read the meal-count report on the morning of the catering deadline.
-- Cleanup: drop any temporary test households, verify production env vars on Vercel still match v0.1 contract.
-- No UI changes in this phase unless the smoke surfaces a defect.
-
-**Success Criteria** (what must be TRUE):
-
-1. Tyler can run the documented CSV import (script or Studio UI) and see the imported guests reflected in lookup calls within minutes.
-2. The meal-count SQL snippet returns accurate counts when run against test data with known answers.
-3. The end-to-end smoke checklist passes for at least one multi-member household and one single-person household.
-4. The pre-ship runbook tells Tyler exactly which commands or Studio steps to run to replace the guest list before sending invitations, with no ambiguity.
-5. After cleanup, the `rsvps` and `guests` tables contain only intended data; Vercel env vars remain the v0.1 two-var contract (no new keys added).
-
-**Plans:** TBD
-
----
-
 ## Progress
 
 | Phase | Plans Complete | Status | Completed |
@@ -251,8 +264,8 @@ Plans:
 | 3. Bridal Party | 3/3 | Shipped | 2026-05-30 |
 | 4. Guest List Schema & Lookup API | 0/3 | Planned | — |
 | 5. Name-Lookup Gate UI | 2/2 | Complete   | 2026-06-02 |
-| 6. Group Form & Meal Selection | 0/0 | Not started | — |
-| 7. Tyler-Facing Handoff | 0/0 | Not started | — |
+| 6. Admin Console | 0/5 | Planned | — |
+| 7. Group Form & Meal Selection | 0/0 | Not started | — |
 
 ---
 
@@ -260,7 +273,6 @@ Plans:
 
 - Guest accounts / passwords / magic links — name-lookup gate is the identity layer
 - Email confirmations on RSVP submit — would require Resend/SendGrid; deferred
-- Built-in admin UI for guest list — Supabase Studio + CSV is enough for a one-off wedding
 - Plus-one self-add — Tyler controls household membership server-side
 - Meal options editable post-deploy — meal list lives in code per MEAL-02
 - Photo gallery / post-wedding uploads — separate concern
