@@ -4,8 +4,8 @@ milestone: v0.2
 milestone_name: - Guest accounts / passwords / magic links — name-lookup gate is the identity layer
 current_phase: 06
 status: executing
-stopped_at: Phase 5 UI-SPEC approved
-last_updated: "2026-06-30T19:05:42.823Z"
+stopped_at: "06-05 runbook written; e2e smoke pending user verification"
+last_updated: "2026-06-30T19:19:00Z"
 last_activity: 2026-06-30
 progress:
   total_phases: 4
@@ -21,8 +21,8 @@ progress:
 **Milestone:** v0.2 — Gated RSVP & Meal Selection
 **Status:** Ready to execute
 **Current phase:** 06
-**Stopped at:** Phase 5 UI-SPEC approved
-**Resume file:** None
+**Stopped at:** 06-05 runbook written; e2e smoke pending user verification
+**Resume file:** .planning/phases/06-admin-console/RUNBOOK.md (smoke checklist Section 10)
 
 ## Decisions
 
@@ -66,8 +66,8 @@ progress:
 
 ## Current Position
 
-Phase: 06 (admin-console) — EXECUTING
-Plan: 5 of 5
-Status: Ready to execute
-Resume file: .planning/phases/06-admin-console/06-03-PLAN.md
+Phase: 06 (admin-console) — SMOKE PENDING
+Plan: 5 of 5 (Task 1 done / Task 2 awaiting human-verify)
+Status: Runbook written; waiting for Tyler to run 5-leg smoke checklist (RUNBOOK.md Section 10)
+Resume file: .planning/phases/06-admin-console/RUNBOOK.md
 Last activity: 2026-06-30
