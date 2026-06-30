@@ -101,3 +101,16 @@ None — no new network endpoints, auth paths, or schema changes in this plan.
 - Task 2 (end-to-end smoke) is a `checkpoint:human-verify` gate.
 - ROADMAP Phase 6 remains **In Progress** until Tyler confirms smoke results.
 - STATE.md updated to reflect: runbook written, smoke pending user verification.
+
+## Follow-up changes (post-smoke)
+
+Four changes implemented after the smoke runbook, in response to issues found during manual verification. All committed to `main`. Phase NOT marked complete.
+
+| Change | Commit | Description |
+|--------|--------|-------------|
+| 1 - Logout route | 55ef6d7 | Created `app/api/admin/auth/logout/route.ts` (GET handler). Clears `admin_session` cookie (maxAge 0, same attributes as login) and redirects to `/`. Fixes the 404 when clicking Logout in the admin nav. |
+| 2 - Member names in header | fa8ef44 | `HouseholdsTable.tsx` household header now shows member names joined by ", " instead of the raw `household_id` UUID. Guest-count label preserved. |
+| 3 - Load RSVPs into households view | 4affcd1 | `admin/page.tsx` fetches `rsvps` after guests and attaches `attending`, `meal_choice`, `dietary_restrictions` to each `GuestRow`. Graceful degrade on error (no RSVPs assumed). `GuestRow` type extended in `HouseholdsTable.tsx`. |
+| 4 - Inline admin RSVP editing | 4affcd1 | New `app/api/admin/rsvps/route.ts` (PUT) with admin_session gate, UUID+boolean validation, `isMealChoice` check, and `supabaseAdmin.upsert` on `guest_id` conflict. `HouseholdsTable.tsx` adds per-guest RSVP action: attending toggle, meal select (MEAL_OPTIONS), dietary text input, Save/Cancel, and a status hint (No response / Not attending / Attending · {meal}). No supabaseAdmin import in the client island. |
+
+**Files changed:** `app/api/admin/auth/logout/route.ts` (new), `app/(admin)/admin/HouseholdsTable.tsx`, `app/(admin)/admin/page.tsx`, `app/api/admin/rsvps/route.ts` (new).
