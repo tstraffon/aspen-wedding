@@ -29,6 +29,13 @@ export default async function AdminRsvpsPage() {
     guestMap.set(g.id, g.full_name);
   }
 
+  // Build household_id -> member names (label for the household, matching the Households view)
+  const householdNames = new Map<string, string[]>();
+  for (const g of guests) {
+    if (!householdNames.has(g.household_id)) householdNames.set(g.household_id, []);
+    householdNames.get(g.household_id)!.push(g.full_name);
+  }
+
   const attending = rsvps.filter((r) => r.attending);
 
   // Meal-count summary — keyed from MEAL_OPTIONS (D-13: single source of truth)
@@ -141,8 +148,18 @@ export default async function AdminRsvpsPage() {
               className="bg-surface-container-lowest border border-white/10 p-6 space-y-3"
             >
               <p className="font-label text-xs uppercase tracking-widest text-on-surface-variant">
-                Household{" "}
-                <span className="text-on-surface font-mono">{householdId}</span>
+                {householdNames.get(householdId)?.length ? (
+                  <span className="text-on-surface font-body normal-case tracking-normal">
+                    {householdNames.get(householdId)!.join(", ")}
+                  </span>
+                ) : (
+                  <>
+                    Unknown household{" "}
+                    <span className="text-on-surface-variant/40 font-mono lowercase">
+                      {householdId}
+                    </span>
+                  </>
+                )}
               </p>
               <div className="space-y-2">
                 {members.map((r) => (
