@@ -280,8 +280,8 @@ export default function HouseholdsTable({
                 ? "1 guest"
                 : `${household.members.length} guests`}
             </span>
-            <span className="font-mono text-xs text-on-surface-variant/40 truncate">
-              {household.household_id}
+            <span className="font-body text-xs text-on-surface-variant truncate">
+              {household.members.map((m) => m.full_name).join(", ")}
             </span>
           </div>
 
