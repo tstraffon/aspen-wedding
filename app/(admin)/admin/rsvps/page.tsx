@@ -1,6 +1,11 @@
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { MEAL_OPTIONS } from "@/lib/rsvp/meal-options";
 
+// Live, auth-gated admin data — never statically prerendered. Without this the
+// build tries to render this page (calling the service-role client) with no
+// Supabase env present, failing the Vercel build.
+export const dynamic = "force-dynamic";
+
 export default async function AdminRsvpsPage() {
   const [rsvpsResult, guestsResult] = await Promise.all([
     supabaseAdmin

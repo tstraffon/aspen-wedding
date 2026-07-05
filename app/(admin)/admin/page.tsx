@@ -7,6 +7,11 @@
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import HouseholdsTable, { type HouseholdGroup } from "./HouseholdsTable";
 
+// Live, auth-gated admin data — never statically prerendered. Without this the
+// build tries to render this page (calling the service-role client) with no
+// Supabase env present, failing the Vercel build.
+export const dynamic = "force-dynamic";
+
 export default async function AdminPage() {
   const { data: guests, error } = await supabaseAdmin
     .from("guests")
