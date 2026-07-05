@@ -712,8 +712,15 @@ export default function RSVPPage() {
                     <div className="mt-4">
                       <span id="rsvp-suggestions-label" className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-2">
                         Did you mean?
+                        {form.suggestions.length > 1 && (
+                          <span className="text-on-surface-variant/60 normal-case tracking-normal">
+                            {" "}({form.suggestions.length} names — scroll for more)
+                          </span>
+                        )}
                       </span>
-                      <ul className="flex flex-wrap gap-2" aria-labelledby="rsvp-suggestions-label">
+                      {/* Scrollable so a large family (many same-surname matches) can't
+                          blow out the card; names arrive alphabetically from the server. */}
+                      <ul className="flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-1" aria-labelledby="rsvp-suggestions-label">
                         {form.suggestions.map((name, i) => (
                           // index-suffixed key: the server de-dupes names, but a
                           // collision-proof key guards against any duplicate slipping through

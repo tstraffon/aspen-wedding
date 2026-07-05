@@ -50,14 +50,18 @@ GRANT EXECUTE ON FUNCTION public.effective_surname(text) TO anon;
 GRANT EXECUTE ON FUNCTION public.effective_surname(text) TO authenticated;
 
 -- suggest_guests_by_name(p_name):
---   Returns up to 5 DISTINCT guest names whose SURNAME matches the input's
---   surname (via effective_surname, so Jr/Sr/II/III/IV/V suffixes are handled),
---   ranked by full-name trigram similarity to the input. Exact full-name matches
---   are excluded (the strict matcher handles those). Names are de-duplicated
---   (GROUP BY full_name): if two guests share the exact same name, showing it
---   twice would be two indistinguishable chips — the UI renders one, and LIMIT 5
---   counts distinct names. Runs as caller (anon already has SELECT on guests);
---   STABLE so it can inline.
+--   Returns up to 25 DISTINCT guest names whose SURNAME matches the input's
+--   surname (via effective_surname, so Jr/Sr/II/III/IV/V suffixes are handled).
+--   Listed ALPHABETICALLY so a large same-surname family reads as a scannable
+--   roster — with only a bare surname typed, trigram rank is near-arbitrary, so
+--   alphabetical is more findable than "top 5 by similarity". (sim is still
+--   computed for the return column, just not used for ordering.) Exact full-name
+--   matches are excluded (the strict matcher handles those). Names are
+--   de-duplicated (GROUP BY full_name): two guests sharing the exact same name
+--   would be indistinguishable chips, so the UI shows one and LIMIT counts
+--   distinct names. The 25 cap comfortably covers a single family while bounding
+--   the payload. Runs as caller (anon already has SELECT on guests); STABLE so
+--   it can inline.
 CREATE OR REPLACE FUNCTION public.suggest_guests_by_name(p_name text)
 RETURNS TABLE (full_name text, sim real)
 LANGUAGE sql STABLE
@@ -84,8 +88,8 @@ AS $$
   SELECT full_name, max(sim) AS sim
   FROM matches
   GROUP BY full_name
-  ORDER BY sim DESC, full_name
-  LIMIT 5;
+  ORDER BY full_name
+  LIMIT 25;
 $$;
 
 REVOKE ALL    ON FUNCTION public.suggest_guests_by_name(text) FROM public;
