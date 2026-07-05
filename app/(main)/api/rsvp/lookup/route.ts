@@ -26,6 +26,15 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 
+// Shape returned by the get_household_rsvps SECURITY DEFINER function — the
+// existing response (if any) for each guest in the matched household.
+type ExistingRsvp = {
+  guest_id: string;
+  attending: boolean;
+  meal_choice: string | null;
+  dietary_restrictions: string | null;
+};
+
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const { name } = body;
@@ -65,9 +74,24 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Miss (D-11): HTTP 200, not 404.
+  // Miss (D-11): HTTP 200, not 404. Offer a ranked "Did you mean?" list of
+  // guests sharing the entered last name (additive fallback; the strict
+  // matcher above is untouched). Suggestion failure degrades to [], never 500.
   if (!matches || matches.length === 0) {
-    return NextResponse.json({ found: false });
+    const { data: suggestionRows, error: suggestErr } = await supabase.rpc(
+      "suggest_guests_by_name",
+      { p_name: trimmedName }
+    );
+
+    if (suggestErr) {
+      console.error("Guest suggestion error:", suggestErr);
+    }
+
+    const suggestions = ((suggestionRows ?? []) as { full_name: string }[]).map(
+      (r) => r.full_name
+    );
+
+    return NextResponse.json({ found: false, suggestions });
   }
 
   // Hit: fetch full household so the group form can render every member.
@@ -87,14 +111,44 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const members = (householdRows ?? []).map((row) => ({
-    guest_id: row.id,
-    full_name: row.full_name,
-  }));
+  // Existing responses for this household so the form can prefill them.
+  // anon has no SELECT on rsvps, so this reads through the get_household_rsvps
+  // SECURITY DEFINER function (granted EXECUTE to anon) — the controlled read
+  // path that mirrors the submit_rsvps write path.
+  const { data: existingRows, error: existingErr } = await supabase.rpc(
+    "get_household_rsvps",
+    { p_household_id: matched.household_id }
+  );
+
+  if (existingErr) {
+    console.error("Existing RSVP fetch error:", existingErr);
+    return NextResponse.json(
+      { error: "Something went wrong. Please try again." },
+      { status: 500 }
+    );
+  }
+
+  const existing = (existingRows ?? []) as ExistingRsvp[];
+  const existingByGuest = new Map(
+    existing.map((r) => [r.guest_id, r] as const)
+  );
+
+  const members = (householdRows ?? []).map((row) => {
+    const prior = existingByGuest.get(row.id);
+    return {
+      guest_id: row.id,
+      full_name: row.full_name,
+      // null = no answer yet; boolean = previously submitted choice.
+      attending: prior ? prior.attending : null,
+      meal_choice: prior?.meal_choice ?? null,
+      dietary_restrictions: prior?.dietary_restrictions ?? null,
+    };
+  });
 
   return NextResponse.json({
     found: true,
     household_id: matched.household_id,
     members,
+    has_existing: existing.length > 0,
   });
 }
