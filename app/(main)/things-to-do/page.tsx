@@ -20,13 +20,13 @@ const activities = [
     link: "https://www.aspenartmuseum.org",
   },
   {
-    title: "Downtown Stroll",
+    title: "Farmer's Market",
     description:
-      "Spend an afternoon exploring the high-end boutiques or taking a tour of the historic architecture of downtown Aspen, just steps from Hotel Jerome.",
+      "A Colorado-only market winding through downtown along Hopkins and Hyman, Saturdays 8:30am–2pm. Find Palisade peaches, artisan breads, live music, and handcrafted goods against a mountain backdrop.",
     image:
       "https://www.aspensnowmass.com/-/media/aspen-snowmass/images/hero/guidehero/summer/2025/roadtrip_hero_2425.png",
-    alt: "Shopping on Main St",
-    link: "https://www.aspenchamber.org/explore/shopping",
+    alt: "Aspen Saturday Market",
+    link: "https://aspenchamber.org/explore/trip-highlights/aspen-saturday-market/",
   },
   {
     title: "Picnic In Herron Park",

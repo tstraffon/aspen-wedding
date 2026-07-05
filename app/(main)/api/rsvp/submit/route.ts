@@ -27,13 +27,13 @@
  */
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import { isMealChoice } from "@/lib/rsvp/meal-options";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-// Placeholder meal enum — Phase 6 / MEAL-02 swaps this with the real menu (one-line change).
-const MEAL_ENUM = ["chicken", "fish", "vegetarian"] as const;
-type MealChoice = (typeof MEAL_ENUM)[number];
+// Meal options live in lib/rsvp/meal-options.ts — the single source of truth
+// shared with the RSVP form so the two layers can never disagree (audit B2).
 
 type Submission = {
   guest_id: string;
@@ -91,10 +91,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
     if (s.attending) {
-      if (
-        typeof s.meal_choice !== "string" ||
-        !MEAL_ENUM.includes(s.meal_choice as MealChoice)
-      ) {
+      if (!isMealChoice(s.meal_choice)) {
         return NextResponse.json(
           { error: "Invalid request" },
           { status: 400 }

@@ -5,6 +5,7 @@
   "workflow": {
     "discuss_mode": "discuss",
     "granularity": "balanced",
-    "commit_docs": true
+    "commit_docs": true,
+    "_auto_chain_active": false
   }
 }

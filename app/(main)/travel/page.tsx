@@ -239,6 +239,28 @@ export default function TravelPage() {
                   <div className="p-6 bg-surface-variant/20 border border-outline/5 rounded-lg">
                     <div className="flex items-start gap-4">
                       <span className="material-symbols-outlined text-primary/60 text-xl mt-0.5">
+                        electric_car
+                      </span>
+                      <div>
+                        <h4 className="font-label text-sm text-on-surface mb-1">Downtowner</h4>
+                        <p className="text-on-surface-variant text-sm leading-relaxed font-light">
+                          A free, on-demand electric shuttle that will pick you up and drop you off anywhere within the downtown Aspen zone. Request a ride through the{" "}
+                          <a
+                            className="link-editorial text-primary hover:opacity-80 transition-all"
+                            href="https://www.ridedowntowner.com/aspen"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Downtowner app
+                          </a>
+                          .
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-6 bg-surface-variant/20 border border-outline/5 rounded-lg">
+                    <div className="flex items-start gap-4">
+                      <span className="material-symbols-outlined text-primary/60 text-xl mt-0.5">
                         directions_bus
                       </span>
                       <div>

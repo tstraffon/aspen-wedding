@@ -105,7 +105,7 @@ export default function ItineraryPage() {
                         The Welcome Party - Silver City
                       </h4>
                       <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
-                        Hors d'oeuvres & cocktails to kick off the weekend at Aspen's oldest mountain saloon, Silver City. Aspen Western attire.
+                        Hors d&apos;oeuvres & cocktails to kick off the weekend at Aspen&apos;s oldest mountain saloon, Silver City. Aspen Western attire.
                       </p>
                       <a href="https://maps.google.com/?q=210+S+Galena+St,+Aspen,+CO+81611" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500 hover:text-primary/80">
                         <span className="material-symbols-outlined text-sm">location_on</span>
@@ -173,7 +173,7 @@ export default function ItineraryPage() {
                           </span>
                         </div>
                         <h4 className="font-headline text-3xl text-on-surface mb-4">
-                          The Wedding Ceremony - St. Mary's Church
+                          The Wedding Ceremony - St. Mary&apos;s Church
                         </h4>
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
                            A traditional Catholic wedding ceremony without a full Mass, officiated by Uncle Father Henry! Please arrive early as we will start at 3pm sharp. Black tie optional attire.
@@ -217,7 +217,7 @@ export default function ItineraryPage() {
                           Cocktails - Hotel Jerome Courtyard
                         </h4>
                         <p className="text-on-surface-variant font-light leading-relaxed mb-6 text-lg">
-                          A magical (👀) outdoor cocktail hour in the Hotel Jerome courtyard before dinner. Just a 3 minute walk from St. Mary's!
+                          A magical (👀) outdoor cocktail hour in the Hotel Jerome courtyard before dinner. Just a 3 minute walk from St. Mary&apos;s!
                         </p>
                         <a href="https://maps.google.com/?q=330+E+Main+St,+Aspen,+CO+81611" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-on-surface/60 font-label text-[11px] uppercase tracking-[0.1em] group-hover:text-primary/60 transition-colors duration-500 hover:text-primary/80">
                           <span className="material-symbols-outlined text-sm">location_on</span>

@@ -407,6 +407,26 @@
   transition: transform 100ms ease;
 }
 
+/* ── RSVP success celebration — drifting gold diamonds (brand motif) ── */
+@keyframes confetti-fall {
+  0%   { opacity: 0; transform: translate3d(0, -8vh, 0) rotate(45deg); }
+  8%   { opacity: 0.85; }
+  100% { opacity: 0; transform: translate3d(var(--drift, 0px), 88vh, 0) rotate(225deg); }
+}
+
+.confetti-piece {
+  position: absolute;
+  top: 0;
+  width: 9px;
+  height: 9px;
+  background: var(--color-primary);
+  border-radius: 1px;
+  opacity: 0;
+  pointer-events: none;
+  animation: confetti-fall 3000ms cubic-bezier(0.45, 0, 0.55, 1) both;
+  will-change: transform, opacity;
+}
+
 /* ── Arrow bounce hint ───────────────────────────────────── */
 @keyframes arrow-hint {
   0%, 100% { transform: translateY(0); }
@@ -615,7 +635,7 @@
   .reveal-on-scroll, .reveal-on-scroll-stagger > *, .gallery-grid > *,
   .parallax-bg, .hero-parallax-bg,
   .ampersand-breathe, .diamond-scroll-reveal, .arrow-bounce-hint,
-  [style*="hero-fade-up"] {
+  .confetti-piece, [style*="hero-fade-up"] {
     animation: none !important;
   }
   .btn-press:active { transform: none; }

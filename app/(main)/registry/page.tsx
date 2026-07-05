@@ -8,33 +8,22 @@ export const metadata: Metadata = {
 const registries = [
   {
     title: "Honeyfund",
+    kicker: "Honeymoon Fund",
     description:
       "Our honeymoon adventure fund. Help us celebrate by contributing to the trip of a lifetime.",
     image:
-      "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80",
-    alt: "Mountain landscape with a passport and journal evoking honeymoon travel",
-    // TODO: replace with real registry URL
-    link: "#",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80",
+    alt: "Turquoise waves rolling onto a white sand tropical Hawaiian beach",
+    link: "https://www.honeyfund.com/site/straffon-veeck-09-19-2026",
   },
   {
     title: "Amazon",
+    kicker: "Registry",
     description:
       "From everyday essentials to home upgrades — our Amazon wishlist has a little of everything.",
-    image:
-      "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=800&q=80",
-    alt: "Wrapped gift box with neutral linen ribbon on a wooden surface",
-    // TODO: replace with real registry URL
-    link: "#",
-  },
-  {
-    title: "Crate & Barrel",
-    description:
-      "Tableware, linens, and kitchen goods we've been eyeing for our first home together.",
-    image:
-      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80",
-    alt: "Curated tabletop with linen napkins, glassware, and warm afternoon light",
-    // TODO: replace with real registry URL
-    link: "#",
+    image: "/registry-amazon.jpg",
+    alt: "Assortment of personalized wedding gifts",
+    link: "https://www.amazon.com/wedding/guest-view/2ND8G333Q8MCF",
   },
 ];
 
@@ -74,18 +63,7 @@ export default function RegistryPage() {
               </span>
             </h1>
             <p className="text-on-surface-variant text-lg max-w-2xl font-light leading-relaxed hero-reveal-subtitle">
-              A few places we&apos;ve put together — but truly, just being there is enough.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Framing Block */}
-      <section className="py-16 bg-background">
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12">
-          <div className="max-w-2xl mx-auto text-center reveal-on-scroll">
-            <p className="text-on-surface-variant text-lg font-light leading-relaxed">
-              Your presence is the greatest gift. If you&apos;d like to celebrate with something more, here are a few places we&apos;ve registered.
+              A few places we&apos;ve registered, for anyone who&apos;d like to celebrate with a gift.
             </p>
           </div>
         </div>
@@ -97,50 +75,71 @@ export default function RegistryPage() {
           className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(212,163,115,0.04)_0%,transparent_60%)] pointer-events-none"
           aria-hidden="true"
         />
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12 relative z-10">
-          <div className="mb-12 md:mb-24 reveal-on-scroll">
-            <span className="font-label text-xs uppercase tracking-[0.4em] text-primary mb-6 block">
-              Gift Registries
-            </span>
-            <h2 className="font-headline text-4xl md:text-6xl text-on-surface">
-              A Few of Our{" "}
-              <span className="italic font-light text-primary/80">Favorites</span>
-            </h2>
-          </div>
+        <div className="max-w-[1280px] mx-auto px-6 md:px-12 relative z-10">
+          <div className="space-y-20 md:space-y-32 reveal-on-scroll-stagger">
+            {registries.map((r, i) => {
+              const flipped = i % 2 === 1;
+              return (
+                <div key={r.title} className="reveal-on-scroll">
+                  {i > 0 && (
+                    <div
+                      className="h-px w-full bg-outline/10 mb-20 md:mb-32"
+                      aria-hidden="true"
+                    />
+                  )}
+                  <div className="group grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+                    {/* Image */}
+                    <a
+                      href={r.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      tabIndex={-1}
+                      aria-hidden="true"
+                      className={`lg:col-span-7 block overflow-hidden bg-surface-variant/50 relative aspect-[3/2] ${
+                        flipped ? "lg:order-2" : ""
+                      }`}
+                    >
+                      <div
+                        className="absolute inset-0 bg-background/20 group-hover:bg-transparent transition-colors duration-500 z-10"
+                        aria-hidden="true"
+                      />
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        alt={r.alt}
+                        className="w-full h-full object-cover transition-transform duration-1000 scale-105 group-hover:scale-110"
+                        src={r.image}
+                      />
+                    </a>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12 md:gap-y-24 reveal-on-scroll-stagger">
-            {registries.map((r) => (
-              <a
-                key={r.title}
-                href={r.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Visit ${r.title} registry (opens in new tab)`}
-                className="group cursor-pointer block"
-              >
-                <div className="aspect-[4/5] bg-surface-variant/50 mb-8 overflow-hidden relative">
-                  <div
-                    className="absolute inset-0 bg-background/20 group-hover:bg-transparent transition-colors duration-500 z-10"
-                    aria-hidden="true"
-                  />
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    alt={r.alt}
-                    className="w-full h-full object-cover transition-transform duration-1000 scale-105 group-hover:scale-110"
-                    src={r.image}
-                  />
+                    {/* Text */}
+                    <div
+                      className={`lg:col-span-5 ${
+                        flipped ? "lg:order-1" : ""
+                      }`}
+                    >
+                      <span className="font-label text-xs uppercase tracking-[0.4em] text-primary/70 mb-5 block">
+                        {String(i + 1).padStart(2, "0")} &middot; {r.kicker}
+                      </span>
+                      <h3 className="font-headline text-4xl md:text-6xl text-on-surface mb-5 leading-[0.95]">
+                        {r.title}
+                      </h3>
+                      <p className="text-on-surface-variant text-lg leading-relaxed mb-8 font-light max-w-md">
+                        {r.description}
+                      </p>
+                      <a
+                        href={r.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Visit ${r.title} registry (opens in new tab)`}
+                        className="font-headline italic text-primary text-base editorial-underline inline-flex items-center gap-2 hover:gap-3 transition-all"
+                      >
+                        Visit Registry
+                      </a>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-headline text-2xl md:text-4xl text-on-surface mb-3 group-hover:text-primary transition-colors">
-                  {r.title}
-                </h3>
-                <p className="text-on-surface-variant text-lg leading-relaxed mb-6 font-light">
-                  {r.description}
-                </p>
-                <span className="font-headline italic text-primary text-sm editorial-underline inline-flex items-center gap-2 group-hover:gap-3 transition-all">
-                  Visit Registry
-                </span>
-              </a>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
