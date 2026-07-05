@@ -164,6 +164,7 @@ export default function RSVPPage() {
   // with the chosen (exact) name, which hits the strict matcher (D-10).
   function handleSuggestionClick(name: string) {
     setForm((f) => ({ ...f, lookupName: name }));
+    // updates the input immediately; runLookup uses `name` (the arg), not form.lookupName
     void runLookup(name);
   }
 
@@ -709,10 +710,10 @@ export default function RSVPPage() {
                   </p>
                   {form.suggestions.length > 0 && (
                     <div className="mt-4">
-                      <span className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-2">
+                      <span id="rsvp-suggestions-label" className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-2">
                         Did you mean?
                       </span>
-                      <ul className="flex flex-wrap gap-2">
+                      <ul className="flex flex-wrap gap-2" aria-labelledby="rsvp-suggestions-label">
                         {form.suggestions.map((name) => (
                           <li key={name}>
                             <button
