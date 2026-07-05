@@ -19,6 +19,24 @@ import { useEffect, useRef, useState } from "react";
 import { MEAL_OPTIONS } from "@/lib/rsvp/meal-options";
 import { CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/site";
 
+// Hand-tuned positions for the success-stage gold-diamond drift. Fixed (not
+// random) so server and client render identically; the variety comes from the
+// spread of left offsets, horizontal drift, delays, and durations.
+const CONFETTI = [
+  { left: "6%", drift: "24px", delay: "0ms", duration: "3200ms" },
+  { left: "15%", drift: "-28px", delay: "280ms", duration: "2800ms" },
+  { left: "24%", drift: "16px", delay: "120ms", duration: "3400ms" },
+  { left: "33%", drift: "-18px", delay: "520ms", duration: "2600ms" },
+  { left: "42%", drift: "30px", delay: "60ms", duration: "3000ms" },
+  { left: "51%", drift: "-34px", delay: "700ms", duration: "3300ms" },
+  { left: "60%", drift: "20px", delay: "200ms", duration: "2700ms" },
+  { left: "68%", drift: "-22px", delay: "880ms", duration: "3100ms" },
+  { left: "77%", drift: "34px", delay: "360ms", duration: "2900ms" },
+  { left: "85%", drift: "-16px", delay: "620ms", duration: "3400ms" },
+  { left: "92%", drift: "26px", delay: "440ms", duration: "2800ms" },
+  { left: "48%", drift: "-30px", delay: "980ms", duration: "3000ms" },
+] as const;
+
 // ── v0.2 FormState types (D-02 — locked shape, Phase 6 consumes without refactor) ──
 
 type Stage = "lookup" | "form" | "success";
@@ -40,6 +58,8 @@ type FormState = {
   // True when the matched household already has at least one saved response —
   // drives the "already responded" note and the prefilled inputs.
   hasExisting: boolean;
+  // Ranked "Did you mean?" names returned on a miss (last-name matches).
+  suggestions: string[];
   errorKind: ErrorKind | null;
 };
 
@@ -50,6 +70,7 @@ export default function RSVPPage() {
     household: null,
     submissions: [],
     hasExisting: false,
+    suggestions: [],
     errorKind: null,
   });
   const [isSearching, setIsSearching] = useState(false);
@@ -60,11 +81,10 @@ export default function RSVPPage() {
   const formHeadingRef = useRef<HTMLHeadingElement>(null);
   const lookupInputRef = useRef<HTMLInputElement>(null);
 
-  // ── handleLookup (L-05 flow, RESEARCH Q2 + Q10) ──────────────────────────
-  async function handleLookup(e: React.FormEvent) {
-    e.preventDefault();
-    setForm((f) => ({ ...f, errorKind: null }));
-    const trimmed = form.lookupName.trim();
+  // ── Shared lookup (used by the form submit AND suggestion clicks) ─────────
+  async function runLookup(rawName: string) {
+    setForm((f) => ({ ...f, errorKind: null, suggestions: [] }));
+    const trimmed = rawName.trim();
     if (!trimmed) {
       setForm((f) => ({ ...f, errorKind: "validation" }));
       return;
@@ -88,6 +108,7 @@ export default function RSVPPage() {
         found: boolean;
         household_id?: string;
         has_existing?: boolean;
+        suggestions?: string[];
         members?: {
           guest_id: string;
           full_name: string;
@@ -97,20 +118,24 @@ export default function RSVPPage() {
         }[];
       } = await res.json();
       if (!data.found) {
-        setForm((f) => ({ ...f, errorKind: "miss" }));
+        setForm((f) => ({
+          ...f,
+          lookupName: trimmed,
+          errorKind: "miss",
+          suggestions: data.suggestions ?? [],
+        }));
         return;
       }
       const members = data.members ?? [];
       // Atomic setForm — sets stage + household + submissions in ONE call to
       // avoid an intermediate render with `stage: 'form'` but empty `submissions`
-      // (RESEARCH Q10, Pitfall 3). Prefill from any prior response: the API
-      // returns the saved boolean `attending` (or null if unanswered), which
-      // maps back to the "yes"|"no"|null UI value.
+      // (RESEARCH Q10, Pitfall 3). Prefill from any prior response.
       setForm({
         stage: "form",
         lookupName: trimmed,
         household: { id: data.household_id!, members },
         hasExisting: data.has_existing ?? false,
+        suggestions: [],
         submissions: members.map((m) => ({
           guest_id: m.guest_id,
           full_name: m.full_name,
@@ -128,9 +153,23 @@ export default function RSVPPage() {
     }
   }
 
+  // ── handleLookup (L-05 flow) — thin wrapper over runLookup ───────────────
+  async function handleLookup(e: React.FormEvent) {
+    e.preventDefault();
+    await runLookup(form.lookupName);
+  }
+
+  // ── handleSuggestionClick — fill the box, re-run the EXACT matcher ────────
+  // Clicking a suggestion never auto-submits an RSVP: it just re-runs lookup
+  // with the chosen (exact) name, which hits the strict matcher (D-10).
+  function handleSuggestionClick(name: string) {
+    setForm((f) => ({ ...f, lookupName: name }));
+    void runLookup(name);
+  }
+
   // ── handleTryAgain (L-03, GUEST-03) ──────────────────────────────────────
   function handleTryAgain() {
-    setForm((f) => ({ ...f, lookupName: "", errorKind: null }));
+    setForm((f) => ({ ...f, lookupName: "", errorKind: null, suggestions: [] }));
     lookupInputRef.current?.focus();
   }
 
@@ -297,23 +336,44 @@ export default function RSVPPage() {
       (s) => s.attending === "yes"
     ).length;
     return (
-      <main className="pt-32 pb-24 min-h-screen flex flex-col justify-center">
+      <main className="relative overflow-hidden pt-32 pb-24 min-h-screen flex flex-col justify-center">
         {pageBackdrop}
-        <div className="max-w-screen-2xl mx-auto w-full px-8 md:px-12">
+        {/* One-time gold-diamond drift (brand motif) — a celebratory flourish on
+            a successful RSVP. Decorative and reduced-motion safe (see globals). */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+          {CONFETTI.map((c, i) => (
+            <span
+              key={i}
+              className="confetti-piece"
+              style={
+                {
+                  left: c.left,
+                  animationDelay: c.delay,
+                  animationDuration: c.duration,
+                  ["--drift"]: c.drift,
+                } as React.CSSProperties
+              }
+            />
+          ))}
+        </div>
+        <div className="relative max-w-screen-2xl mx-auto w-full px-8 md:px-12">
           <div className="max-w-2xl mx-auto text-center py-16">
-            <span className="font-label text-xs uppercase tracking-[0.3em] text-primary mb-6 block font-semibold">
+            <span className="hero-reveal-label font-label text-xs uppercase tracking-[0.3em] text-primary mb-6 block font-semibold">
               RSVP Received
             </span>
-            <h1 className="font-headline text-6xl md:text-8xl text-on-surface leading-[1.1] mb-8">
+            <h1 className="hero-reveal-title font-headline text-6xl md:text-8xl text-on-surface leading-[1.1] mb-8">
               Thank <span className="italic text-primary">You</span>
             </h1>
-            <p className="font-body text-lg text-on-surface-variant leading-relaxed mb-6">
+            <p className="hero-reveal-subtitle font-body text-lg text-on-surface-variant leading-relaxed mb-6">
               Your response has been recorded.{" "}
               {attendingCount > 0
                 ? "We can't wait to celebrate with you in Aspen."
                 : "We're sorry you can't make it — you'll be missed."}
             </p>
-            <p className="font-body text-on-surface-variant/80 leading-relaxed">
+            <p
+              className="font-body text-on-surface-variant/80 leading-relaxed"
+              style={{ animation: "hero-fade-up 800ms ease-out 750ms both" }}
+            >
               Need to change something? Just{" "}
               <button
                 type="button"
@@ -324,6 +384,7 @@ export default function RSVPPage() {
                     household: null,
                     submissions: [],
                     hasExisting: false,
+                    suggestions: [],
                     errorKind: null,
                   })
                 }
@@ -358,7 +419,7 @@ export default function RSVPPage() {
       <p className="font-body text-lg text-on-surface-variant max-w-md leading-relaxed">
         We look forward to celebrating this new chapter with our closest
         family and friends. Please confirm your attendance by{" "}
-        <span className="font-bold text-primary">September 1st</span>.
+        <span className="font-bold text-primary">July 31st</span>.
       </p>
     </div>
   );
@@ -430,9 +491,9 @@ export default function RSVPPage() {
                           onChange={() =>
                             updateSubmission(sub.guest_id, { attending: "yes" })
                           }
-                          className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary"
+                          className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary peer"
                         />
-                        <span className="font-label text-xs uppercase tracking-wider text-on-surface-variant group-hover:text-primary transition-colors">Yes</span>
+                        <span className="font-label text-xs uppercase tracking-wider text-on-surface-variant transition-colors group-hover:text-primary peer-checked:text-primary peer-checked:font-semibold">Yes</span>
                       </label>
                       <label className="flex items-center space-x-3 cursor-pointer group">
                         <input
@@ -446,9 +507,9 @@ export default function RSVPPage() {
                               meal_choice: null,
                             })
                           }
-                          className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary"
+                          className="w-4 h-4 text-primary border-white/20 bg-transparent focus:ring-primary peer"
                         />
-                        <span className="font-label text-xs uppercase tracking-wider text-on-surface-variant group-hover:text-primary transition-colors">No</span>
+                        <span className="font-label text-xs uppercase tracking-wider text-on-surface-variant transition-colors group-hover:text-primary peer-checked:text-primary peer-checked:font-semibold">No</span>
                       </label>
                     </div>
                   </fieldset>
@@ -456,7 +517,10 @@ export default function RSVPPage() {
                   {/* Meal + dietary — only for attendees. Meal options come from the
                       shared MEAL_OPTIONS constant (audit B2), so form and server agree. */}
                   {sub.attending === "yes" && (
-                    <>
+                    <div
+                      className="space-y-6"
+                      style={{ animation: "hero-fade-up 450ms ease-out both" }}
+                    >
                       <div>
                         <label htmlFor={`meal-${sub.guest_id}`} className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-2">Meal Choice</label>
                         <select
@@ -493,7 +557,7 @@ export default function RSVPPage() {
                           className="w-full bg-surface-container-low border-none border-b border-white/10 focus:ring-0 focus:border-primary transition-all duration-300 py-4 px-4 font-body text-on-surface placeholder:text-on-surface-variant/40"
                         />
                       </div>
-                    </>
+                    </div>
                   )}
                 </div>
               ))}
@@ -535,11 +599,16 @@ export default function RSVPPage() {
                 onClick={handleSubmit}
                 disabled={isSubmitting}
                 aria-busy={isSubmitting}
-                className="w-full py-6 bg-primary text-on-primary font-label text-sm uppercase tracking-[0.4em] hover:bg-white transition-all duration-500 group flex items-center justify-center space-x-4 font-bold disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full py-6 bg-primary text-on-primary font-label text-sm uppercase tracking-[0.4em] hover:bg-white transition-all duration-500 group flex items-center justify-center space-x-4 font-bold btn-press disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 <span>{isSubmitting ? "Sending…" : "Confirm Group RSVP"}</span>
                 <span aria-hidden="true" className="material-symbols-outlined text-sm group-hover:translate-x-2 transition-transform">east</span>
               </button>
+              <p className="text-on-surface-variant/70 text-sm font-body font-light text-center mt-6">
+                Plans change, and that&apos;s okay. You can come back and update
+                your RSVP anytime until{" "}
+                <span className="text-primary font-medium">July 31st</span>.
+              </p>
             </div>
           </div>
         </div>
@@ -638,6 +707,27 @@ export default function RSVPPage() {
                   <p className="text-on-surface-variant/80 text-sm font-body font-light">
                     {errorCopy.miss.body}
                   </p>
+                  {form.suggestions.length > 0 && (
+                    <div className="mt-4">
+                      <span className="font-label text-[11px] uppercase tracking-widest text-primary block opacity-80 mb-2">
+                        Did you mean?
+                      </span>
+                      <ul className="flex flex-wrap gap-2">
+                        {form.suggestions.map((name) => (
+                          <li key={name}>
+                            <button
+                              type="button"
+                              onClick={() => handleSuggestionClick(name)}
+                              disabled={isSearching}
+                              className="font-body text-sm text-on-surface bg-surface-container-low border border-white/10 rounded-full px-4 py-2 hover:border-primary hover:text-primary transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                            >
+                              {name}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -646,7 +736,7 @@ export default function RSVPPage() {
             <button
               type="submit"
               disabled={isSearching}
-              className="w-full py-6 bg-primary text-on-primary font-label text-sm uppercase tracking-[0.4em] hover:bg-white transition-all duration-500 group flex items-center justify-center space-x-4 font-bold disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-6 bg-primary text-on-primary font-label text-sm uppercase tracking-[0.4em] hover:bg-white transition-all duration-500 group flex items-center justify-center space-x-4 font-bold btn-press disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <span>{isSearching ? "Searching…" : "Find My Invitation"}</span>
               <span aria-hidden="true" className="material-symbols-outlined text-sm group-hover:translate-x-2 transition-transform">
