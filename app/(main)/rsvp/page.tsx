@@ -714,8 +714,10 @@ export default function RSVPPage() {
                         Did you mean?
                       </span>
                       <ul className="flex flex-wrap gap-2" aria-labelledby="rsvp-suggestions-label">
-                        {form.suggestions.map((name) => (
-                          <li key={name}>
+                        {form.suggestions.map((name, i) => (
+                          // index-suffixed key: the server de-dupes names, but a
+                          // collision-proof key guards against any duplicate slipping through
+                          <li key={`${name}-${i}`}>
                             <button
                               type="button"
                               onClick={() => handleSuggestionClick(name)}

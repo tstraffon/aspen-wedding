@@ -17,10 +17,13 @@
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 -- suggest_guests_by_name(p_name):
---   Returns up to 5 guests whose LAST name exactly matches the input's last
---   name, ranked by full-name trigram similarity to the input. Exact full-name
---   matches are excluded (the strict matcher handles those). Runs as caller
---   (anon already has SELECT on guests); STABLE so it can inline.
+--   Returns up to 5 DISTINCT guest names whose LAST name exactly matches the
+--   input's last name, ranked by full-name trigram similarity to the input.
+--   Exact full-name matches are excluded (the strict matcher handles those).
+--   Names are de-duplicated (GROUP BY full_name): if two guests share the exact
+--   same name, showing it twice would be two indistinguishable chips — the UI
+--   renders one, and LIMIT 5 counts distinct names. Runs as caller (anon
+--   already has SELECT on guests); STABLE so it can inline.
 CREATE OR REPLACE FUNCTION public.suggest_guests_by_name(p_name text)
 RETURNS TABLE (full_name text, sim real)
 LANGUAGE sql STABLE
@@ -34,27 +37,33 @@ AS $$
       norm,
       split_part(norm, ' ', array_length(string_to_array(norm, ' '), 1)) AS last_tok
     FROM qi
+  ),
+  matches AS (
+    SELECT
+      g.full_name,
+      similarity(
+        lower(regexp_replace(trim(g.full_name), '\s+', ' ', 'g')),
+        q.norm
+      ) AS sim
+    FROM public.guests g, q
+    WHERE
+      -- last-name anchor: stored last token == input last token
+      split_part(
+        lower(regexp_replace(trim(g.full_name), '\s+', ' ', 'g')),
+        ' ',
+        array_length(
+          string_to_array(lower(regexp_replace(trim(g.full_name), '\s+', ' ', 'g')), ' '),
+          1
+        )
+      ) = q.last_tok
+      -- exclude exact matches (strict matcher already covers those)
+      AND lower(regexp_replace(trim(g.full_name), '\s+', ' ', 'g')) <> q.norm
   )
-  SELECT
-    g.full_name,
-    similarity(
-      lower(regexp_replace(trim(g.full_name), '\s+', ' ', 'g')),
-      q.norm
-    ) AS sim
-  FROM public.guests g, q
-  WHERE
-    -- last-name anchor: stored last token == input last token
-    split_part(
-      lower(regexp_replace(trim(g.full_name), '\s+', ' ', 'g')),
-      ' ',
-      array_length(
-        string_to_array(lower(regexp_replace(trim(g.full_name), '\s+', ' ', 'g')), ' '),
-        1
-      )
-    ) = q.last_tok
-    -- exclude exact matches (strict matcher already covers those)
-    AND lower(regexp_replace(trim(g.full_name), '\s+', ' ', 'g')) <> q.norm
-  ORDER BY sim DESC, g.full_name
+  -- collapse duplicate names to one row, keeping the best similarity score
+  SELECT full_name, max(sim) AS sim
+  FROM matches
+  GROUP BY full_name
+  ORDER BY sim DESC, full_name
   LIMIT 5;
 $$;
 
