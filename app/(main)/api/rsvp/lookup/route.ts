@@ -21,7 +21,6 @@
 // Carry-forward Phase 1 patterns:
 //   - anon Supabase client only; no service-role-key fallback
 //   - env reads at module-call time, fail-fast with sanitized 500
-//   - SITE_ACCESS_CODE proxy gate (proxy.ts) fronts this route
 //
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
